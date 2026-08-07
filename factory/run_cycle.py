@@ -166,12 +166,25 @@ def _seed_world(workdir: Path, tag: str, quests_src: Path,
     shutil.copytree(quests_src, quests)
     loadout = sorted(p for p in loadout_src.glob("*.md")
                      if p.name != "README.md")
+    rules = sorted(p for p in (WORLD / "rules").glob("*.md")
+                   if p.name != "README.md") if (WORLD / "rules").is_dir() else []
     for a in PLAYERS:
-        crafted = agents_root / a / "crafted"
-        crafted.mkdir(parents=True, exist_ok=True)
-        for s in loadout:
-            shutil.copy(s, crafted / s.name)
-    return str(agents_root), str(quests), [s.name for s in loadout]
+        adir = agents_root / a
+        # EQUIPPED loadout skills → the agent's .claude/skills/ (claude-native:
+        # a Claude Code process embodying this dir auto-loads them; crafted/
+        # stays what the agent MAKES)
+        for sk in loadout:
+            d = adir / ".claude" / "skills" / sk.stem
+            d.mkdir(parents=True, exist_ok=True)
+            shutil.copy(sk, d / "SKILL.md")
+        # STANDING RULES → the agent's .claude/rules/ (claude-native home;
+        # prompt injection remains the MiniMax adapter)
+        if rules:
+            rdir = adir / ".claude" / "rules"
+            rdir.mkdir(parents=True, exist_ok=True)
+            for r in rules:
+                shutil.copy(r, rdir / r.name)
+    return str(agents_root), str(quests), [s.stem for s in loadout]
 
 
 async def _run_world(agents_root: str, quests_root: str, rounds: int,
@@ -230,9 +243,9 @@ def _live_kind(workdir: Path, patch: Path) -> CarKind:
             q_src, l_src = WORLD / "quests", WORLD / "loadout"
         agents_root, quests, loadout = _seed_world(
             workdir, f"{tag}-{counter['n']}", q_src, l_src)
-        note = (f"You OWN these loadout skills (in your crafted/): {loadout} "
-                f"— APPLY them whenever they help your play."
-                if loadout else "")
+        note = (f"You have these loadout skills EQUIPPED (in your "
+                f".claude/skills/): {loadout} — APPLY them whenever they "
+                f"help your play." if loadout else "")
         board, _ = await _run_world(agents_root, quests, LIVE_ROUNDS,
                                     name=f"live:{tag}", extra_note=note)
         return {"tag": tag, "fitness": _throughput(board),
@@ -397,8 +410,8 @@ async def cycle(ci: bool) -> dict:
     # ── 0. live telemetry on the current package (the spec that aims dev) ──
     agents_root, quests, loadout = _seed_world(
         workdir, "telemetry", WORLD / "quests", WORLD / "loadout")
-    note = (f"You OWN these loadout skills: {loadout} — apply them."
-            if loadout else "")
+    note = (f"You have these loadout skills EQUIPPED (in your "
+            f".claude/skills/): {loadout} — apply them." if loadout else "")
     board0, _ = await _run_world(agents_root, quests, LIVE_ROUNDS,
                                  name="live:telemetry", extra_note=note)
     tel = _telemetry(board0)

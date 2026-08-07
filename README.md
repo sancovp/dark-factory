@@ -207,13 +207,13 @@ need the selection structure to be sound.**
 |---|---|
 | [`world/agents/`](world/agents/) | the agents — each a directory with its `.claude/` loadout (the WoS template: test_skill, skill-type definitions, meta-prompt-engineering, bug_report…). What they craft lands in `<agent>/crafted/` |
 | [`world/quests/`](world/quests/) | the quest files — each one an economy rule (its reward is parsed from the file) |
-| [`world/loadout/`](world/loadout/) | **the package's skill set**: skills every player owns at world boot. Shipping a skill here changes the game for everyone — this is what most factory PRs modify |
+| [`world/loadout/`](world/loadout/) | **the package's skill set** — installed into each agent's `.claude/skills/` at world boot (equipped, claude-native). Shipping a skill here changes the game for everyone |
 | [`.claude/skills/`](.claude/skills/) | the golden set — shipped, experiment-proven skills, equippable by any Claude Code session |
 | [`factory/wos_team.py`](factory/wos_team.py) | the team wiring: players + deity (heaven MiniMax agents) |
 | [`factory/gate.py`](factory/gate.py) | the fresh-model test — WoS `test.sh` semantics, verbatim |
 | [`factory/run_cycle.py`](factory/run_cycle.py) | steps 0–5 above, as code |
 | [`.github/workflows/factory.yml`](.github/workflows/factory.yml) | cron + issues trigger + dispatch; a keyless compose-check gates human PRs |
-| [`world/rules/`](world/rules/) | **the standing rulebook** — after every cycle the deity reviews what happened and accumulates the lessons here; every future world boots with them |
+| [`world/rules/`](world/rules/) | **the standing rulebook** — after every cycle the deity reviews what happened and accumulates the lessons here; installed into each agent's `.claude/rules/` at boot and injected into every briefing |
 | [`LINEAGE.json`](LINEAGE.json) | every verdict ever rendered |
 | `FACTORY_ON` | the kill switch — delete this file and autonomous cycles stop |
 
