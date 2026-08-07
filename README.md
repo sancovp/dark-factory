@@ -153,6 +153,19 @@ permanent record: merged PRs are proven improvements, closed PRs are the
 graveyard of plausible ideas that didn't survive measurement, and
 [`LINEAGE.json`](LINEAGE.json) is the machine-readable log of every verdict.
 
+### Step 6 — the deity's retrospective (the rules accumulate)
+
+After the verdict, the deity takes its cross-cycle seat: it reviews the whole
+trace — what died at the gate, what the race reverted, what shipped, where the
+dev-world wasted effort — and distills the lesson into **the standing
+rulebook** ([`world/rules/`](world/rules/)). Every future world, dev and live,
+boots with those rules in every agent's and the deity's briefing. Skills
+accumulate in the loadout; *lessons accumulate in the rules* — the way they
+develop improves, not just what they've developed. (First accumulated rule,
+from a real reverted cycle: *"Installing a file to loadout/ doesn't ship it —
+surviving the gate test does. Verify composition works end-to-end BEFORE
+declaring it loadout-ready."*)
+
 ---
 
 ## 3. Why three gates
@@ -200,6 +213,7 @@ need the selection structure to be sound.**
 | [`factory/gate.py`](factory/gate.py) | the fresh-model test — WoS `test.sh` semantics, verbatim |
 | [`factory/run_cycle.py`](factory/run_cycle.py) | steps 0–5 above, as code |
 | [`.github/workflows/factory.yml`](.github/workflows/factory.yml) | cron + issues trigger + dispatch; a keyless compose-check gates human PRs |
+| [`world/rules/`](world/rules/) | **the standing rulebook** — after every cycle the deity reviews what happened and accumulates the lessons here; every future world boots with them |
 | [`LINEAGE.json`](LINEAGE.json) | every verdict ever rendered |
 | `FACTORY_ON` | the kill switch — delete this file and autonomous cycles stop |
 

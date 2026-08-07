@@ -78,7 +78,8 @@ def _available_quests(quests_root):
 class WoSPlayer(Link):
     """A player: a tooled MiniMax agent embodied in its dir. Full WoS move set."""
 
-    def __init__(self, name, agents_root, quests_root, extra_note=""):
+    def __init__(self, name, agents_root, quests_root, extra_note="",
+                 rules_text=""):
         self.name = name
         self.agents_root = agents_root
         self.quests_root = quests_root
@@ -87,6 +88,8 @@ class WoSPlayer(Link):
             f"executable Claude Code skills (markdown files), trade them, do quests, form parties, and "
             f"audit the game for exploits. Your agent dir is {agents_root}/{name} (it has your .claude "
             f"loadout: skill_types, test_skill, meta-PE). You have Bash + file editing.\n\n{MPE}\n\n"
+            + (f"THE STANDING RULES (accumulated by the deity across cycles — "
+               f"OBEY them):\n{rules_text}\n\n" if rules_text else "")
             + (extra_note + "\n\n" if extra_note else "")
             + "Apply the method above before you choose your move (verify a listing's real quality "
               "before buying; check your own strategy for convergence). Reply with ONE JSON action "
@@ -136,11 +139,13 @@ class WoSDeity(Link):
     rule on rarity challenges, VALIDATE bug reports (the advance then pays)."""
     name = "deity"
 
-    def __init__(self):
+    def __init__(self, rules_text=""):
         self.rt = MiniMaxRuntime(name="deity", tools=[], system_prompt=(
             "You are the DEITY of World of Skillcraft — the god-agent. Your job is SELECTION PRESSURE "
             "(stop the economy converging) and INTEGRITY (validate bug reports honestly).\n\n"
-            f"{MPE}\n\nApply the method above BEFORE every ruling: verify a bug is a real, reproducible "
+            + (f"THE STANDING RULES you have accumulated across cycles — "
+               f"enforce them:\n{rules_text}\n\n" if rules_text else "")
+            + f"{MPE}\n\nApply the method above BEFORE every ruling: verify a bug is a real, reproducible "
             "exploit (not plausible-sounding) before validating it; verify a claimed rarity against the "
             "actual skill before upholding it; check your own convergence-call for bias. Observe, "
             "narrate, rule on rarity challenges, and judge each open bug. Reply with ONE JSON object "

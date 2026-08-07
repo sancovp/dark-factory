@@ -68,6 +68,8 @@ DEV_ROUNDS = int(os.environ.get("FACTORY_DEV_ROUNDS", "3"))
 LIVE_ROUNDS = int(os.environ.get("FACTORY_LIVE_ROUNDS", "3"))
 REPLICATES = int(os.environ.get("FACTORY_REPLICATES", "2"))
 MAX_RUNS_PER_DAY = int(os.environ.get("FACTORY_MAX_RUNS_PER_DAY", "4"))
+RULES = WORLD / "rules"
+MAX_RULES = int(os.environ.get("FACTORY_MAX_RULES", "12"))
 
 
 def _guard(path: Path) -> Path:
@@ -85,6 +87,69 @@ def _record(entry: dict) -> None:
     log = json.loads(LINEAGE.read_text()) if LINEAGE.exists() else []
     log.append(entry)
     _guard(LINEAGE).write_text(json.dumps(log, indent=2) + "\n")
+
+
+def _load_rules() -> str:
+    """The standing rulebook, as one briefing block (name: text per rule)."""
+    if not RULES.is_dir():
+        return ""
+    parts = []
+    for f in sorted(RULES.glob("*.md")):
+        if f.name == "README.md":
+            continue
+        parts.append(f"- [{f.stem}] " + " ".join(f.read_text().split())[:400])
+    return "\n".join(parts)
+
+
+async def _deity_retrospective(entry: dict, ci: bool) -> list:
+    """THE DEITY'S CROSS-CYCLE JOB: watch what happened, help them with it.
+    After each cycle the deity reviews the full trace and accumulates the
+    standing rules — the lessons every future world boots with. Additions
+    and amendments only (same name replaces); capped at MAX_RULES."""
+    from cave_teams.examples import MiniMaxRuntime
+    from .wos_team import MPE, last_json
+    existing = _load_rules()
+    deity = MiniMaxRuntime(name="deity_retro", tools=[], system_prompt=(
+        "You are the DEITY of World of Skillcraft in your CROSS-CYCLE seat: "
+        "after each factory cycle you review what actually happened and "
+        "accumulate THE STANDING RULES — the lessons every future dev-world "
+        "and live-world boots with. Rules must be short, operational, and "
+        "earned from THIS cycle's evidence (never speculative). Amend by "
+        "reusing a rule's name; add sparingly.\n\n" + MPE))
+    out = await deity.run(
+        f"THE CYCLE THAT JUST HAPPENED:\n{json.dumps(entry, indent=1)[:3000]}\n\n"
+        f"THE CURRENT STANDING RULES ({MAX_RULES} max):\n"
+        f"{existing or '(none yet)'}\n\n"
+        "What did this cycle teach? A death at the gate, a reverted race, a "
+        "wasted dev-world, a shipped win — each may earn a rule that makes "
+        "the NEXT cycle develop better. Reply ONLY JSON: "
+        '{"rules":[{"name":"<snake_case>","text":"<one operational rule, '
+        '<=60 words>"}],"reasoning":"<one line>"} — an empty rules list is a '
+        "valid answer if nothing was earned.")
+    o = last_json(out if isinstance(out, str) else str(out),
+                  keys=("rules",), default={})
+    written = []
+    current = [f for f in RULES.glob("*.md") if f.name != "README.md"]
+    for r in (o.get("rules") or [])[:3]:              # ≤3 new lessons per cycle
+        name = re.sub(r"[^a-z0-9_]+", "_", str(r.get("name", "")).lower()).strip("_")
+        text = str(r.get("text", "")).strip()
+        if not name or not text:
+            continue
+        path = RULES / f"{name}.md"
+        if not path.exists() and len(current) + len(written) >= MAX_RULES:
+            print(f"  deity: rulebook full ({MAX_RULES}) — '{name}' skipped")
+            continue
+        _guard(path).write_text(f"# {name}\n\n{text}\n")
+        written.append(name)
+    if written:
+        print(f"  deity accumulated rule(s): {written}")
+        if ci:
+            _sh("git", "pull", "--rebase")
+            _sh("git", "add", str(RULES))
+            _sh("git", "commit", "-m",
+                f"deity: standing rule(s) accumulated — {', '.join(written)}")
+            _sh("git", "push")
+    return written
 
 
 # ── the package: world/quests (economy rules) + world/loadout (boot skills) ──
@@ -117,11 +182,14 @@ async def _run_world(agents_root: str, quests_root: str, rounds: int,
     state = initial_state(PLAYERS)
     post_bulletin(state, bulletin or "Test before you list. Diverge — quests "
                                      "and audits pay.")
-    players = {a: WoSPlayer(a, agents_root, quests_root, extra_note=extra_note)
+    rules_text = _load_rules()
+    players = {a: WoSPlayer(a, agents_root, quests_root, extra_note=extra_note,
+                            rules_text=rules_text)
                for a in PLAYERS}
     world = SkillcraftWorld(
         agents=players, agents_root=agents_root, quests_root=quests_root,
-        deity=WoSDeity(), rounds=rounds, seasons=1, name=name)
+        deity=WoSDeity(rules_text=rules_text), rounds=rounds, seasons=1,
+        name=name)
     res = await world.execute({"board": state})
     return res.context["board"], players
 
@@ -521,6 +589,14 @@ async def cycle(ci: bool) -> dict:
                 f"PR is the receipt.", "--delete-branch")
             print("  PR closed (receipt)")
         _sh("git", "checkout", base)
+        _sh("git", "pull", "--rebase")     # SHIP squash-merges land on origin
+        if verdict != "SHIP":              # the branch died with the entry —
+            _record(entry)                 # re-record the receipt on MAIN
+            _sh("git", "add", str(LINEAGE))
+            _sh("git", "commit", "-m",
+                f"factory: lineage — {verdict} ({change_line[:50]})")
+            _sh("git", "push")
+    await _deity_retrospective(entry, ci)
     return entry
 
 
