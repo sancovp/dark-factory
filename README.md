@@ -1,135 +1,125 @@
 # dark-factory
 
-**A repository that develops itself — and only merges what it can causally prove.**
+**A repository that improves its own contents — and only merges a change it can
+prove made things better.**
 
-Every commit on `main` that touches `garage/` was proposed by an AI dev seat,
-survived a quarantine gate, and **strictly beat the incumbent in a controlled
-split test** (a real RCT, replicated when the judge is noisy). Everything that
-*failed* is here too: the closed PRs are the graveyard of plausible-but-wrong
-ideas, each with its measured verdict. The git history is the lineage.
+Here is the whole loop, concretely:
 
-```
-  ┌────────────────────────────────────────────────────────────────────┐
-  │            World() → Formula1Stable() → Racetrack() → Championship()│
-  │  selection:  market      R&D loop          RCT         replicated   │
-  │  rigor:     opinion  → directed evol. →  CAUSAL   →   meta-science  │
-  └────────────────────────────────────────────────────────────────────┘
-```
+1. This repo contains small **skills** — a task spec, a document, and an
+   implementation (see [`garage/`](garage/)). Each skill has a fixed **test
+   battery**: inputs with known-correct outputs.
+2. Once a day, a GitHub Action wakes up and asks an AI (the **dev seat**) to
+   improve a skill. The AI is shown the skill and the inputs it currently
+   fails — **never the expected outputs**, so it can't just memorize answers.
+3. The proposal is executed for real in a sandbox (**the gate**). If it can't
+   run — syntax error, crash, timeout — it's dead on arrival: rejected, and
+   the AI is told why.
+4. If it runs, it races the current version **head-to-head on the same
+   battery** — a controlled A/B test. Strictly more correct outputs → the
+   Action opens a PR and **merges it**, score in the title. Tie or worse → the
+   PR is **closed** with the verdict as a comment.
 
-## What is actually running
+That's it. No human review in the loop, and no vibes either: `main` only
+moves when treatment beat control, same test, same day.
 
-A scheduled GitHub Action runs one **factory cycle** per car in `garage/`:
+## It already happened
 
-1. **ORDER 0 — telemetry.** The incumbent artifact runs against its task
-   battery. Fitness = correct outputs. The dev seat is shown the **failing
-   inputs only — never the expected outputs** (it can see *what* broke, it
-   cannot memorize answers it hasn't earned).
-2. **ORDER 1 — the stable.** The dev seat (an LLM, one conversation) proposes
-   an edited artifact. The **quarantine gate** materializes the candidate in a
-   sandbox and executes it for real; a candidate that cannot execute **dies**
-   — the lineage is extinct, and the seat is re-asked with the cause of death.
-   The gate is code. Its word is the only test record that exists.
-3. **ORDER 2/3 — the race.** The survivor races the incumbent: identical
-   conditions, one variable (the artifact). `code` cars use a deterministic
-   sandboxed interpreter (zero-noise: one race suffices). `prose` cars are
-   executed by a **fresh model per case** — a brand-new session that sees only
-   the document and one input — which is stochastic, so the race is **replicated
-   and decided by strict majority** (a lucky single race can lie in *both*
-   directions; replication converges — see the receipts below).
-4. **The verdict is the merge.** SHIP ⇒ the factory's own PR is merged with
-   the tally in the title. REVERT/tie ⇒ the PR is closed with the verdict as a
-   comment. Ties never ship — change has cost, and correlation never ships a
-   car.
+On the repo's first unattended run:
 
-So: **`main` advances only on causal proof.** Not "the metrics moved after we
-shipped" — *treatment beat control, same track, same day, N replicates.*
+- [**PR #1**](../../pull/1) `[SHIP] extract-emails gen1: 4→6` — **merged by the
+  bot.** The seeded skill had a case-sensitivity bug (scored 4/6). The AI was
+  shown the two failing inputs, wrote the fix (`re.IGNORECASE` + normalize),
+  it survived the sandbox, and won the race 6-to-4. Merged, no human.
+- [**PR #2**](../../pull/2) `[REVERT] extract-emails-prose gen1: 3.0→3.0` —
+  **closed by the bot.** A plausible rewrite of the prose skill passed the
+  sandbox but tied its race (0 wins in 3 replicates). Ties don't merge.
 
-## How to read this repo
+One run, both outcomes: a real improvement shipped itself, and a
+plausible-but-worthless change left a public receipt instead of landing.
+Every closed PR in this repo is one of those receipts.
 
-| where | what it is |
+## Why bother
+
+Most "AI improves the code" setups merge on plausibility: the diff looks
+good, the tests still pass, ship it. The failure mode is confident nonsense —
+and we've watched it happen: in one live run, the dev seat read a *bug* as
+*intent* and rewrote it to be more rigorously wrong, with a clear
+justification. It passed the sandbox. The A/B race measured it: worse than
+the incumbent. Closed.
+
+The claim this repo demonstrates is small but sharp: **you don't need the
+proposer to be right; you need the selection structure to be sound.** Gate on
+"does it run," then gate on "did it measurably beat what we had, under
+controlled conditions." Everything else — including a wrong, confident AI —
+is survivable input.
+
+## Reading the repo
+
+| where | what |
 |---|---|
-| `garage/<car>/skill.md` | the artifact — **the car**. The genome is the text |
-| `garage/<car>/battery.json` | the task battery (the track). Held by the factory, not the car — a car cannot grade itself |
-| `LINEAGE.json` | machine-readable history: every verdict, every death, every tally |
-| closed PRs | proposals that died at the gate or lost the race — the receipts |
-| merged PRs titled `[SHIP]` | causally-proven improvements, tally included |
-| `factory/` | the runner + the two LLM seats (thin HTTP clients, toolless) |
-| `.github/workflows/factory.yml` | the schedule. `FACTORY_ON` at repo root is the kill switch |
+| `garage/<skill>/skill.md` | the artifact under evolution (the document/implementation) |
+| `garage/<skill>/battery.json` | its test battery — held by the factory, not the skill: a thing can't grade itself |
+| `garage/<skill>/car.json` | name, kind, generation counter |
+| [`LINEAGE.json`](LINEAGE.json) | machine-readable history: every verdict, death, and score |
+| merged PRs titled `[SHIP]` | proven improvements, score in the title |
+| closed PRs | proposals that died in the sandbox or lost the race |
+| [`factory/`](factory/) | the runner + the two AI seats (plain HTTP calls, no agent framework) |
+| [`.github/workflows/factory.yml`](.github/workflows/factory.yml) | the daily schedule; delete `FACTORY_ON` to pause |
 
-## The containment (stated as a feature)
+Two kinds of skill, two kinds of judge:
 
-The runner is **path-guarded**: it can write `garage/` and `LINEAGE.json`,
-nothing else. It cannot modify its own code, the workflow, or this README —
-no self-modifying CI. The dev seat is a toolless HTTP call: it receives
-exactly the artifact + failing inputs, and returns text. The judge seat is a
-fresh call per case with zero history. Autonomy here means *the loop runs
-unattended*, not *the loop is unconstrained*.
+- **`code` skills** carry a fenced ```python block. The judge is a sandboxed
+  interpreter — deterministic, so one race decides.
+- **`prose` skills** are pure instructions. The judge is a **fresh AI session
+  per test case** — it gets only the document and one input, and must follow
+  the document literally. Fresh sessions are noisy, so the race is **replicated
+  and decided by strict majority** (a lucky single race can lie in both
+  directions; replication converges).
 
-Honest boundary: the batteries are public in this repo, so a tool-using agent
-could read the answers. That is exactly why the seats are **not** agents. The
-claim this repo makes is about the *selection structure*, not about seat
-virtue — a confidently wrong proposal is expected input, and the machinery is
-what stops it (it already has: see the lineage).
+## The guardrails
 
-## Why the ladder (the one-paragraph theory)
-
-Each order wraps the one below and optimizes it: a Stable is a map
-*cars → cars*; a Racetrack judges those maps; a Championship judges the
-judgments. In domain-theoretic terms the tower is `D_{n+1} = [D_n → D_n]` —
-Scott's inverse-limit construction, whose limit `D∞ ≅ [D∞ → D∞]` is the space
-where an element *is* a function on elements, including itself. The finite
-proof-object for that math (embedding-projection pairs, exhaustively verified)
-lives in [`sancovp/lfpoop`](https://github.com/sancovp/lfpoop)
-(`lfpoop/dinfinity.py`). This repo is the same tower with the arrows running:
-the artifact is the point, the seats are the functions, and the polymorphic
-judge slot is the embedding.
-
-The selection ladder is the point: **market opinion → directed evolution →
-controlled trial → replicated trials.** The higher the order, the harder it is
-for a bad change to survive. This factory runs at Championship order for noisy
-judges and Racetrack order for deterministic ones — always at the order where
-its verdicts are *sound*, never merely *plausible*.
-
-## Receipts — in this repo, from cycle one
-
-- [PR #1](../../pull/1) — `[SHIP] extract-emails gen1: 4→6`, **merged by the
-  factory**: the dev seat, shown only two failing inputs, wrote the
-  case-sensitivity fix, survived quarantine, and won the split 4→6 strict.
-- [PR #2](../../pull/2) — `[REVERT] extract-emails-prose gen1: 3.0→3.0`,
-  **closed by the factory**: the proposal passed the gate but tied across 3
-  fresh-judge replicates (tally 0–3). Ties never ship.
-
-Both happened in the repo's first autonomous run, unattended. The lineage in
-[`LINEAGE.json`](LINEAGE.json) and the PR list are the live record from here on.
-
-## Receipts (from the build, before this repo went autonomous)
-
-- **The gate kills:** a syntax-broken proposal died in quarantine
-  ("artifact cannot execute"); a lineage-extinction, not an exception trace.
-- **Ties never ship:** a cosmetic rewrite raced 4 vs 4 → REVERT.
-- **A real fix ships:** the case-sensitivity fix raced 4 vs 6 → SHIP, strict.
-- **The structure survives a wrong seat:** live, the dev seat once *doubled
-  down* on a seeded bug — rewrote it more rigorously, confidently, plausibly.
-  The RCT measured 3 vs 2 against it → REVERT. A correlational gate ships that
-  PR; this one closed it.
-- **Replication corrects single-race lies, both directions:** under an explicit
-  noise table, one race wrong-reverted a truly-better change (unlucky 7v5) and
-  wrong-shipped a worthless one (lucky 4v6); 7 replicates fixed both (4–3
-  SHIP, 1–6 REVERT). `test_championship.py` in
-  [`sancovp/cave-teams`](https://github.com/sancovp/cave-teams).
+- The runner is **path-guarded**: it can write `garage/` and `LINEAGE.json`,
+  nothing else — it cannot edit its own code, the workflow, or this README.
+  No self-modifying CI.
+- The AI seats are toolless HTTP calls. They see exactly what the prompt
+  contains (skill + failing inputs) and return text. They cannot browse the
+  repo — which matters, because the batteries are public here. The claim is
+  about the selection structure, not about trusting the model.
+- A skill at max score is marked **saturated** in the lineage and skipped —
+  no daily churn of pointless proposals against a solved problem.
+- `python -m factory.run_cycle --selftest` proves the gate/race machinery
+  keyless, on fixtures, in CI, on every PR.
 
 ## Run your own
 
 ```bash
 pip install -r requirements.txt
-python -m factory.run_cycle --selftest      # keyless: proves the machinery
-MINIMAX_API_KEY=… python -m factory.run_cycle    # one real cycle, locally
+python -m factory.run_cycle --selftest              # no key needed
+MINIMAX_API_KEY=… python -m factory.run_cycle       # one real cycle, locally
 ```
 
-Fork it, put your own artifact + battery in `garage/`, set the
-`MINIMAX_API_KEY` secret (or point `factory/seats.py` at any
+Fork it, drop your own `skill.md` + `battery.json` in `garage/`, add a
+`MINIMAX_API_KEY` Actions secret (or point `factory/seats.py` at any
 Anthropic-compatible endpoint), and your repo develops itself too.
 
-Built on [`cave-teams`](https://github.com/sancovp/cave-teams)
-(`cave_teams.darkfactory` — the orders as constructors; `cave_teams.skillcar`
-— the artifact car). MIT.
+## The design, one level up (optional reading)
+
+Internally the artifact is called the **car**, after a claim about Formula 1:
+the sport is not about the drivers or the pit crew — everything is an effect
+of the car's fitness. The escalation used here is a ladder:
+
+```
+market opinion → directed R&D → controlled trial (A/B) → replicated trials
+```
+
+Each rung makes it strictly harder for a bad change to survive; this factory
+runs at the trial rungs, where verdicts are causal rather than plausible. The
+constructors (`Formula1Stable` = propose+gate loop, `Racetrack` = the A/B
+split, `Championship` = replicated splits) live in
+[`cave-teams`](https://github.com/sancovp/cave-teams) and are ordinary
+composable objects — the "improve the improver" tower they form is, for the
+mathematically inclined, the function-space tower `D_{n+1} = [D_n → D_n]`
+whose limit is Scott's `D∞ ≅ [D∞ → D∞]`; a finite, exhaustively-tested
+proof-object for that construction lives in
+[`sancovp/lfpoop`](https://github.com/sancovp/lfpoop) (`lfpoop/dinfinity.py`).
+None of that is needed to use the factory. MIT.

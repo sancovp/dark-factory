@@ -213,14 +213,16 @@ async def cycle_car(car_dir: Path, ci: bool) -> dict:
 
 
 async def selftest() -> None:
-    """Keyless proof of the whole machinery: a FIXTURE candidate is pushed
-    through the real quarantine + championship against the live garage car."""
+    """Keyless proof of the whole machinery, SELF-CONTAINED: a fixture
+    incumbent (known-buggy), a fixture candidate pair (known-broken /
+    known-better), and a fixture battery — independent of the live garage
+    state, so shipped generations never break this proof."""
     from cave_teams.darkfactory import Championship, racetrack
     from cave_teams.skillcar import apply_artifact_delta
-    car_dir = GARAGE / "extract-emails"
-    car = _load_car(car_dir)
-    kind = _kind_for(car, _battery(car_dir), {})
     fix = json.loads((ROOT / "tests" / "fixtures.json").read_text())
+    car = new_skill_car(fix["buggy_incumbent"], name="selftest-car")
+    car["kind"] = "code"
+    kind = _kind_for(car, fix["battery"], {})
     with tempfile.TemporaryDirectory() as td:
         dead = await kind.viability(
             apply_artifact_delta(car, {"artifact": fix["broken"]}), td)

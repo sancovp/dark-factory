@@ -1,5 +1,32 @@
 {
-  "_note": "selftest fixtures \u2014 a known-broken and a known-better candidate, used ONLY to prove the gate/track machinery keyless. The autonomous dev seat never sees these.",
+  "_note": "selftest fixtures \u2014 a SELF-CONTAINED machinery proof: a known-buggy incumbent, a known-broken candidate (dies at the gate), a known-better candidate (ships), and the battery they race on. Independent of the live garage state so shipped generations never break the selftest. The autonomous dev seat never sees these.",
   "broken": "# Skill: extract-emails\nExtract every email address from the text; output lowercased, sorted, comma-joined.\n\n```python\nimport re\ndef solve(text)\n    found = re.findall(r\"[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}\", text)\n    return \",\".join(sorted(set(found)))\n```\n",
-  "better": "# Skill: extract-emails\nExtract every email address from the text; output lowercased, sorted, comma-joined.\nHandles any casing.\n\n```python\nimport re\ndef solve(text):\n    found = re.findall(r\"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}\", text)\n    return \",\".join(sorted({f.lower() for f in found}))\n```\n"
+  "better": "# Skill: extract-emails\nExtract every email address from the text; output lowercased, sorted, comma-joined.\nHandles any casing.\n\n```python\nimport re\ndef solve(text):\n    found = re.findall(r\"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}\", text)\n    return \",\".join(sorted({f.lower() for f in found}))\n```\n",
+  "buggy_incumbent": "# Skill: extract-emails\nExtract every email address from the text; output lowercased, sorted, comma-joined.\n\n```python\nimport re\ndef solve(text):\n    found = re.findall(r\"[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}\", text)\n    return \",\".join(sorted(set(found)))\n```\n",
+  "battery": [
+    {
+      "input": "reach me at bob@x.com or alice@y.org",
+      "expected": "alice@y.org,bob@x.com"
+    },
+    {
+      "input": "no emails here at all",
+      "expected": ""
+    },
+    {
+      "input": "dupes: a@b.co a@b.co c@d.io",
+      "expected": "a@b.co,c@d.io"
+    },
+    {
+      "input": "mixed Bob@X.com and carol@z.net today",
+      "expected": "bob@x.com,carol@z.net"
+    },
+    {
+      "input": "UPPER ADMIN@SITE.ORG only",
+      "expected": "admin@site.org"
+    },
+    {
+      "input": "end of line: zed@qq.dev",
+      "expected": "zed@qq.dev"
+    }
+  ]
 }
