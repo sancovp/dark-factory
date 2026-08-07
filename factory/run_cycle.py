@@ -67,6 +67,7 @@ CHARTER = ("WE NEED TO WORK TOGETHER TO IMPROVE THE CODEBASE. Come up with "
 DEV_ROUNDS = int(os.environ.get("FACTORY_DEV_ROUNDS", "3"))
 LIVE_ROUNDS = int(os.environ.get("FACTORY_LIVE_ROUNDS", "3"))
 REPLICATES = int(os.environ.get("FACTORY_REPLICATES", "2"))
+MAX_RUNS_PER_DAY = int(os.environ.get("FACTORY_MAX_RUNS_PER_DAY", "4"))
 
 
 def _guard(path: Path) -> Path:
@@ -276,6 +277,39 @@ def _file_world_bugs(board: dict, ci: bool) -> list:
     return filed
 
 
+def _runs_today(ci: bool) -> int:
+    """The governor's meter: workflow runs started today (UTC)."""
+    if not ci:
+        return 0
+    try:
+        today = datetime.datetime.now(
+            datetime.timezone.utc).strftime("%Y-%m-%d")
+        out = _sh("gh", "run", "list", "--workflow", "factory.yml",
+                  "--limit", "30", "--json", "createdAt")
+        return sum(1 for r in json.loads(out or "[]")
+                   if str(r.get("createdAt", "")).startswith(today))
+    except Exception:
+        return MAX_RUNS_PER_DAY            # meter broken → assume cap hit
+
+def _self_kick(filed: list, ci: bool) -> None:
+    """"When it has issues it runs the dev system auto": a cycle that filed
+    NEW world-bugs kicks the next cycle immediately via workflow_dispatch
+    (GitHub's designed exception to token anti-recursion) — governed by a
+    daily run cap so a bug-rich world cannot chain-burn forever."""
+    if not (ci and filed):
+        return
+    n = _runs_today(ci)
+    if n >= MAX_RUNS_PER_DAY:
+        print(f"  governor: {n} runs today ≥ cap {MAX_RUNS_PER_DAY} — "
+              f"the backlog waits for the heartbeat")
+        return
+    try:
+        _sh("gh", "workflow", "run", "factory.yml")
+        print(f"  self-kick: new world-bugs filed → next cycle dispatched "
+              f"({n + 1}/{MAX_RUNS_PER_DAY} today)")
+    except Exception as e:
+        print(f"  self-kick failed (non-fatal): {e}")
+
 def _sh(*cmd: str) -> str:
     r = subprocess.run(cmd, capture_output=True, text=True, cwd=ROOT)
     if r.returncode != 0:
@@ -306,6 +340,7 @@ async def cycle(ci: bool) -> dict:
     filed = _file_world_bugs(board0, ci)
     if filed:
         print(f"  filed {len(filed)} world-bug issue(s): {filed}")
+    _self_kick(filed, ci)
 
     # ── 1. the dev-world plays, aimed at the telemetry ──
     issues = _open_issues(ci)
