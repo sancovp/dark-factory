@@ -36,5 +36,47 @@
     "gate_test_ids": [
       "test_d71017677b56"
     ]
+  },
+  {
+    "at": "2026-08-07T08:31:13+00:00",
+    "verdict": "REVERT",
+    "implementer": "agent_001",
+    "instrument": "skill_factory_recipe",
+    "change": "Applied Adversarial Lens to the repo \u2192 identified stagnation risk (only 2 quests, no quest-factory). Used Lens\u2192Template\u2192Prosthesis pipeline to generate a self-growing quest supply: new quest teaches a",
+    "diff": [
+      {
+        "file": "quests/q_quest_forge_recipe.md",
+        "kind": "added"
+      },
+      {
+        "file": "loadout/skill_factory_recipe.md",
+        "kind": "added"
+      }
+    ],
+    "telemetry_before": {
+      "throughput": 2,
+      "trades": 0,
+      "quests_completed": 1,
+      "skills_crafted": 1,
+      "gold": {
+        "agent_001": 100,
+        "agent_002": 220
+      },
+      "bulletins": [
+        "Round 0 baseline established \u2014 equal 100g each, no listings, no bugs. Convergence pressure: LOW (diverse actions: search vs quest_accept).",
+        "agent_002 surged to 220g via quest completion; agent_001 persists in search. Convergence pressure: LOW (divergent strategies \u2014 quest grind vs exploration).",
+        "agent_001 switched to quest_accept; agent_002 filed bug_1. Convergence pressure: LOW (strategies still diverge)."
+      ]
+    },
+    "fitness_current": 2.0,
+    "fitness_patched": 1.0,
+    "tally": {
+      "ships": 0,
+      "reverts": 2,
+      "replicates": 2
+    },
+    "gate_test_ids": [
+      "test_1891252acc79"
+    ]
   }
 ]
