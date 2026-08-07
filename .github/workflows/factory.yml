@@ -2,7 +2,9 @@ name: dark-factory
 
 on:
   schedule:
-    - cron: "17 6 * * *"        # one autonomous cycle per day
+    - cron: "17 6 * * *"        # heartbeat: one autonomous cycle per day
+  issues:
+    types: [opened]              # an issue landing CONVENES the dev system
   workflow_dispatch:
   pull_request:                  # compose-check gates human PRs too
     paths-ignore: ["LINEAGE.json"]
@@ -10,6 +12,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  issues: write
 
 jobs:
   compose-check:

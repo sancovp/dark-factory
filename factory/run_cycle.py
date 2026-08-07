@@ -58,6 +58,12 @@ GOLDEN = ROOT / ".claude" / "skills"
 LINEAGE = ROOT / "LINEAGE.json"
 PLAYERS = ["agent_001", "agent_002"]
 
+CHARTER = ("WE NEED TO WORK TOGETHER TO IMPROVE THE CODEBASE. Come up with "
+           "a skill that COMPOSES existing skills (a recipe) or is NEW, and "
+           "can be USED to do something that improves this repo. Craft it, "
+           "test it, trade it — the best one gets APPLIED to the repo and "
+           "shipped through CI/CD if it passes every gate.")
+
 DEV_ROUNDS = int(os.environ.get("FACTORY_DEV_ROUNDS", "3"))
 LIVE_ROUNDS = int(os.environ.get("FACTORY_LIVE_ROUNDS", "3"))
 REPLICATES = int(os.environ.get("FACTORY_REPLICATES", "2"))
@@ -225,6 +231,51 @@ async def _gate_package(patch: Path, diff: list, implementer_dir: str) -> dict:
     return {"alive": True, "cause": "pass", "minted": minted}
 
 
+def _open_issues(ci: bool) -> list:
+    """The live system's bug backlog (CI: real GitHub issues)."""
+    if not ci:
+        return []
+    try:
+        out = _sh("gh", "issue", "list", "--state", "open", "--limit", "10",
+                  "--json", "number,title")
+        return [{"number": i["number"], "title": i["title"]}
+                for i in json.loads(out or "[]")]
+    except Exception:
+        return []
+
+
+def _file_world_bugs(board: dict, ci: bool) -> list:
+    """Deity-VALIDATED bugs from the live board become GitHub Issues — the
+    `issues:` workflow trigger then convenes the dev system automatically
+    ("when it has issues it runs the dev system auto")."""
+    filed = []
+    if not ci:
+        return filed
+    try:
+        existing = {i["title"] for i in
+                    json.loads(_sh("gh", "issue", "list", "--state", "all",
+                                   "--limit", "50", "--json", "title") or "[]")}
+    except Exception:
+        existing = set()
+    for bug in board.get("bug_reports", []):
+        if bug.get("status") != "valid":
+            continue
+        title = f"[world-bug] {bug.get('title', bug.get('id', '?'))[:70]}"
+        if title in existing:
+            continue
+        try:
+            _sh("gh", "issue", "create", "--title", title, "--body",
+                f"Filed by the live world's deity-validated bug report.\n\n"
+                f"**Reporter:** {bug.get('reporter')}\n"
+                f"**Severity:** {bug.get('severity')}\n\n"
+                f"**Description:** {bug.get('description')}\n\n"
+                f"**Reproduction:** {bug.get('reproduction')}")
+            filed.append(title)
+        except Exception:
+            pass
+    return filed
+
+
 def _sh(*cmd: str) -> str:
     r = subprocess.run(cmd, capture_output=True, text=True, cwd=ROOT)
     if r.returncode != 0:
@@ -252,15 +303,20 @@ async def cycle(ci: bool) -> dict:
     print(f"  telemetry (current package): {tel['throughput']} throughput "
           f"({tel['trades']} trades, {tel['quests_completed']} quests, "
           f"{tel['skills_crafted']} crafts)")
+    filed = _file_world_bugs(board0, ci)
+    if filed:
+        print(f"  filed {len(filed)} world-bug issue(s): {filed}")
 
     # ── 1. the dev-world plays, aimed at the telemetry ──
-    aim = (f"THE LIVE GAME'S TELEMETRY: {json.dumps(tel)}. The leader wants "
-           f"the next PACKAGE CHANGE to raise live throughput — trade skills "
-           f"that sharpen your thinking about WHAT CHANGE the game needs.")
+    issues = _open_issues(ci)
+    aim = (f"{CHARTER}\nTHE LIVE GAME'S TELEMETRY: {json.dumps(tel)}."
+           + (f"\nOPEN ISSUES (the live system's bug backlog — address one "
+              f"if you can): {json.dumps(issues)}" if issues else ""))
     dev_agents, dev_quests, _ = _seed_world(
         workdir, "dev", WORLD / "quests", WORLD / "loadout")
     dev_board, dev_players = await _run_world(
-        dev_agents, dev_quests, DEV_ROUNDS, name="dev-world", extra_note=aim)
+        dev_agents, dev_quests, DEV_ROUNDS, name="dev-world", extra_note=aim,
+        bulletin=CHARTER)
     print(f"  dev-world: {len(dev_board.get('trade_history', []))} trades, "
           f"throughput {_throughput(dev_board)}")
 
