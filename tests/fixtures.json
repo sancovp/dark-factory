@@ -1,0 +1,5 @@
+{
+  "_note": "selftest fixtures \u2014 a known-broken and a known-better candidate, used ONLY to prove the gate/track machinery keyless. The autonomous dev seat never sees these.",
+  "broken": "# Skill: extract-emails\nExtract every email address from the text; output lowercased, sorted, comma-joined.\n\n```python\nimport re\ndef solve(text)\n    found = re.findall(r\"[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}\", text)\n    return \",\".join(sorted(set(found)))\n```\n",
+  "better": "# Skill: extract-emails\nExtract every email address from the text; output lowercased, sorted, comma-joined.\nHandles any casing.\n\n```python\nimport re\ndef solve(text):\n    found = re.findall(r\"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}\", text)\n    return \",\".join(sorted({f.lower() for f in found}))\n```\n"
+}
