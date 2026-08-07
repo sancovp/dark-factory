@@ -20,5 +20,23 @@
     "generation": 1,
     "incumbent_fitness": 6,
     "cases": 6
+  },
+  {
+    "at": "2026-08-07T07:27:29+00:00",
+    "car": "extract-emails-prose",
+    "kind": "prose",
+    "verdict": "REVERT",
+    "incumbent_fitness": 3,
+    "cases": 5,
+    "extinct": [],
+    "race": {
+      "control": 3.0,
+      "treatment": 3.0
+    },
+    "tally": {
+      "ships": 0,
+      "reverts": 3,
+      "replicates": 3
+    }
   }
 ]
