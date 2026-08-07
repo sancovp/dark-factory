@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 400" font-family="ui-sans-serif,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8b949e"/>
+    </marker>
+  </defs>
+
+  <!-- 0 TELEMETRY -->
+  <rect x="10" y="90" width="180" height="110" rx="14" fill="#1f6feb"/>
+  <text x="100" y="122" text-anchor="middle" fill="#fff" font-size="15.5" font-weight="700">0 · TELEMETRY</text>
+  <text x="100" y="145" text-anchor="middle" fill="#d3e4ff" font-size="12">a live world plays on</text>
+  <text x="100" y="162" text-anchor="middle" fill="#d3e4ff" font-size="12">the CURRENT package</text>
+  <text x="100" y="184" text-anchor="middle" fill="#fff" font-size="12" font-weight="600">→ throughput</text>
+
+  <line x1="190" y1="145" x2="212" y2="145" stroke="#8b949e" stroke-width="2" marker-end="url(#a)"/>
+
+  <!-- 1 DEV-WORLD -->
+  <rect x="216" y="90" width="180" height="110" rx="14" fill="#8250df"/>
+  <text x="306" y="122" text-anchor="middle" fill="#fff" font-size="15.5" font-weight="700">1 · DEV-WORLD</text>
+  <text x="306" y="145" text-anchor="middle" fill="#e5d5ff" font-size="12">convenes under the charter;</text>
+  <text x="306" y="162" text-anchor="middle" fill="#e5d5ff" font-size="12">agents craft + trade skills</text>
+  <text x="306" y="184" text-anchor="middle" fill="#fff" font-size="12" font-weight="600">the R&amp;D lab</text>
+
+  <line x1="396" y1="145" x2="418" y2="145" stroke="#8b949e" stroke-width="2" marker-end="url(#a)"/>
+
+  <!-- 2 APPLY -->
+  <rect x="422" y="90" width="180" height="110" rx="14" fill="#1a7f37"/>
+  <text x="512" y="122" text-anchor="middle" fill="#fff" font-size="15.5" font-weight="700">2 · APPLY</text>
+  <text x="512" y="145" text-anchor="middle" fill="#c8f0d0" font-size="12">the BOUGHT skill is executed</text>
+  <text x="512" y="162" text-anchor="middle" fill="#c8f0d0" font-size="12">on a repo checkout</text>
+  <text x="512" y="184" text-anchor="middle" fill="#fff" font-size="12" font-weight="600">→ the diff falls out</text>
+
+  <line x1="602" y1="145" x2="624" y2="145" stroke="#8b949e" stroke-width="2" marker-end="url(#a)"/>
+
+  <!-- 3 GATE -->
+  <rect x="628" y="90" width="180" height="110" rx="14" fill="#9e6a03"/>
+  <text x="718" y="122" text-anchor="middle" fill="#fff" font-size="15.5" font-weight="700">3 · GATE</text>
+  <text x="718" y="145" text-anchor="middle" fill="#ffe8b0" font-size="12">fresh-model test (test.sh)</text>
+  <text x="718" y="162" text-anchor="middle" fill="#ffe8b0" font-size="12">+ the package executes</text>
+  <text x="718" y="184" text-anchor="middle" fill="#fff" font-size="12" font-weight="600">mints the record</text>
+
+  <line x1="808" y1="145" x2="830" y2="145" stroke="#8b949e" stroke-width="2" marker-end="url(#a)"/>
+
+  <!-- 4 RACE -->
+  <rect x="834" y="90" width="180" height="110" rx="14" fill="#bf3989"/>
+  <text x="924" y="122" text-anchor="middle" fill="#fff" font-size="15.5" font-weight="700">4 · RACE</text>
+  <text x="924" y="145" text-anchor="middle" fill="#ffd3e8" font-size="12">current vs patched —</text>
+  <text x="924" y="162" text-anchor="middle" fill="#ffd3e8" font-size="12">two live worlds, one variable,</text>
+  <text x="924" y="184" text-anchor="middle" fill="#fff" font-size="12" font-weight="600">replicated → causal verdict</text>
+
+  <!-- split to ship / receipt -->
+  <path d="M 1014 120 C 1036 108, 1042 100, 1056 92" fill="none" stroke="#8b949e" stroke-width="2" marker-end="url(#a)"/>
+  <text x="1036" y="92" text-anchor="middle" fill="#8b949e" font-size="11">strict win</text>
+  <path d="M 1014 172 C 1036 190, 1042 210, 1056 232" fill="none" stroke="#8b949e" stroke-width="2" marker-end="url(#a)"/>
+  <text x="1038" y="222" text-anchor="middle" fill="#8b949e" font-size="11">tie / loss</text>
+
+  <!-- 5a SHIP -->
+  <rect x="1060" y="45" width="170" height="90" rx="14" fill="#238636"/>
+  <text x="1145" y="76" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">5 · SHIP</text>
+  <text x="1145" y="98" text-anchor="middle" fill="#d2ffd8" font-size="11.5">the factory merges its own PR;</text>
+  <text x="1145" y="114" text-anchor="middle" fill="#d2ffd8" font-size="11.5">the diff is now the package</text>
+
+  <!-- 5b RECEIPT -->
+  <rect x="1060" y="210" width="170" height="90" rx="14" fill="#da3633"/>
+  <text x="1145" y="241" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">5 · RECEIPT</text>
+  <text x="1145" y="263" text-anchor="middle" fill="#ffd7d5" font-size="11.5">PR closed, verdict attached —</text>
+  <text x="1145" y="279" text-anchor="middle" fill="#ffd7d5" font-size="11.5">the public graveyard</text>
+
+  <!-- gate death loop back to dev -->
+  <path d="M 700 200 C 660 262, 380 262, 320 204" fill="none" stroke="#8b949e" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#a)"/>
+  <text x="510" y="262" text-anchor="middle" fill="#8b949e" font-size="11.5">☠ dies at the gate — the cause is the next cycle's signal</text>
+
+  <!-- ship closes the loop back to telemetry -->
+  <path d="M 1145 135 C 1145 350, 300 355, 102 204" fill="none" stroke="#8b949e" stroke-width="2" marker-end="url(#a)"/>
+  <text x="640" y="345" text-anchor="middle" fill="#8b949e" font-size="11.5">…and the live world now plays the NEW version — the loop closes</text>
+</svg>

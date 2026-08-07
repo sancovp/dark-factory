@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 560" font-family="ui-sans-serif,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8b949e"/>
+    </marker>
+  </defs>
+
+  <!-- DEITY -->
+  <rect x="360" y="18" width="280" height="96" rx="14" fill="#8250df"/>
+  <text x="500" y="48" text-anchor="middle" fill="#fff" font-size="16" font-weight="700">⚖ THE DEITY</text>
+  <text x="500" y="70" text-anchor="middle" fill="#e5d5ff" font-size="12">narrates · applies selection pressure ("diverge!")</text>
+  <text x="500" y="88" text-anchor="middle" fill="#e5d5ff" font-size="12">rules on quality disputes · validates bug reports</text>
+
+  <!-- deity arrows down -->
+  <line x1="430" y1="114" x2="380" y2="188" stroke="#8b949e" stroke-width="2" marker-end="url(#a)"/>
+  <line x1="570" y1="114" x2="620" y2="188" stroke="#8b949e" stroke-width="2" marker-end="url(#a)"/>
+  <text x="500" y="150" text-anchor="middle" fill="#8b949e" font-size="11.5">bulletins · rulings</text>
+
+  <!-- TRADE BOARD (center) -->
+  <rect x="330" y="192" width="340" height="120" rx="14" fill="#9e6a03"/>
+  <text x="500" y="222" text-anchor="middle" fill="#fff" font-size="16" font-weight="700">🏪 THE TRADE BOARD</text>
+  <text x="500" y="245" text-anchor="middle" fill="#ffe8b0" font-size="12">listings need a TEST RECORD — no test, no listing</text>
+  <text x="500" y="263" text-anchor="middle" fill="#ffe8b0" font-size="12">buying is real: gold moves, the buyer gets the file</text>
+  <text x="500" y="286" text-anchor="middle" fill="#fff" font-size="12" font-weight="600">a peer paying gold = the honest signal</text>
+
+  <!-- AGENT 1 -->
+  <rect x="30" y="180" width="230" height="150" rx="14" fill="#1f6feb"/>
+  <text x="145" y="210" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">🤖 agent_001</text>
+  <text x="145" y="232" text-anchor="middle" fill="#d3e4ff" font-size="12">an AI embodied in its directory</text>
+  <text x="145" y="252" text-anchor="middle" fill="#d3e4ff" font-size="12" font-family="ui-monospace,Menlo,monospace">💰 gold: 100</text>
+  <text x="145" y="274" text-anchor="middle" fill="#d3e4ff" font-size="12">crafts skills → real .md files</text>
+  <text x="145" y="294" text-anchor="middle" fill="#d3e4ff" font-size="12">tests · sells · buys · quests</text>
+  <text x="145" y="314" text-anchor="middle" fill="#d3e4ff" font-size="12">audits the game for exploits</text>
+
+  <!-- AGENT 2 -->
+  <rect x="740" y="180" width="230" height="150" rx="14" fill="#1f6feb"/>
+  <text x="855" y="210" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">🤖 agent_002</text>
+  <text x="855" y="232" text-anchor="middle" fill="#d3e4ff" font-size="12">an AI embodied in its directory</text>
+  <text x="855" y="252" text-anchor="middle" fill="#d3e4ff" font-size="12" font-family="ui-monospace,Menlo,monospace">💰 gold: 100</text>
+  <text x="855" y="274" text-anchor="middle" fill="#d3e4ff" font-size="12">crafts skills → real .md files</text>
+  <text x="855" y="294" text-anchor="middle" fill="#d3e4ff" font-size="12">tests · sells · buys · quests</text>
+  <text x="855" y="314" text-anchor="middle" fill="#d3e4ff" font-size="12">audits the game for exploits</text>
+
+  <!-- agent <-> board arrows -->
+  <line x1="260" y1="230" x2="326" y2="230" stroke="#8b949e" stroke-width="2" marker-end="url(#a)"/>
+  <text x="293" y="218" text-anchor="middle" fill="#8b949e" font-size="11">craft → test → post</text>
+  <line x1="326" y1="285" x2="260" y2="285" stroke="#8b949e" stroke-width="2" marker-end="url(#a)"/>
+  <text x="293" y="303" text-anchor="middle" fill="#8b949e" font-size="11">buy (gold ⇄ file)</text>
+
+  <line x1="740" y1="230" x2="674" y2="230" stroke="#8b949e" stroke-width="2" marker-end="url(#a)"/>
+  <text x="707" y="218" text-anchor="middle" fill="#8b949e" font-size="11">craft → test → post</text>
+  <line x1="674" y1="285" x2="740" y2="285" stroke="#8b949e" stroke-width="2" marker-end="url(#a)"/>
+  <text x="707" y="303" text-anchor="middle" fill="#8b949e" font-size="11">buy (gold ⇄ file)</text>
+
+  <!-- QUESTS -->
+  <rect x="120" y="390" width="300" height="90" rx="14" fill="#1a7f37"/>
+  <text x="270" y="420" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">📜 QUESTS</text>
+  <text x="270" y="442" text-anchor="middle" fill="#c8f0d0" font-size="12">"craft a lens-type skill → 60 gold"</text>
+  <text x="270" y="460" text-anchor="middle" fill="#c8f0d0" font-size="12">rewards parsed from the quest FILE — no lying</text>
+
+  <!-- BUG BOUNTIES -->
+  <rect x="580" y="390" width="300" height="90" rx="14" fill="#da3633"/>
+  <text x="730" y="420" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">🐛 BUG BOUNTIES</text>
+  <text x="730" y="442" text-anchor="middle" fill="#ffd7d5" font-size="12">find a REAL exploit in the economy → 100g</text>
+  <text x="730" y="460" text-anchor="middle" fill="#ffd7d5" font-size="12">the deity validates; the season advance pays</text>
+
+  <!-- arrows to bottom row -->
+  <line x1="180" y1="330" x2="230" y2="386" stroke="#8b949e" stroke-width="2" marker-end="url(#a)"/>
+  <line x1="820" y1="330" x2="770" y2="386" stroke="#8b949e" stroke-width="2" marker-end="url(#a)"/>
+
+  <!-- season ratchet note -->
+  <text x="500" y="524" text-anchor="middle" fill="#8b949e" font-size="12.5" font-style="italic">seasons end · gold resets to 100 · bounties pay on top — but the QUALITY BAR only ratchets up</text>
+  <text x="500" y="545" text-anchor="middle" fill="#8b949e" font-size="12.5" font-weight="600">the game manufactures honest signals about which skills matter</text>
+</svg>

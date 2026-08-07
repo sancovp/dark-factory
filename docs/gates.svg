@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 330" font-family="ui-sans-serif,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8b949e"/>
+    </marker>
+  </defs>
+
+  <!-- everything crafted -->
+  <text x="90" y="60" text-anchor="middle" fill="#8b949e" font-size="13" font-weight="600">everything the</text>
+  <text x="90" y="78" text-anchor="middle" fill="#8b949e" font-size="13" font-weight="600">dev-world crafts</text>
+  <g fill="#8b949e" opacity="0.85">
+    <rect x="40" y="100" width="22" height="22" rx="4"/>
+    <rect x="70" y="100" width="22" height="22" rx="4"/>
+    <rect x="100" y="100" width="22" height="22" rx="4"/>
+    <rect x="55" y="130" width="22" height="22" rx="4"/>
+    <rect x="85" y="130" width="22" height="22" rx="4"/>
+    <rect x="115" y="130" width="22" height="22" rx="4"/>
+    <rect x="40" y="160" width="22" height="22" rx="4"/>
+    <rect x="70" y="160" width="22" height="22" rx="4"/>
+    <rect x="100" y="160" width="22" height="22" rx="4"/>
+  </g>
+
+  <line x1="150" y1="140" x2="196" y2="140" stroke="#8b949e" stroke-width="2" marker-end="url(#a)"/>
+
+  <!-- GATE 1: MARKET -->
+  <rect x="200" y="60" width="220" height="170" rx="14" fill="#9e6a03"/>
+  <text x="310" y="92" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">GATE 1 · THE MARKET</text>
+  <text x="310" y="118" text-anchor="middle" fill="#ffe8b0" font-size="12.5">a peer must PAY GOLD for it</text>
+  <text x="310" y="150" text-anchor="middle" fill="#fff" font-size="12" font-weight="600">kills:</text>
+  <text x="310" y="170" text-anchor="middle" fill="#ffe8b0" font-size="12">self-assessed value —</text>
+  <text x="310" y="188" text-anchor="middle" fill="#ffe8b0" font-size="12">skills nobody actually wants</text>
+
+  <line x1="420" y1="140" x2="466" y2="140" stroke="#8b949e" stroke-width="2" marker-end="url(#a)"/>
+
+  <!-- GATE 2: FRESH MODEL -->
+  <rect x="470" y="60" width="220" height="170" rx="14" fill="#8250df"/>
+  <text x="580" y="92" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">GATE 2 · FRESH MODEL</text>
+  <text x="580" y="118" text-anchor="middle" fill="#e5d5ff" font-size="12.5">a BLANK instance must follow it</text>
+  <text x="580" y="134" text-anchor="middle" fill="#e5d5ff" font-size="12.5">from its text alone (test.sh)</text>
+  <text x="580" y="162" text-anchor="middle" fill="#fff" font-size="12" font-weight="600">kills:</text>
+  <text x="580" y="182" text-anchor="middle" fill="#e5d5ff" font-size="12">context-dependent skills +</text>
+  <text x="580" y="200" text-anchor="middle" fill="#e5d5ff" font-size="12">forged records (the factory mints)</text>
+
+  <line x1="690" y1="140" x2="736" y2="140" stroke="#8b949e" stroke-width="2" marker-end="url(#a)"/>
+
+  <!-- GATE 3: THE RACE -->
+  <rect x="740" y="60" width="220" height="170" rx="14" fill="#bf3989"/>
+  <text x="850" y="92" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">GATE 3 · THE RACE</text>
+  <text x="850" y="118" text-anchor="middle" fill="#ffd3e8" font-size="12.5">live world WITH it must out-produce</text>
+  <text x="850" y="134" text-anchor="middle" fill="#ffd3e8" font-size="12.5">live world WITHOUT it — replicated</text>
+  <text x="850" y="162" text-anchor="middle" fill="#fff" font-size="12" font-weight="600">kills:</text>
+  <text x="850" y="182" text-anchor="middle" fill="#ffd3e8" font-size="12">plausible-but-useless changes,</text>
+  <text x="850" y="200" text-anchor="middle" fill="#ffd3e8" font-size="12">however confidently argued</text>
+
+  <line x1="960" y1="140" x2="1006" y2="140" stroke="#8b949e" stroke-width="2" marker-end="url(#a)"/>
+
+  <!-- THE CANON -->
+  <rect x="1010" y="95" width="96" height="90" rx="14" fill="#238636"/>
+  <text x="1058" y="130" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">THE</text>
+  <text x="1058" y="150" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">CANON</text>
+  <text x="1058" y="172" text-anchor="middle" fill="#d2ffd8" font-size="11">shipped ✓</text>
+
+  <!-- fallout -->
+  <line x1="310" y1="230" x2="310" y2="268" stroke="#8b949e" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#a)"/>
+  <line x1="580" y1="230" x2="580" y2="268" stroke="#8b949e" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#a)"/>
+  <line x1="850" y1="230" x2="850" y2="268" stroke="#8b949e" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#a)"/>
+  <text x="580" y="295" text-anchor="middle" fill="#8b949e" font-size="12.5" font-style="italic">what falls through becomes a closed PR or a lineage entry — the receipts</text>
+  <text x="580" y="318" text-anchor="middle" fill="#8b949e" font-size="12.5" font-weight="600">none of the three gates is anyone's opinion of their own work</text>
+</svg>

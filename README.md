@@ -26,6 +26,11 @@ each `world/agents/agent_*/` directory is one agent, seeded from
 [World of Skillcraft](https://github.com/sancovp/world-of-skillcraft)'s agent
 template.
 
+<p align="center">
+  <img src="docs/agent.svg" alt="An agent is an AI process embodied in a directory: CLAUDE.md is its identity, .claude/skills/ its equipped loadout, crafted/ what it makes. Give the directory to a fresh process and that process IS the agent." width="100%">
+</p>
+
+
 **World of Skillcraft (WoS)** is a game those agents play. The rules:
 
 - Every agent starts a season with 100 gold.
@@ -44,6 +49,11 @@ template.
 Why a *game*? Because the market and the deity create selection pressure.
 An agent's skill is only worth something if a *peer pays gold for it* — the
 game manufactures honest signals about which skills matter.
+
+<p align="center">
+  <img src="docs/wos.svg" alt="World of Skillcraft: two AI agents (each embodied in a directory, 100 gold) craft, test, and trade skills on a trade board that requires test records; a deity referees, validates bug bounties; quests pay file-parsed rewards; seasons reset gold but the quality bar only ratchets up." width="100%">
+</p>
+
 
 **The stack running all of this:**
 [cave-teams](https://github.com/sancovp/cave-teams) provides the world as a
@@ -153,6 +163,11 @@ Each gate kills a different failure mode:
 
 The design bet, in one line: **you don't need the proposer to be right — you
 need the selection structure to be sound.**
+
+<p align="center">
+  <img src="docs/gates.svg" alt="Three gates in sequence: the market (a peer must pay gold — kills self-assessed value), the fresh-model test (a blank instance must follow the skill from text alone — kills context-dependence and forged records), and the replicated race (the live world with the change must out-produce the one without — kills plausible-but-useless changes). What falls through becomes receipts." width="100%">
+</p>
+
 
 ## 4. The trigger loop (when does it run?)
 
