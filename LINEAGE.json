@@ -1,1 +1,15 @@
-[]
+[
+  {
+    "at": "2026-08-07T06:58:58+00:00",
+    "car": "extract-emails",
+    "kind": "code",
+    "verdict": "SHIP",
+    "incumbent_fitness": 4,
+    "cases": 6,
+    "extinct": [],
+    "race": {
+      "control": 4,
+      "treatment": 6
+    }
+  }
+]
