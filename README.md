@@ -1,4 +1,4 @@
-# 🏭 dark-factory
+# 🌑🏭 dark-factory
 
 > **A repository that improves its own contents — and only merges a change it
 > can prove made things better.**
@@ -49,15 +49,9 @@ even adversarially wrong. The selection structure is what's sound.
 
 ## ⚙️ How the loop works
 
-```mermaid
-flowchart LR
-  A["⏰ daily cron"] --> B["dev seat (AI)<br/>sees: skill + failing inputs"]
-  B -->|proposed edit| C{"🚧 the gate<br/>execute in sandbox"}
-  C -->|"can't run → dead<br/>(cause fed back, retry)"| B
-  C -->|runs| D{"🏁 the race<br/>A/B vs incumbent,<br/>same battery"}
-  D -->|"strict win"| E["✅ PR opened<br/>and MERGED<br/>score in title"]
-  D -->|"tie / worse"| F["❌ PR opened<br/>and CLOSED<br/>verdict in comment"]
-```
+<p align="center">
+  <img src="docs/factory-loop.svg" alt="The loop: daily cron → dev seat (sees skill + failing inputs) → the gate (execute in sandbox; dead proposals loop back with the cause) → the race (A/B vs incumbent on the same battery) → strict win = PR merged by the bot / tie or worse = PR closed as a receipt" width="100%">
+</p>
 
 1. **Propose** — the dev seat gets the skill + its failing inputs and returns
    an edited document.
