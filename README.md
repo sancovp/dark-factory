@@ -184,6 +184,10 @@ need the selection structure to be sound.**
   fix changes live play.
 - **Manual** — `workflow_dispatch` from the Actions tab, or run it locally.
 
+<p align="center">
+  <img src="docs/loop.svg" alt="The closed loop: live play, in-game bugs (deity-validated), GitHub issues, the dev-world convenes, gates and ship, live play resumes on the new version — the daily cron as heartbeat." width="100%">
+</p>
+
 ## 5. Reading the repo
 
 | path | what it is |
