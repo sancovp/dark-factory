@@ -51,12 +51,12 @@ even adversarially wrong. The selection structure is what's sound.
 
 ```mermaid
 flowchart LR
-  A["⏰ daily cron"] --> B["dev seat (AI)\nsees: skill + failing inputs"]
-  B -->|proposed edit| C{"🚧 the gate\nexecute in sandbox"}
-  C -->|"can't run → dead\n(cause fed back, retry)"| B
-  C -->|runs| D{"🏁 the race\nA/B vs incumbent,\nsame battery"}
-  D -->|"strict win"| E["✅ PR opened\nand MERGED\nscore in title"]
-  D -->|"tie / worse"| F["❌ PR opened\nand CLOSED\nverdict in comment"]
+  A["⏰ daily cron"] --> B["dev seat (AI)<br/>sees: skill + failing inputs"]
+  B -->|proposed edit| C{"🚧 the gate<br/>execute in sandbox"}
+  C -->|"can't run → dead<br/>(cause fed back, retry)"| B
+  C -->|runs| D{"🏁 the race<br/>A/B vs incumbent,<br/>same battery"}
+  D -->|"strict win"| E["✅ PR opened<br/>and MERGED<br/>score in title"]
+  D -->|"tie / worse"| F["❌ PR opened<br/>and CLOSED<br/>verdict in comment"]
 ```
 
 1. **Propose** — the dev seat gets the skill + its failing inputs and returns
