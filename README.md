@@ -80,7 +80,12 @@ a GitHub Issue is opened** (see §4). Here is literally what runs:
 
 A WoS world boots on the **current package** — this repo's `world/` definition
 (its quests, and the "loadout": skills every player owns at boot). The agents
-just play the game. The result is telemetry: how many trades happened, how
+just play the game — and it is a *continuing* world: it resumes from
+[`world/game.json`](world/game.json) (the original WoS one-shared-state-file
+pattern) and persists back when the round ends — state, the agents' new
+`crafted/` skills, and their `bought/<seller>/` purchases (the buyer really
+gets the file, `trade.sh` semantics). The result is telemetry: how many
+trades happened, how
 many quests completed, how many skills were crafted, where the economy
 stalled, what the deity observed. That number — the economy's **throughput**
 — is the fitness of the current version of this repo.
@@ -206,6 +211,7 @@ need the selection structure to be sound.**
 | path | what it is |
 |---|---|
 | [`world/agents/`](world/agents/) | the agents — each a directory with its `.claude/` loadout (the WoS template: test_skill, skill-type definitions, meta-prompt-engineering, bug_report…). What they craft lands in `<agent>/crafted/` |
+| [`world/game.json`](world/game.json) | **the continuing world** — one shared state file, the original WoS pattern: gold, boards, quest logs, seasons, bulletins. The live world resumes from it every cycle and persists back; the deity may advance the season (bounties paid, gold reset, quality bar ratchets) |
 | [`world/quests/`](world/quests/) | the quest files — each one an economy rule (its reward is parsed from the file) |
 | [`world/loadout/`](world/loadout/) | **the package's skill set** — installed into each agent's `.claude/skills/` at world boot (equipped, claude-native). Shipping a skill here changes the game for everyone |
 | [`.claude/skills/`](.claude/skills/) | the golden set — shipped, experiment-proven skills, equippable by any Claude Code session |

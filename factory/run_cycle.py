@@ -46,7 +46,8 @@ import tempfile
 from pathlib import Path
 
 from cave_teams.skillcraft import (SkillcraftWorld, initial_state,
-                                   post_bulletin, _grep_reward)
+                                   post_bulletin, _grep_reward,
+                                   skillcraft_advance)
 from cave_teams.darkfactory import CarKind, Championship, racetrack
 
 from .wos_team import WoSPlayer, WoSDeity, last_json
@@ -69,6 +70,7 @@ LIVE_ROUNDS = int(os.environ.get("FACTORY_LIVE_ROUNDS", "3"))
 REPLICATES = int(os.environ.get("FACTORY_REPLICATES", "2"))
 MAX_RUNS_PER_DAY = int(os.environ.get("FACTORY_MAX_RUNS_PER_DAY", "4"))
 RULES = WORLD / "rules"
+GAME = WORLD / "game.json"           # THE CONTINUING WORLD (WoS's game.json)
 MAX_RULES = int(os.environ.get("FACTORY_MAX_RULES", "12"))
 
 
@@ -87,6 +89,37 @@ def _record(entry: dict) -> None:
     log = json.loads(LINEAGE.read_text()) if LINEAGE.exists() else []
     log.append(entry)
     _guard(LINEAGE).write_text(json.dumps(log, indent=2) + "\n")
+
+
+def _load_board() -> dict:
+    """The continuing live world — world/game.json, exactly WoS's pattern
+    (one shared state file at the game dir's root). Born fresh only once."""
+    if GAME.exists():
+        return json.loads(GAME.read_text())
+    board = initial_state(PLAYERS)
+    post_bulletin(board, "The world is born. Test before you list. "
+                         "Diverge — quests and audits pay.")
+    return board
+
+
+def _persist_live(board: dict, agents_root: str, ci: bool) -> None:
+    """The live world CONTINUES: its board becomes world/game.json and the
+    agents' crafted/ + bought/ merge back into the repo's agent dirs —
+    seasons, lore, gold, and artifacts accumulate like the original repo."""
+    _guard(GAME).write_text(json.dumps(board, indent=2) + "\n")
+    for a in PLAYERS:
+        for sub in ("crafted", "bought"):
+            src = Path(agents_root) / a / sub
+            if src.is_dir():
+                dst = _guard(WORLD / "agents" / a / sub)
+                shutil.copytree(src, dst, dirs_exist_ok=True)
+    if ci:
+        _sh("git", "pull", "--rebase")
+        _sh("git", "add", str(WORLD))
+        _sh("git", "commit", "-m",
+            f"live: the world continues (season "
+            f"{board.get('season', {}).get('number')}, tick +{LIVE_ROUNDS})")
+        _sh("git", "push")
 
 
 def _load_rules() -> str:
@@ -123,9 +156,13 @@ async def _deity_retrospective(entry: dict, ci: bool) -> list:
         "What did this cycle teach? A death at the gate, a reverted race, a "
         "wasted dev-world, a shipped win — each may earn a rule that makes "
         "the NEXT cycle develop better. Reply ONLY JSON: "
+        'You also hold deity-season.sh: set "advance_season": true ONLY '
+        "when the live season has run its course (stagnant economy, lessons "
+        "absorbed) — it pays bounties, resets gold to the floor, and RATCHETS "
+        "the quality bar. Reply ONLY JSON: "
         '{"rules":[{"name":"<snake_case>","text":"<one operational rule, '
-        '<=60 words>"}],"reasoning":"<one line>"} — an empty rules list is a '
-        "valid answer if nothing was earned.")
+        '<=60 words>"}],"advance_season":false,"reasoning":"<one line>"} — '
+        "an empty rules list is a valid answer if nothing was earned.")
     o = last_json(out if isinstance(out, str) else str(out),
                   keys=("rules",), default={})
     written = []
@@ -148,6 +185,19 @@ async def _deity_retrospective(entry: dict, ci: bool) -> list:
             _sh("git", "add", str(RULES))
             _sh("git", "commit", "-m",
                 f"deity: standing rule(s) accumulated — {', '.join(written)}")
+            _sh("git", "push")
+    if o.get("advance_season") and GAME.exists():
+        board = json.loads(GAME.read_text())
+        nxt = skillcraft_advance()(board, board.get("season", {})
+                                   .get("number", 1) + 1)
+        _guard(GAME).write_text(json.dumps(nxt, indent=2) + "\n")
+        print(f"  deity ADVANCED THE SEASON → {nxt['season']['number']} "
+              f"(bounties paid, gold reset, ratchet carried)")
+        if ci:
+            _sh("git", "pull", "--rebase")
+            _sh("git", "add", str(GAME))
+            _sh("git", "commit", "-m",
+                f"deity: season advanced → {nxt['season']['number']}")
             _sh("git", "push")
     return written
 
@@ -189,12 +239,16 @@ def _seed_world(workdir: Path, tag: str, quests_src: Path,
 
 async def _run_world(agents_root: str, quests_root: str, rounds: int,
                      name: str, extra_note: str = "",
-                     bulletin: str = "") -> tuple:
+                     bulletin: str = "", start_board: dict = None) -> tuple:
     """One SkillcraftWorld game (players + deity). Returns (board, players) —
     the players' runtimes persist so the implementer can keep its context."""
-    state = initial_state(PLAYERS)
-    post_bulletin(state, bulletin or "Test before you list. Diverge — quests "
-                                     "and audits pay.")
+    state = (json.loads(json.dumps(start_board)) if start_board
+             else initial_state(PLAYERS))
+    if bulletin:
+        post_bulletin(state, bulletin)
+    elif not start_board:
+        post_bulletin(state, "Test before you list. Diverge — quests "
+                             "and audits pay.")
     rules_text = _load_rules()
     players = {a: WoSPlayer(a, agents_root, quests_root, extra_note=extra_note,
                             rules_text=rules_text)
@@ -230,6 +284,10 @@ def _telemetry(board: dict) -> dict:
                           for x in board.get("deity_bulletin", [])][-3:]}
 
 
+def _delta_throughput(after: dict, before: dict) -> int:
+    return _throughput(after) - _throughput(before)
+
+
 def _live_kind(workdir: Path, patch: Path) -> CarKind:
     """The racetrack CarKind: car = {'package': 'current'|'patched'}. race() =
     play a full live WoS on that package version."""
@@ -246,9 +304,11 @@ def _live_kind(workdir: Path, patch: Path) -> CarKind:
         note = (f"You have these loadout skills EQUIPPED (in your "
                 f".claude/skills/): {loadout} — APPLY them whenever they "
                 f"help your play." if loadout else "")
+        start = _load_board()
         board, _ = await _run_world(agents_root, quests, LIVE_ROUNDS,
-                                    name=f"live:{tag}", extra_note=note)
-        return {"tag": tag, "fitness": _throughput(board),
+                                    name=f"live:{tag}", extra_note=note,
+                                    start_board=start)
+        return {"tag": tag, "fitness": _delta_throughput(board, start),
                 "trades": len(board.get("trade_history", [])), "car": dict(car)}
 
     async def _viability(car, _wd):
@@ -413,7 +473,9 @@ async def cycle(ci: bool) -> dict:
     note = (f"You have these loadout skills EQUIPPED (in your "
             f".claude/skills/): {loadout} — apply them." if loadout else "")
     board0, _ = await _run_world(agents_root, quests, LIVE_ROUNDS,
-                                 name="live:telemetry", extra_note=note)
+                                 name="live:telemetry", extra_note=note,
+                                 start_board=_load_board())
+    _persist_live(board0, agents_root, ci)
     tel = _telemetry(board0)
     print(f"  telemetry (current package): {tel['throughput']} throughput "
           f"({tel['trades']} trades, {tel['quests_completed']} quests, "

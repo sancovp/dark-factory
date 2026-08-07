@@ -1,0 +1,46 @@
+{
+  "season": {
+    "number": 1,
+    "title": null,
+    "started_at": null,
+    "rarity_consensus": {
+      "template": "common",
+      "lens": "uncommon",
+      "prosthesis": "rare",
+      "towering": "rare",
+      "combiner": "uncommon",
+      "persona": "rare",
+      "recipe": "epic"
+    }
+  },
+  "agents": {
+    "agent_001": {
+      "gold": 100,
+      "last_action": null,
+      "last_action_at": null,
+      "skills_crafted": 0,
+      "trades_completed": 0,
+      "quests_completed": 0
+    },
+    "agent_002": {
+      "gold": 100,
+      "last_action": null,
+      "last_action_at": null,
+      "skills_crafted": 0,
+      "trades_completed": 0,
+      "quests_completed": 0
+    }
+  },
+  "trade_board": [],
+  "trade_history": [],
+  "lfg_board": [],
+  "quest_log": {},
+  "deity_bulletin": [
+    {
+      "season": 1,
+      "message": "The world is born. Test before you list. Diverge \u2014 quests and audits pay.",
+      "posted_at": "2026-08-07T09:46:14Z"
+    }
+  ],
+  "bug_reports": []
+}
