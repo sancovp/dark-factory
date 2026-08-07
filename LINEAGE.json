@@ -11,5 +11,14 @@
       "control": 4,
       "treatment": 6
     }
+  },
+  {
+    "at": "2026-08-07T07:25:05+00:00",
+    "car": "extract-emails",
+    "kind": "code",
+    "verdict": "SATURATED",
+    "generation": 1,
+    "incumbent_fitness": 6,
+    "cases": 6
   }
 ]
