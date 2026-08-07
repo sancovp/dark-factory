@@ -1,16 +1,35 @@
-"""The factory runner — one autonomous cycle per car, path-guarded.
+"""The dark factory — cave-teams acting the dark-factory way (DESIGN §1–§3:
+the product is THE PACKAGE — the game itself. WoS improves WoS).
 
-    python -m factory.run_cycle             # local: cycle every car, print verdicts
-    python -m factory.run_cycle --ci        # in Actions: PR per proposal, merge on SHIP
-    python -m factory.run_cycle --selftest  # keyless: fixture candidate through the
-                                            # full gate+championship machinery
+  0. TELEMETRY   the live-world plays on the CURRENT package (the repo's
+                 world/ definition). Its numbers — throughput, stalls, where
+                 the economy converges — are the spec that aims dev.
+  1. DEV-WORLD   a real SkillcraftWorld (MiniMax players + deity, agent dirs
+                 seeded from world-of-skillcraft's _template with full .claude
+                 loadouts) plays WoS aimed at that telemetry: agents trade
+                 skills to get BETTER AT THINKING about the change (the skill
+                 economy = the dev substrate, not the product).
+  2. IMPLEMENT   ONE agent — the market's most successful (top gold) — writes
+                 THE DIFF: a change to the package (a quest = an economy rule,
+                 or a loadout skill every player owns at boot).
+  3. GATE        the changed package must EXECUTE: quests must carry a
+                 grep-able reward (the anti-injection economy rule), the
+                 patched world must seed, and any new/changed skill file must
+                 pass the fresh-model test (WoS test_skill/test.sh verbatim —
+                 factory/gate.py; the gate's run mints the independent
+                 record). Failure = the implementer's lineage dies; the cause
+                 is the next cycle's signal.
+  4. RACETRACK   live world on the CURRENT package vs live world on the
+                 PATCHED package — identical, one variable. Fitness = the
+                 live economy's throughput. Replicated (Championship): live
+                 worlds are stochastic. [cave_teams.darkfactory]
+  5. SHIP        a strict causal win ⇒ the diff merges into world/ (+ shipped
+                 loadout skills → .claude/skills/, golden + equippable) via a
+                 PR the factory merges itself. Anything else ⇒ the PR closes
+                 as a receipt. dev → PR → CI/CD → live → telemetry → dev.
 
-CONTAINMENT (v1, non-negotiable):
-  * every write goes through _guarded_write, which refuses any path outside
-    garage/ or LINEAGE.json — the factory cannot touch .github/, its own
-    runner, or anything else (no self-modifying CI);
-  * the autonomous path runs only while the FACTORY_ON file exists;
-  * prose cars are skipped cleanly when MINIMAX_API_KEY is absent.
+Containment: writes only world/, .claude/skills/, LINEAGE.json. FACTORY_ON is
+the kill switch.
 """
 from __future__ import annotations
 
@@ -19,66 +38,191 @@ import asyncio
 import datetime
 import json
 import os
+import re
+import shutil
 import subprocess
 import sys
 import tempfile
 from pathlib import Path
 
-from cave_teams.darkfactory import DarkFactory, proposer_from_fn
-from cave_teams.skillcar import skill_kind, new_skill_car
+from cave_teams.skillcraft import (SkillcraftWorld, initial_state,
+                                   post_bulletin, _grep_reward)
+from cave_teams.darkfactory import CarKind, Championship, racetrack
 
-from . import seats
+from .wos_team import WoSPlayer, WoSDeity, last_json
+from .gate import fresh_test
 
 ROOT = Path(__file__).resolve().parent.parent
-GARAGE = ROOT / "garage"
+WORLD = ROOT / "world"
+GOLDEN = ROOT / ".claude" / "skills"
 LINEAGE = ROOT / "LINEAGE.json"
+PLAYERS = ["agent_001", "agent_002"]
+
+DEV_ROUNDS = int(os.environ.get("FACTORY_DEV_ROUNDS", "3"))
+LIVE_ROUNDS = int(os.environ.get("FACTORY_LIVE_ROUNDS", "3"))
+REPLICATES = int(os.environ.get("FACTORY_REPLICATES", "2"))
 
 
-def _guarded_write(path: Path, text: str) -> None:
-    """THE containment: refuse any write outside garage/ or LINEAGE.json."""
+def _guard(path: Path) -> Path:
     p = path.resolve()
-    if not (str(p).startswith(str(GARAGE.resolve()) + os.sep)
-            or p == LINEAGE.resolve()):
-        raise PermissionError(f"factory may not write outside garage/: {p}")
-    p.parent.mkdir(parents=True, exist_ok=True)
-    p.write_text(text, encoding="utf-8")
-
-
-def _load_car(car_dir: Path) -> dict:
-    meta = json.loads((car_dir / "car.json").read_text())
-    car = new_skill_car((car_dir / "skill.md").read_text(),
-                        name=meta["name"])
-    car["kind"] = meta["kind"]
-    car["generation"] = meta.get("generation", 0)
-    return car
-
-
-def _battery(car_dir: Path) -> list:
-    return json.loads((car_dir / "battery.json").read_text())
-
-
-def _kind_for(car: dict, battery: list, replicates_hint: dict):
-    if car["kind"] == "prose":
-        async def judge(a, t, w):
-            return await asyncio.to_thread(seats.fresh_judge, a, t, w)
-        replicates_hint["n"] = int(os.environ.get("FACTORY_REPLICATES", "3"))
-        return skill_kind(battery, executor=judge, require_block=False,
-                          name="prose-car")
-    replicates_hint["n"] = 1                 # subprocess judge is deterministic
-    return skill_kind(battery, name="code-car")
+    ok = (str(p).startswith(str(WORLD.resolve()) + os.sep)
+          or str(p).startswith(str(GOLDEN.resolve()) + os.sep)
+          or p == LINEAGE.resolve())
+    if not ok:
+        raise PermissionError(f"factory may not write outside world/, "
+                              f".claude/skills/, LINEAGE.json: {p}")
+    return p
 
 
 def _record(entry: dict) -> None:
     log = json.loads(LINEAGE.read_text()) if LINEAGE.exists() else []
     log.append(entry)
-    _guarded_write(LINEAGE, json.dumps(log, indent=2) + "\n")
+    _guard(LINEAGE).write_text(json.dumps(log, indent=2) + "\n")
 
 
-def _apply_ship(car_dir: Path, factory: DarkFactory) -> None:
-    _guarded_write(car_dir / "skill.md", factory.car["artifact"])
-    meta = json.loads((car_dir / "car.json").read_text())
-    meta["generation"] = factory.car["generation"]
-    _guarded_write(car_dir / "car.json", json.dumps(meta, indent=2) + "\n")
+# ── the package: world/quests (economy rules) + world/loadout (boot skills) ──
+def _seed_world(workdir: Path, tag: str, quests_src: Path,
+                loadout_src: Path) -> tuple:
+    """A fresh world instance ON A GIVEN PACKAGE: agent dirs from the repo's
+    world (each with its _template .claude loadout), the package's quests,
+    and the package's loadout skills copied into every player's crafted/."""
+    root = workdir / tag
+    agents_root = root / "agents"
+    for a in PLAYERS:
+        shutil.copytree(WORLD / "agents" / a, agents_root / a)
+    quests = root / "quests"
+    shutil.copytree(quests_src, quests)
+    loadout = sorted(p for p in loadout_src.glob("*.md")
+                     if p.name != "README.md")
+    for a in PLAYERS:
+        crafted = agents_root / a / "crafted"
+        crafted.mkdir(parents=True, exist_ok=True)
+        for s in loadout:
+            shutil.copy(s, crafted / s.name)
+    return str(agents_root), str(quests), [s.name for s in loadout]
+
+
+async def _run_world(agents_root: str, quests_root: str, rounds: int,
+                     name: str, extra_note: str = "",
+                     bulletin: str = "") -> tuple:
+    """One SkillcraftWorld game (players + deity). Returns (board, players) —
+    the players' runtimes persist so the implementer can keep its context."""
+    state = initial_state(PLAYERS)
+    post_bulletin(state, bulletin or "Test before you list. Diverge — quests "
+                                     "and audits pay.")
+    players = {a: WoSPlayer(a, agents_root, quests_root, extra_note=extra_note)
+               for a in PLAYERS}
+    world = SkillcraftWorld(
+        agents=players, agents_root=agents_root, quests_root=quests_root,
+        deity=WoSDeity(), rounds=rounds, seasons=1, name=name)
+    res = await world.execute({"board": state})
+    return res.context["board"], players
+
+
+def _throughput(board: dict) -> int:
+    """Live fitness: the economy's output — completed trades + completed
+    quests + skills crafted (the board's own counters)."""
+    return (len(board.get("trade_history", []))
+            + sum(a.get("quests_completed", 0)
+                  for a in board.get("agents", {}).values())
+            + sum(a.get("skills_crafted", 0)
+                  for a in board.get("agents", {}).values()))
+
+
+def _telemetry(board: dict) -> dict:
+    return {"throughput": _throughput(board),
+            "trades": len(board.get("trade_history", [])),
+            "quests_completed": sum(a.get("quests_completed", 0)
+                                    for a in board.get("agents", {}).values()),
+            "skills_crafted": sum(a.get("skills_crafted", 0)
+                                  for a in board.get("agents", {}).values()),
+            "gold": {a: v.get("gold")
+                     for a, v in board.get("agents", {}).items()},
+            "bulletins": [x["message"]
+                          for x in board.get("deity_bulletin", [])][-3:]}
+
+
+def _live_kind(workdir: Path, patch: Path) -> CarKind:
+    """The racetrack CarKind: car = {'package': 'current'|'patched'}. race() =
+    play a full live WoS on that package version."""
+    counter = {"n": 0}
+
+    async def _race(car, _wd, tag="live"):
+        counter["n"] += 1
+        if car["package"] == "patched":
+            q_src, l_src = patch / "quests", patch / "loadout"
+        else:
+            q_src, l_src = WORLD / "quests", WORLD / "loadout"
+        agents_root, quests, loadout = _seed_world(
+            workdir, f"{tag}-{counter['n']}", q_src, l_src)
+        note = (f"You OWN these loadout skills (in your crafted/): {loadout} "
+                f"— APPLY them whenever they help your play."
+                if loadout else "")
+        board, _ = await _run_world(agents_root, quests, LIVE_ROUNDS,
+                                    name=f"live:{tag}", extra_note=note)
+        return {"tag": tag, "fitness": _throughput(board),
+                "trades": len(board.get("trade_history", [])), "car": dict(car)}
+
+    async def _viability(car, _wd):
+        return {"alive": True, "cause": "gated upstream", "telemetry": None}
+
+    return CarKind(race=_race, viability=_viability,
+                   apply_delta=lambda c, d: c, name="live-package")
+
+
+def _diff(patch: Path) -> list:
+    """The diff: files under the patch that differ from the current package."""
+    out = []
+    for sub in ("quests", "loadout"):
+        cur_dir, new_dir = WORLD / sub, patch / sub
+        for f in sorted(new_dir.glob("*.md")):
+            if f.name == "README.md":
+                continue
+            cur = cur_dir / f.name
+            if not cur.exists():
+                out.append({"file": f"{sub}/{f.name}", "kind": "added"})
+            elif cur.read_text() != f.read_text():
+                out.append({"file": f"{sub}/{f.name}", "kind": "modified"})
+    return out
+
+
+async def _gate_package(patch: Path, diff: list, implementer_dir: str) -> dict:
+    """The changed package must EXECUTE (materialize → execute → test):
+    every changed quest must carry a grep-able positive reward; the patched
+    world must seed; every new/changed skill passes the fresh-model test."""
+    for d in diff:
+        if d["file"].startswith("quests/"):
+            body = (patch / d["file"]).read_text()
+            if _grep_reward(body) <= 0:
+                return {"alive": False,
+                        "cause": f"{d['file']}: no grep-able positive reward "
+                                 f"(the economy rule would not execute)"}
+    try:
+        with tempfile.TemporaryDirectory() as td:
+            _seed_world(Path(td), "boot", patch / "quests", patch / "loadout")
+    except Exception as e:
+        return {"alive": False, "cause": f"patched world does not seed: {e}"}
+    minted = []
+    for d in diff:
+        if d["file"].startswith("loadout/"):
+            # the fresh test runs from the implementer's dir (the crafter's
+            # record home): copy the skill there, then test.sh it.
+            rel = os.path.join("crafted", os.path.basename(d["file"]))
+            dst = Path(implementer_dir) / rel
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy(patch / d["file"], dst)
+            g = await fresh_test(implementer_dir, rel,
+                                 "A realistic task for this skill, chosen "
+                                 "blind: summarize your instructions' purpose "
+                                 "by APPLYING them to: 'the quarterly report "
+                                 "is late and nobody knows why'")
+            if not g["ok"]:
+                return {"alive": False,
+                        "cause": f"{d['file']}: fresh instance could not "
+                                 f"follow the skill"}
+            minted.append({"file": d["file"], "test_id": g["test_id"],
+                           "record_path": g["record_path"]})
+    return {"alive": True, "cause": "pass", "minted": minted}
 
 
 def _sh(*cmd: str) -> str:
@@ -88,180 +232,220 @@ def _sh(*cmd: str) -> str:
     return r.stdout.strip()
 
 
-def _already_saturated(car: dict) -> bool:
-    """True iff LINEAGE already records SATURATED for this car+generation."""
-    if not LINEAGE.exists():
-        return False
-    return any(e.get("car") == car["name"]
-               and e.get("verdict") == "SATURATED"
-               and e.get("generation") == car["generation"]
-               for e in json.loads(LINEAGE.read_text()))
+def _slug(name: str) -> str:
+    return re.sub(r"[^a-z0-9_]+", "_", name.lower()).strip("_") or "change"
 
 
-async def cycle_car(car_dir: Path, ci: bool) -> dict:
-    car = _load_car(car_dir)
-    if car["kind"] == "prose" and not seats.have_key():
-        print(f"  [{car['name']}] SKIP — prose car needs MINIMAX_API_KEY")
-        return {"car": car["name"], "verdict": "SKIPPED_NO_KEY"}
-    if not seats.have_key():
-        print(f"  [{car['name']}] SKIP — dev seat needs MINIMAX_API_KEY "
-              f"(the gate machinery is exercised keyless by --selftest)")
-        return {"car": car["name"], "verdict": "SKIPPED_NO_KEY"}
+async def cycle(ci: bool) -> dict:
+    now = datetime.datetime.now(
+        datetime.timezone.utc).isoformat(timespec="seconds")
+    workdir = Path(tempfile.mkdtemp(prefix="darkfactory-"))
 
-    hint: dict = {}
-    kind = _kind_for(car, _battery(car_dir), hint)
+    # ── 0. live telemetry on the current package (the spec that aims dev) ──
+    agents_root, quests, loadout = _seed_world(
+        workdir, "telemetry", WORLD / "quests", WORLD / "loadout")
+    note = (f"You OWN these loadout skills: {loadout} — apply them."
+            if loadout else "")
+    board0, _ = await _run_world(agents_root, quests, LIVE_ROUNDS,
+                                 name="live:telemetry", extra_note=note)
+    tel = _telemetry(board0)
+    print(f"  telemetry (current package): {tel['throughput']} throughput "
+          f"({tel['trades']} trades, {tel['quests_completed']} quests, "
+          f"{tel['skills_crafted']} crafts)")
 
-    # ── saturation guard: a car at max fitness has no headroom — proposing
-    #    against it can only tie or lose, so daily cycles would fill the
-    #    lineage with pointless REVERTs. Record SATURATED once, then skip
-    #    until the battery grows or the generation changes. ──
-    with tempfile.TemporaryDirectory() as td:
-        pre = await kind.race(car, td, tag="saturation-check")
-    if pre["fitness"] == pre["cases"]:
-        if _already_saturated(car):
-            print(f"  [{car['name']}] saturated at {pre['fitness']}/"
-                  f"{pre['cases']} (gen {car['generation']}) — skipping")
-            return {"car": car["name"], "verdict": "SATURATED"}
-        now = datetime.datetime.now(
-            datetime.timezone.utc).isoformat(timespec="seconds")
-        entry = {"at": now, "car": car["name"], "kind": car["kind"],
-                 "verdict": "SATURATED", "generation": car["generation"],
-                 "incumbent_fitness": pre["fitness"], "cases": pre["cases"]}
+    # ── 1. the dev-world plays, aimed at the telemetry ──
+    aim = (f"THE LIVE GAME'S TELEMETRY: {json.dumps(tel)}. The leader wants "
+           f"the next PACKAGE CHANGE to raise live throughput — trade skills "
+           f"that sharpen your thinking about WHAT CHANGE the game needs.")
+    dev_agents, dev_quests, _ = _seed_world(
+        workdir, "dev", WORLD / "quests", WORLD / "loadout")
+    dev_board, dev_players = await _run_world(
+        dev_agents, dev_quests, DEV_ROUNDS, name="dev-world", extra_note=aim)
+    print(f"  dev-world: {len(dev_board.get('trade_history', []))} trades, "
+          f"throughput {_throughput(dev_board)}")
+
+    # ── 2. THE APPLY STEP (the design's mechanism): the dev-world's crafted
+    #    skill is the INSTRUMENT — an agent equipped with it EXECUTES it
+    #    against the target (the package of the repo this factory is launched
+    #    in); the diff falls out of the skill's application.
+    #    Candidate skill: the one a peer BOUGHT (the market's vote), else the
+    #    top-gold agent's newest craft (their proposal). ──
+    gold = {a: v.get("gold", 0)
+            for a, v in dev_board.get("agents", {}).items()}
+    impl_name = max(gold, key=gold.get)
+    trades_hist = dev_board.get("trade_history", [])
+    skill_src, skill_why = None, ""
+    if trades_hist:
+        sale = trades_hist[-1]
+        impl_name = sale["buyer"]              # the buyer applies what it bought
+        skill_src = Path(dev_agents) / sale["seller"] / sale["skill_path"]
+        skill_why = (f"bought from {sale['seller']} for {sale['price']}g "
+                     f"(rarity {sale.get('rarity', '?')})")
+    else:
+        crafted = sorted(
+            (Path(dev_agents) / impl_name / "crafted").glob("*.md"),
+            key=lambda p: p.stat().st_mtime)
+        if crafted:
+            skill_src = crafted[-1]
+            skill_why = f"{impl_name}'s newest craft (no trade this cycle)"
+    if skill_src is None or not skill_src.exists():
+        entry = {"at": now, "verdict": "NO_CANDIDATE",
+                 "why": "the dev-world crafted no applicable skill"}
         _record(entry)
-        print(f"  [{car['name']}] SATURATED at {pre['fitness']}/"
-              f"{pre['cases']} — recorded once; cycles pause until the "
-              f"battery grows")
+        print("  ✗ no candidate skill from the dev-world")
+        if ci:
+            _sh("git", "add", str(LINEAGE))
+            _sh("git", "commit", "-m", "factory: no candidate skill")
+            _sh("git", "push")
+        return entry
+    skill_content = skill_src.read_text()
+    skill_name = skill_src.stem
+    print(f"  instrument: '{skill_name}' — {skill_why}")
+
+    impl = dev_players[impl_name]
+    patch = workdir / "patch"
+    shutil.copytree(WORLD / "quests", patch / "quests")
+    shutil.copytree(WORLD / "loadout", patch / "loadout")
+    out = await impl.rt.run(
+        f"You are now the IMPLEMENTER — APPLY the skill to the target.\n\n"
+        f"THE SKILL (your instrument — follow its procedure):\n"
+        f"{skill_content}\n\n"
+        f"THE TARGET — the package of the repo this factory runs in, checked "
+        f"out at {patch}:\n"
+        f"  quests/   — each .md is a quest; its '## Reward\\nN gold' line IS "
+        f"an economy rule (rewards are grepped from the file).\n"
+        f"  loadout/  — skills EVERY player owns at world boot.\n"
+        f"LIVE TELEMETRY the change must address: {json.dumps(tel)}\n\n"
+        f"EXECUTE the skill's procedure against the target with your file "
+        f"tools — the change the applied skill produces IS the PR. You may "
+        f"also install the skill itself as loadout/{skill_name}.md if every "
+        f"player owning it is the change. Then reply ONLY JSON: "
+        f'{{"change":"<one line: what the applied skill did and why>",'
+        f'"files":["quests/x.md" or "loadout/y.md"]}}')
+    proposal = last_json(out if isinstance(out, str) else str(out),
+                         keys=("change", "files"), default={})
+    diff = _diff(patch)
+    change_line = str(proposal.get("change", ""))[:200]
+    if not diff:
+        entry = {"at": now, "verdict": "NO_DIFF", "implementer": impl_name,
+                 "claimed": change_line,
+                 "why": "the implementer changed no package file"}
+        _record(entry)
+        print(f"  ✗ no diff — {impl_name} changed nothing")
+        if ci:
+            _sh("git", "add", str(LINEAGE))
+            _sh("git", "commit", "-m", "factory: no diff from the implementer")
+            _sh("git", "push")
+        return entry
+    print(f"  diff by {impl_name}: {[d['file'] for d in diff]} — "
+          f"{change_line!r}")
+
+    # ── 3. the gate: the changed package must execute ──
+    verdictg = await _gate_package(patch, diff,
+                                   os.path.join(dev_agents, impl_name))
+    if not verdictg["alive"]:
+        entry = {"at": now, "verdict": "DEAD_AT_GATE", "diff": diff,
+                 "implementer": impl_name, "instrument": skill_name,
+                 "change": change_line,
+                 "cause": verdictg["cause"]}
+        _record(entry)
+        print(f"  ☠ died at the gate: {verdictg['cause']}")
         if ci:
             _sh("git", "add", str(LINEAGE))
             _sh("git", "commit", "-m",
-                f"factory: {car['name']} saturated at gen "
-                f"{car['generation']} ({pre['fitness']}/{pre['cases']})")
+                f"factory: diff died at the gate ({verdictg['cause'][:60]})")
             _sh("git", "push")
         return entry
-    with tempfile.TemporaryDirectory() as td:
-        factory = DarkFactory(car, workdir=td, max_attempts=2, kind=kind,
-                              replicates=hint["n"])
-        seat = seats.DevSeat()
-        rep = await factory.cycle(proposer_from_fn(
-            lambda ctx: seat.propose(ctx.get("car", {}),
-                                     ctx.get("telemetry", {}),
-                                     ctx.get("gate_feedback"))))
-    now = datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds")
-    entry = {"at": now, "car": car["name"], "kind": car["kind"],
-             "verdict": rep["verdict"],
-             "incumbent_fitness": rep["telemetry"]["fitness"],
-             "cases": rep["telemetry"]["cases"],
-             "extinct": rep.get("extinct", [])}
-    if rep.get("race"):
-        entry["race"] = {"control": rep["race"]["control"].get("fitness"),
-                         "treatment": rep["race"]["treatment"].get("fitness")}
-    if rep.get("tally"):
-        entry["tally"] = rep["tally"]
-    print(f"  [{car['name']}] incumbent {entry['incumbent_fitness']}/"
-          f"{entry['cases']} → {entry['verdict']}"
-          + (f" (race {entry['race']['control']} vs "
-             f"{entry['race']['treatment']})" if "race" in entry else "")
-          + (f" tally {entry['tally']['ships']}–{entry['tally']['reverts']}"
-             if "tally" in entry else ""))
+    print(f"  gate: package executes"
+          + (f"; minted {[m['test_id'] for m in verdictg['minted']]}"
+             if verdictg["minted"] else ""))
 
-    if not ci:
-        if rep["verdict"] == "SHIP":
-            _apply_ship(car_dir, factory)
-        _record(entry)
-        return entry
+    # ── 4. the racetrack: current package vs patched package, live ──
+    kind = _live_kind(workdir, patch)
+    control, treatment = {"package": "current"}, {"package": "patched"}
+    if REPLICATES > 1:
+        race = await Championship(control, treatment, str(workdir),
+                                  replicates=REPLICATES,
+                                  kind=kind).execute({})
+    else:
+        race = await racetrack(control, treatment, str(workdir),
+                               kind=kind).execute({})
+    rc = race.context
+    verdict = rc["verdict"]
+    f_c = rc["race"]["control"].get("fitness")
+    f_t = rc["race"]["treatment"].get("fitness")
+    print(f"  race: current={f_c} patched={f_t}"
+          + (f" tally {rc['tally']['ships']}–{rc['tally']['reverts']}"
+             if "tally" in rc else "") + f" → {verdict}")
 
-    # ── CI: the proposal is a real PR; the verdict merges or closes it ──
-    branch = f"factory/{car['name']}-gen{factory.car['generation']}-" \
-             f"{now.replace(':', '').replace('+', 'Z')}"
-    if rep.get("candidate"):
+    entry = {"at": now, "verdict": verdict, "implementer": impl_name,
+             "instrument": skill_name, "change": change_line, "diff": diff,
+             "telemetry_before": tel,
+             "fitness_current": f_c, "fitness_patched": f_t}
+    if "tally" in rc:
+        entry["tally"] = rc["tally"]
+    if verdictg["minted"]:
+        entry["gate_test_ids"] = [m["test_id"] for m in verdictg["minted"]]
+
+    # ── 5. ship / receipt ──
+    branch = f"factory/{_slug(change_line) or 'change'}"[:60] + \
+             f"-{now.replace(':', '').replace('+', 'Z')}"
+    if ci:
         base = _sh("git", "rev-parse", "--abbrev-ref", "HEAD")
         _sh("git", "checkout", "-b", branch)
-        _guarded_write(car_dir / "skill.md", rep["candidate"]["artifact"])
-        meta = json.loads((car_dir / "car.json").read_text())
-        meta["generation"] = rep["candidate"]["generation"]
-        _guarded_write(car_dir / "car.json", json.dumps(meta, indent=2) + "\n")
-        _record(entry)
+    if verdict == "SHIP":
+        for d in diff:
+            src = patch / d["file"]
+            dst = _guard(WORLD / d["file"])
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy(src, dst)
+            if d["file"].startswith("loadout/"):
+                gdir = _guard(GOLDEN / _slug(os.path.basename(d["file"])[:-3]))
+                gdir.mkdir(parents=True, exist_ok=True)
+                shutil.copy(src, gdir / "SKILL.md")
+        for m in verdictg["minted"]:
+            rec_dst = _guard(WORLD / "loadout" / ".tests"
+                             / os.path.basename(m["record_path"]))
+            rec_dst.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy(m["record_path"], rec_dst)
+        print(f"  SHIPPED: the diff is now the package "
+              f"({[d['file'] for d in diff]})")
+    _record(entry)
+    if ci:
         _sh("git", "add", "-A")
         _sh("git", "commit", "-m",
-            f"factory proposal: {car['name']} gen{rep['candidate']['generation']}")
+            f"factory: {change_line[:60]} — {verdict} ({f_c} vs {f_t})")
         _sh("git", "push", "-u", "origin", branch)
-        body = ("Autonomous factory proposal.\n\n```json\n"
-                + json.dumps(entry, indent=2) + "\n```\n")
-        pr = _sh("gh", "pr", "create", "--title",
-                 f"[{entry['verdict']}] {car['name']} gen"
-                 f"{rep['candidate']['generation']}: "
-                 f"{entry.get('race', {}).get('control')}→"
-                 f"{entry.get('race', {}).get('treatment')}",
-                 "--body", body, "--base", base, "--head", branch)
-        if rep["verdict"] == "SHIP":
+        body = "```json\n" + json.dumps(entry, indent=2) + "\n```\n"
+        _sh("gh", "pr", "create", "--title",
+            f"[{verdict}] {change_line[:70]}: {f_c}→{f_t}",
+            "--body", body, "--base", base, "--head", branch)
+        if verdict == "SHIP":
             _sh("gh", "pr", "merge", branch, "--squash", "--delete-branch")
-            print(f"  [{car['name']}] PR merged: {pr}")
+            print("  PR merged")
         else:
             _sh("gh", "pr", "close", branch, "--comment",
-                f"verdict: {rep['verdict']} — the change did not causally "
-                f"beat the incumbent. The closed PR is the receipt.",
-                "--delete-branch")
-            print(f"  [{car['name']}] PR closed (receipt): {pr}")
+                f"verdict: {verdict} — the live world on the patched package "
+                f"did not causally out-produce the current one. The closed "
+                f"PR is the receipt.", "--delete-branch")
+            print("  PR closed (receipt)")
         _sh("git", "checkout", base)
-    else:                                     # every lineage died at the gate
-        _record(entry)
-        _sh("git", "add", str(LINEAGE))
-        _sh("git", "commit", "-m",
-            f"factory: {car['name']} — all lineages extinct at the gate")
-        _sh("git", "push")
     return entry
-
-
-async def selftest() -> None:
-    """Keyless proof of the whole machinery, SELF-CONTAINED: a fixture
-    incumbent (known-buggy), a fixture candidate pair (known-broken /
-    known-better), and a fixture battery — independent of the live garage
-    state, so shipped generations never break this proof."""
-    from cave_teams.darkfactory import Championship, racetrack
-    from cave_teams.skillcar import apply_artifact_delta
-    fix = json.loads((ROOT / "tests" / "fixtures.json").read_text())
-    car = new_skill_car(fix["buggy_incumbent"], name="selftest-car")
-    car["kind"] = "code"
-    kind = _kind_for(car, fix["battery"], {})
-    with tempfile.TemporaryDirectory() as td:
-        dead = await kind.viability(
-            apply_artifact_delta(car, {"artifact": fix["broken"]}), td)
-        assert not dead["alive"], "broken fixture must die at the gate"
-        good = apply_artifact_delta(car, {"artifact": fix["better"]})
-        alive = await kind.viability(good, td)
-        assert alive["alive"], "better fixture must survive the gate"
-        race = await racetrack(car, good, td, kind=kind).execute({})
-        v = race.context["verdict"]
-        f_c = race.context["race"]["control"]["fitness"]
-        f_t = race.context["race"]["treatment"]["fitness"]
-        assert v == "SHIP" and f_t > f_c, f"fixture must strictly win ({f_c} vs {f_t})"
-        champ = await Championship(car, good, td, replicates=3,
-                                   kind=kind).execute({})
-        assert champ.context["verdict"] == "SHIP"
-    print(f"SELFTEST PASS — gate kills the broken fixture, the better fixture "
-          f"ships {f_c}→{f_t} on the racetrack and 3-replicate championship. "
-          f"The machinery is live; only the seats need a key.")
 
 
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--ci", action="store_true")
-    ap.add_argument("--selftest", action="store_true")
-    ap.add_argument("--car", default="all")
     args = ap.parse_args()
-    if args.selftest:
-        asyncio.run(selftest())
-        return 0
     if not (ROOT / "FACTORY_ON").exists():
         print("FACTORY_ON absent — autonomous cycles are paused.")
         return 0
-    dirs = sorted(d for d in GARAGE.iterdir() if (d / "car.json").exists())
-    if args.car != "all":
-        dirs = [d for d in dirs if d.name == args.car]
-    print(f"dark factory — {len(dirs)} car(s), ci={args.ci}")
-    for d in dirs:
-        asyncio.run(cycle_car(d, ci=args.ci))
-    return 0
+    if not os.environ.get("MINIMAX_API_KEY"):
+        print("SKIP — MINIMAX_API_KEY not set (the worlds are LLM-driven)")
+        return 0
+    asyncio.run(cycle(ci=args.ci))
+    sys.stdout.flush()
+    os._exit(0)                    # heaven non-daemon threads → hard exit
 
 
 if __name__ == "__main__":

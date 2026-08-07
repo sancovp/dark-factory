@@ -1,2 +1,2 @@
-cave-teams @ git+https://github.com/sancovp/cave-teams@0c3056f377b95ed8ae793f17916d60eba6312b00
-requests>=2.28
+cave-teams @ git+https://github.com/sancovp/cave-teams@9c9027b367c5159a0cb63dccf7a09ea92162d199
+heaven-framework>=0.1.21

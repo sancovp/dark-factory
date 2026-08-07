@@ -1,0 +1,8 @@
+{
+  "test_id": "test_second_order_lens",
+  "skill_path": "crafted/second-order-lens.md",
+  "result": "pass",
+  "input": "Consider: 'We should automate customer support to cut costs'",
+  "output_summary": "Applied second-order lens: (1) immediate cost reduction, (2) slower response times + customer frustration, (3) frustrated customers leave → revenue loss, reputation damage, (4) equilibrium: smaller loyal base OR expensive re-investment to recover. Reversed first-order conclusion: automation is only good if second-order costs are manageable.",
+  "test_notes": "Lens successfully reframed decision from 'cut costs' to 'sustainable vs unsustainable cost-cutting'. Genuinely changed the analysis direction."
+}

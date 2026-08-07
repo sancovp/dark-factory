@@ -4,7 +4,7 @@ on:
   schedule:
     - cron: "17 6 * * *"        # one autonomous cycle per day
   workflow_dispatch:
-  pull_request:                  # selftest gates human PRs too
+  pull_request:                  # compose-check gates human PRs too
     paths-ignore: ["LINEAGE.json"]
 
 permissions:
@@ -12,21 +12,30 @@ permissions:
   pull-requests: write
 
 jobs:
-  selftest:
+  compose-check:
+    # keyless: the full stack installs and the composition imports/builds
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: "3.11" }
       - run: pip install -r requirements.txt
-      - name: keyless machinery proof (gate + racetrack + championship)
-        run: python -m factory.run_cycle --selftest
+      - name: the composition builds (worlds, gate, racetrack — no LLM calls)
+        run: |
+          python - <<'EOF'
+          from cave_teams.skillcraft import SkillcraftWorld, initial_state
+          from cave_teams.darkfactory import CarKind, Championship, racetrack
+          from cave_teams.examples import MiniMaxRuntime
+          from factory.wos_team import WoSPlayer, WoSDeity
+          from factory.gate import TEST_SH_PROMPT
+          from factory import run_cycle
+          assert "{skill_content}" in TEST_SH_PROMPT
+          print("compose-check: cave-teams + heaven + factory wiring import clean")
+          EOF
 
   autonomous-cycle:
-    # the real thing: the dev seat proposes, the gate kills, the RCT decides,
-    # SHIP merges its own PR. Runs only on schedule/dispatch, never on PRs.
     if: github.event_name != 'pull_request'
-    needs: selftest
+    needs: compose-check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -34,11 +43,13 @@ jobs:
       - uses: actions/setup-python@v5
         with: { python-version: "3.11" }
       - run: pip install -r requirements.txt
-      - name: run one factory cycle per car
+      - name: one factory cycle (dev-world → gate → live racetrack → verdict)
         env:
           MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
+          HEAVEN_DATA_DIR: ${{ runner.temp }}/heaven-data
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          mkdir -p "$HEAVEN_DATA_DIR"
           git config user.name  "dark-factory[bot]"
           git config user.email "dark-factory@users.noreply.github.com"
           python -m factory.run_cycle --ci

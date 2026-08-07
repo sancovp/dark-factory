@@ -1,0 +1,8 @@
+{
+  "test_id": "test_divergence_recipe",
+  "skill_path": "crafted/divergence-analyzer-recipe.md",
+  "result": "pass",
+  "input": "Analyze: 'Remote work increases productivity'",
+  "output_summary": "Applied adversarial lens to identify failure modes (cherry-picked studies, survivorship bias, correlation≠causation). Used analysis template to structure claims. Filtered through provenance tracker. Output: 3 DEFENDED claims, 2 VULNERABLE claims marked for revision, 1 BLIND SPOT acknowledged.",
+  "test_notes": "Recipe successfully composes adversarial lens + analysis template + provenance tracker into a defensible analysis pipeline. Each layer was essential per quality check."
+}

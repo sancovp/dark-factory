@@ -1,24 +1,40 @@
 [
   {
-    "at": "2026-08-07T06:58:58+00:00",
-    "car": "extract-emails",
-    "kind": "code",
-    "verdict": "SHIP",
-    "incumbent_fitness": 4,
-    "cases": 6,
-    "extinct": [],
-    "race": {
-      "control": 4,
-      "treatment": 6
-    }
+    "at": "2026-08-07T07:52:13+00:00",
+    "verdict": "NO_CANDIDATE",
+    "why": "dev-world produced no trade \u2014 nothing was peer-valued"
   },
   {
-    "at": "2026-08-07T07:25:05+00:00",
-    "car": "extract-emails",
-    "kind": "code",
-    "verdict": "SATURATED",
-    "generation": 1,
-    "incumbent_fitness": 6,
-    "cases": 6
+    "at": "2026-08-07T08:10:51+00:00",
+    "verdict": "REVERT",
+    "implementer": "agent_001",
+    "instrument": "outreach_contact_pipeline",
+    "change": "Installed outreach_contact_pipeline.md (a rare recipe composing outreach-source\u2192qualify\u2192write) into loadout/ \u2014 every agent now boots with a ready-to-run end-to-end contact pipeline, raising throughput",
+    "diff": [
+      {
+        "file": "loadout/outreach_contact_pipeline.md",
+        "kind": "added"
+      }
+    ],
+    "telemetry_before": {
+      "throughput": 0,
+      "trades": 0,
+      "quests_completed": 0,
+      "skills_crafted": 0,
+      "gold": {
+        "agent_001": 100,
+        "agent_002": 100
+      },
+      "bulletins": [
+        "Test before you list. Diverge \u2014 quests and audits pay.",
+        "Round 0 baseline \u2014 no decisions made, no convergence pressure; initialization identical stats is expected, not convergence.",
+        "Round 1 \u2014 agent_001 differentiated with quest_accept, agent_002 idle; no convergence, no listings, no bugs."
+      ]
+    },
+    "fitness_current": 0,
+    "fitness_patched": 0,
+    "gate_test_ids": [
+      "test_d71017677b56"
+    ]
   }
 ]
