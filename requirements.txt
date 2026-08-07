@@ -1,2 +1,2 @@
-cave-teams @ git+https://github.com/sancovp/cave-teams@ceo
+cave-teams @ git+https://github.com/sancovp/cave-teams@0c3056f377b95ed8ae793f17916d60eba6312b00
 requests>=2.28

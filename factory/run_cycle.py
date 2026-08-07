@@ -88,6 +88,16 @@ def _sh(*cmd: str) -> str:
     return r.stdout.strip()
 
 
+def _already_saturated(car: dict) -> bool:
+    """True iff LINEAGE already records SATURATED for this car+generation."""
+    if not LINEAGE.exists():
+        return False
+    return any(e.get("car") == car["name"]
+               and e.get("verdict") == "SATURATED"
+               and e.get("generation") == car["generation"]
+               for e in json.loads(LINEAGE.read_text()))
+
+
 async def cycle_car(car_dir: Path, ci: bool) -> dict:
     car = _load_car(car_dir)
     if car["kind"] == "prose" and not seats.have_key():
@@ -100,6 +110,34 @@ async def cycle_car(car_dir: Path, ci: bool) -> dict:
 
     hint: dict = {}
     kind = _kind_for(car, _battery(car_dir), hint)
+
+    # ── saturation guard: a car at max fitness has no headroom — proposing
+    #    against it can only tie or lose, so daily cycles would fill the
+    #    lineage with pointless REVERTs. Record SATURATED once, then skip
+    #    until the battery grows or the generation changes. ──
+    with tempfile.TemporaryDirectory() as td:
+        pre = await kind.race(car, td, tag="saturation-check")
+    if pre["fitness"] == pre["cases"]:
+        if _already_saturated(car):
+            print(f"  [{car['name']}] saturated at {pre['fitness']}/"
+                  f"{pre['cases']} (gen {car['generation']}) — skipping")
+            return {"car": car["name"], "verdict": "SATURATED"}
+        now = datetime.datetime.now(
+            datetime.timezone.utc).isoformat(timespec="seconds")
+        entry = {"at": now, "car": car["name"], "kind": car["kind"],
+                 "verdict": "SATURATED", "generation": car["generation"],
+                 "incumbent_fitness": pre["fitness"], "cases": pre["cases"]}
+        _record(entry)
+        print(f"  [{car['name']}] SATURATED at {pre['fitness']}/"
+              f"{pre['cases']} — recorded once; cycles pause until the "
+              f"battery grows")
+        if ci:
+            _sh("git", "add", str(LINEAGE))
+            _sh("git", "commit", "-m",
+                f"factory: {car['name']} saturated at gen "
+                f"{car['generation']} ({pre['fitness']}/{pre['cases']})")
+            _sh("git", "push")
+        return entry
     with tempfile.TemporaryDirectory() as td:
         factory = DarkFactory(car, workdir=td, max_attempts=2, kind=kind,
                               replicates=hint["n"])

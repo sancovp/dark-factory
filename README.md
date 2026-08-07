@@ -90,6 +90,18 @@ for a bad change to survive. This factory runs at Championship order for noisy
 judges and Racetrack order for deterministic ones — always at the order where
 its verdicts are *sound*, never merely *plausible*.
 
+## Receipts — in this repo, from cycle one
+
+- [PR #1](../../pull/1) — `[SHIP] extract-emails gen1: 4→6`, **merged by the
+  factory**: the dev seat, shown only two failing inputs, wrote the
+  case-sensitivity fix, survived quarantine, and won the split 4→6 strict.
+- [PR #2](../../pull/2) — `[REVERT] extract-emails-prose gen1: 3.0→3.0`,
+  **closed by the factory**: the proposal passed the gate but tied across 3
+  fresh-judge replicates (tally 0–3). Ties never ship.
+
+Both happened in the repo's first autonomous run, unattended. The lineage in
+[`LINEAGE.json`](LINEAGE.json) and the PR list are the live record from here on.
+
 ## Receipts (from the build, before this repo went autonomous)
 
 - **The gate kills:** a syntax-broken proposal died in quarantine
