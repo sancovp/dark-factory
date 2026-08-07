@@ -72,6 +72,10 @@ install with pip; the whole thing runs inside GitHub Actions.
 A cycle fires from the daily cron, a manual dispatch, or **automatically when
 a GitHub Issue is opened** (see §4). Here is literally what runs:
 
+<p align="center">
+  <img src="docs/cycle.svg" alt="One cycle: telemetry, dev-world, apply, gate, race, ship or receipt — deaths loop back to dev, ships loop back to live." width="100%">
+</p>
+
 ### Step 0 — the live world plays (telemetry)
 
 A WoS world boots on the **current package** — this repo's `world/` definition
