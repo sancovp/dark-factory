@@ -36,9 +36,20 @@ jobs:
           import json, os, subprocess, datetime as dt
           out = open(os.environ["GITHUB_OUTPUT"], "a")
           event = os.environ["EVENT"]
-          if event in ("workflow_dispatch", "issues"):
-              print("gate: non-schedule trigger — deploy unconditionally")
-              out.write(f"due=true\nautomation={event}\n"); raise SystemExit
+          if event == "workflow_dispatch":
+              print("gate: manual dispatch — deploy unconditionally")
+              out.write("due=true\nautomation=workflow_dispatch\n"); raise SystemExit
+          if event == "issues":
+              # PUBLIC-SAFE: only MAINTAINER issues convene the org directly;
+              # community issues wait in backlog for a factory-approved label
+              ev = json.load(open(os.environ["GITHUB_EVENT_PATH"]))
+              assoc = ev.get("issue", {}).get("author_association", "")
+              if assoc in ("OWNER", "MEMBER", "COLLABORATOR"):
+                  print(f"gate: maintainer issue ({assoc}) — deploy")
+                  out.write("due=true\nautomation=issues\n"); raise SystemExit
+              print(f"gate: community issue ({assoc}) — backlog only, "
+                    "label it factory-approved to admit it to the org's aim")
+              out.write("due=false\nautomation=\n"); raise SystemExit
           cal_path = "world/calendar.json"
           cal = json.load(open(cal_path))
           now = dt.datetime.now(dt.timezone.utc)

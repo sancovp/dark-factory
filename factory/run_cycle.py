@@ -381,14 +381,24 @@ async def _gate_package(patch: Path, diff: list, implementer_dir: str) -> dict:
 
 
 def _open_issues(ci: bool) -> list:
-    """The live system's bug backlog (CI: real GitHub issues)."""
+    """The live system's bug backlog (CI: real GitHub issues). PUBLIC-SAFE:
+    only maintainer-authored issues, or community issues a maintainer
+    blessed with the factory-approved label, enter the org's aim — untrusted
+    text never reaches the agents' prompts unreviewed."""
     if not ci:
         return []
+    from .config import CFG
+    trusted = set(CFG.get("maintainers", []))
     try:
-        out = _sh("gh", "issue", "list", "--state", "open", "--limit", "10",
-                  "--json", "number,title")
-        return [{"number": i["number"], "title": i["title"]}
-                for i in json.loads(out or "[]")]
+        out = _sh("gh", "issue", "list", "--state", "open", "--limit", "20",
+                  "--json", "number,title,author,labels")
+        keep = []
+        for i in json.loads(out or "[]"):
+            author = (i.get("author") or {}).get("login", "")
+            labels = {l.get("name") for l in (i.get("labels") or [])}
+            if author in trusted or "factory-approved" in labels:
+                keep.append({"number": i["number"], "title": i["title"]})
+        return keep[:10]
     except Exception:
         return []
 
