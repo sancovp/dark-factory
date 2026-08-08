@@ -74,6 +74,21 @@ must never replace them.
    CANNOT write `.onionmorph`/`.heaven` — the factory must never modify its
    own presentation/roster. Keep it that way.
 
+## Propagation queue (AgentDir landed in cave-teams @ a018991, 2026-08-08)
+
+The library now has the devdir as a class (`cave_teams.agentdir.AgentDir` +
+`scaffold_agents`, with the REAL WoS `_template` vendored). Adopt it here:
+1. replace `factory/run_cycle._seed_world`'s hand glue with `scaffold_agents`
+   (+ `equip_skill`/`equip_rule` for loadout+rules install);
+2. embody `WoSPlayer` runtimes via `AgentDir.embody()` (heaven carries the
+   dir; claude_parity autoloads .claude) instead of prompt-carried paths;
+3. re-pin requirements to cave-teams @ a018991 (or later);
+4. the already-briefed swap: CI runs `python -m factory.world` (the one
+   DarkFactoryWorld object) instead of the legacy run_cycle.
+Vendored-template sync rule: `cave_teams/wos_template/` is a VERBATIM copy of
+world-of-skillcraft `agents/_template` — when the origin changes, re-vendor;
+never fork the copy.
+
 ## Handoff
 
 v1 (this layer + the factory itself) was built in the CEO session of
