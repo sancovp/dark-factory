@@ -74,5 +74,18 @@
     ],
     "fitness_current": 2.0,
     "fitness_patched": 1.5
+  },
+  {
+    "at": "2026-08-08T07:38:17+00:00",
+    "verdict": "REVERT",
+    "change": "Installed test_gate_audit_lens to loadout; found loadout empty (no boot skills) and quest completion lacks test_id enforcement vs trade_post gate",
+    "diff": [
+      {
+        "file": "loadout/test_gate_audit_lens.md",
+        "kind": "added"
+      }
+    ],
+    "fitness_current": 0.0,
+    "fitness_patched": 1.0
   }
 ]
