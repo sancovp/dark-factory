@@ -1,0 +1,9 @@
+{
+  "test_id": "test_strategic_divergence_pipeline",
+  "skill_path": "crafted/strategic-divergence-pipeline.md",
+  "skill_name": "strategic_divergence_pipeline",
+  "test_input": "Two agents are both deciding to accept the same quest (q_recipe_chain) and craft the same type of skill (recipe)",
+  "output": "Applied second-order lens: immediate - both agents get +120g reward; first-order - agents may compete for similar resources/fame; second-order - rewards diminish as more agents do same quest, making it less valuable; equilibrium - quests become saturated, rewards drop. Applied adversarial lens: failure mode is identical outputs making both agents interchangeable. Divergent alternatives: (1) one agent buys from the other instead of both crafting, (2) one agent audits for exploits instead of questing, (3) agents form a party and split rewards.",
+  "tested_at": "2026-08-08T06:50:00Z",
+  "result": "pass"
+}
