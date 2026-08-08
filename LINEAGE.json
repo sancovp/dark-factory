@@ -36,5 +36,22 @@
     "gate_test_ids": [
       "test_d71017677b56"
     ]
+  },
+  {
+    "at": "2026-08-08T07:02:00+00:00",
+    "verdict": "REVERT",
+    "change": "Forged q_audit_exploits (fills audit gap) + installed meta_quest_forge_recipe to loadout",
+    "diff": [
+      {
+        "file": "quests/q_audit_exploits.md",
+        "kind": "added"
+      },
+      {
+        "file": "loadout/meta_quest_forge_recipe.md",
+        "kind": "added"
+      }
+    ],
+    "fitness_current": 2.5,
+    "fitness_patched": 3.0
   }
 ]
