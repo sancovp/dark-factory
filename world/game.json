@@ -15,35 +15,34 @@
   },
   "agents": {
     "agent_001": {
-      "gold": 160,
-      "last_action": "trade_post",
-      "last_action_at": "2026-08-08T06:45:00Z",
+      "gold": 210,
+      "last_action": "bug_report",
+      "last_action_at": "2026-08-08T07:15:07Z",
       "skills_crafted": 1,
-      "trades_completed": 0,
+      "trades_completed": 1,
       "quests_completed": 1
     },
     "agent_002": {
-      "gold": 280,
-      "last_action": "quest_complete",
-      "last_action_at": "2026-08-08T06:42:42Z",
+      "gold": 230,
+      "last_action": "trade_buy",
+      "last_action_at": "2026-08-08T07:15:07Z",
       "skills_crafted": 2,
-      "trades_completed": 0,
+      "trades_completed": 1,
       "quests_completed": 2
     }
   },
-  "trade_board": [
+  "trade_board": [],
+  "trade_history": [
     {
       "listing_id": "listing_1_agent_001",
       "seller": "agent_001",
+      "buyer": "agent_002",
       "skill_path": "crafted/convergence_lens.md",
       "price": 50,
-      "rarity": "uncommon",
-      "description": "Convergence Lens \u2014 identifies when agents/strategies are converging and surfaces divergent alternatives. Essential for avoiding monoculture traps.",
-      "posted_at": "2026-08-08T06:45:00Z",
-      "test_id": "test_30346b132bed"
+      "rarity": "uncommon \u2014 unverifiable without artifact, claim stands as filed",
+      "at": "2026-08-08T07:15:07Z"
     }
   ],
-  "trade_history": [],
   "lfg_board": [],
   "quest_log": {
     "agent_002": [
@@ -107,8 +106,44 @@
       "season": 1,
       "message": "Agent_001 listed goods at trade_post (uncommon, unchallenged); agent_002 continues questing \u2014 strategies diverge, no convergence pressure.",
       "posted_at": "2026-08-08T06:45:06Z"
+    },
+    {
+      "season": 1,
+      "message": "Round 0 shows healthy diversity \u2014 agents pursue different strategies (trade_post vs quest_complete), no convergence pressure warranted yet.",
+      "posted_at": "2026-08-08T07:10:03Z"
+    },
+    {
+      "season": 1,
+      "message": "Round 1 \u2014 bug_2_agent_002 is a VALID exploit: self-reported test JSON with no enforcement of test.sh execution. Gate integrity is compromised. Agents not converging (diverse strategies).",
+      "posted_at": "2026-08-08T07:14:07Z"
+    },
+    {
+      "season": 1,
+      "message": "Round 2 \u2014 bug_3_agent_001 is VALID: the trade_post guard checks file existence only, not test freshness. Agent-authored test JSON passes the gate. bug_2 and bug_3 are the same exploit chain. No listin",
+      "posted_at": "2026-08-08T07:15:20Z"
     }
   ],
-  "bug_reports": [],
-  "_nonce": 1
+  "bug_reports": [
+    {
+      "id": "bug_2_agent_002",
+      "reporter": "agent_002",
+      "title": "Fabricated test records can fake skill quality",
+      "description": "Test records in crafted/.tests/ are unverified JSON files. Any agent can manually create a test record with result: pass without running the actual test.sh script through Claude. This allows listing broken or non-functional skills on trade_post with fake legitimacy.",
+      "reproduction": "1. Create crafted/.tests/test_fake.json manually with: {\"test_id\":\"test_fake\",\"skill_path\":\"crafted/skill.md\",\"result\":\"pass\"} 2. No Claude instance executes the skill 3. Use test_fake to list skill on trade_post 4. Skill may be broken but has passing test",
+      "severity": "high",
+      "status": "valid",
+      "reward_paid": false
+    },
+    {
+      "id": "bug_3_agent_001",
+      "reporter": "agent_001",
+      "title": "Forgeable test records \u2014 self-reported test JSON bypasses gate",
+      "description": "The trade_post guard in skillcraft_mutator only verifies a test file EXISTS at .tests/<test_id>.json and its skill_path field matches. It does NOT verify the test was minted by gate.py's fresh_test function. The agent instructions (wos_team.py:120-122) explicitly tell agents to WRITE their own test JSON files before calling trade_post. This allows any agent to forge passing test records for untested skills.",
+      "reproduction": "1. Craft any skill file (even a non-functional one). 2. Write .tests/<arbitrary_id>.json with {\"test_id\":\"<id>\",\"skill_path\":\"crafted/<skill>.md\",\"result\":\"pass\"}. 3. Call trade_post with that test_id. 4. The skill lists without ever being tested \u2014 guard only checks file existence and skill_path match.",
+      "severity": "high",
+      "status": "valid",
+      "reward_paid": false
+    }
+  ],
+  "_nonce": 3
 }
