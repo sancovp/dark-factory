@@ -143,17 +143,17 @@ def make_judge(ci: bool = False):
         entry = {"at": now, **{k: out[k] for k in
                                ("verdict", "change", "diff",
                                 "fitness_current", "fitness_patched")}}
-        if v == "SHIP":
-            for d in candidate["diff"]:
-                src, dst = patch / d["file"], rc._guard(rc.WORLD / d["file"])
-                dst.parent.mkdir(parents=True, exist_ok=True)
-                shutil.copy(src, dst)
-        rc._record(entry)
         if ci:                              # the CI/CD half: PR per verdict
             branch = (f"factory/{rc._slug(out['change']) or 'change'}"[:60]
                       + f"-{now.replace(':', '').replace('+', 'Z')}")
             base = rc._sh("git", "rev-parse", "--abbrev-ref", "HEAD")
             rc._sh("git", "checkout", "-b", branch)
+            if v == "SHIP":
+                for d in candidate["diff"]:
+                    src = patch / d["file"]
+                    dst = rc._guard(rc.WORLD / d["file"])
+                    dst.parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copy(src, dst)
             rc._sh("git", "add", "-A")
             rc._sh("git", "commit", "-m",
                    f"factory: {out['change'][:60]} — {v}")
@@ -172,6 +172,17 @@ def make_judge(ci: bool = False):
                        f"out-produce the current one.", "--delete-branch")
             rc._sh("git", "checkout", base)
             rc._sh("git", "pull", "--rebase")
+            rc._record(entry)               # lineage lives on MAIN, always
+            rc._publish(f"factory: lineage — {v} ({out['change'][:50]})",
+                        rc.LINEAGE)
+        else:
+            if v == "SHIP":
+                for d in candidate["diff"]:
+                    src = patch / d["file"]
+                    dst = rc._guard(rc.WORLD / d["file"])
+                    dst.parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copy(src, dst)
+            rc._record(entry)
         return out
 
     return judge

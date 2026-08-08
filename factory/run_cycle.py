@@ -104,12 +104,9 @@ def _persist_live(board: dict, agents_root: str, ci: bool) -> None:
                 dst = _guard(WORLD / "agents" / a / sub)
                 shutil.copytree(src, dst, dirs_exist_ok=True)
     if ci:
-        _sh("git", "pull", "--rebase")
-        _sh("git", "add", str(WORLD))
-        _sh("git", "commit", "-m",
-            f"live: the world continues (season "
-            f"{board.get('season', {}).get('number')}, tick +{LIVE_ROUNDS})")
-        _sh("git", "push")
+        _publish(f"live: the world continues (season "
+                 f"{board.get('season', {}).get('number')}, "
+                 f"tick +{LIVE_ROUNDS})", WORLD)
 
 
 def _load_rules() -> str:
@@ -176,11 +173,8 @@ async def _deity_retrospective(entry: dict, ci: bool) -> list:
     if written:
         print(f"  deity accumulated rule(s): {written}")
         if ci:
-            _sh("git", "pull", "--rebase")
-            _sh("git", "add", str(RULES))
-            _sh("git", "commit", "-m",
-                f"deity: standing rule(s) accumulated — {', '.join(written)}")
-            _sh("git", "push")
+            _publish(f"deity: standing rule(s) accumulated — "
+                     f"{', '.join(written)}", RULES)
     cal_path = WORLD / "calendar.json"
     wanted = [a for a in (o.get("automations") or [])
               if isinstance(a, dict) and a.get("name")
@@ -201,11 +195,7 @@ async def _deity_retrospective(entry: dict, ci: bool) -> list:
             _guard(cal_path).write_text(json.dumps(cal, indent=2) + "\n")
             print(f"  deity scheduled automation(s): {added}")
             if ci:
-                _sh("git", "pull", "--rebase")
-                _sh("git", "add", str(cal_path))
-                _sh("git", "commit", "-m",
-                    f"deity: calendar — {', '.join(added)}")
-                _sh("git", "push")
+                _publish(f"deity: calendar — {', '.join(added)}", cal_path)
     if o.get("advance_season") and GAME.exists():
         board = json.loads(GAME.read_text())
         nxt = skillcraft_advance()(board, board.get("season", {})
@@ -214,11 +204,8 @@ async def _deity_retrospective(entry: dict, ci: bool) -> list:
         print(f"  deity ADVANCED THE SEASON → {nxt['season']['number']} "
               f"(bounties paid, gold reset, ratchet carried)")
         if ci:
-            _sh("git", "pull", "--rebase")
-            _sh("git", "add", str(GAME))
-            _sh("git", "commit", "-m",
-                f"deity: season advanced → {nxt['season']['number']}")
-            _sh("git", "push")
+            _publish(f"deity: season advanced → {nxt['season']['number']}",
+                     GAME)
     return written
 
 
@@ -470,6 +457,19 @@ def _self_kick(filed: list, ci: bool) -> None:
               f"({n + 1}/{MAX_RUNS_PER_DAY} today)")
     except Exception as e:
         print(f"  self-kick failed (non-fatal): {e}")
+
+def _publish(msg: str, *paths) -> None:
+    """Commit-then-sync: add the paths, commit, pull --rebase (tree is clean
+    after the commit, so rebase works), push. The 2026-08-08 first-deploy
+    fix: pulling BEFORE adding dies on the unstaged world state."""
+    _sh("git", "add", *[str(p) for p in paths])
+    r = subprocess.run(["git", "commit", "-m", msg],
+                       capture_output=True, text=True, cwd=ROOT)
+    if r.returncode != 0:
+        return                                  # nothing to commit
+    _sh("git", "pull", "--rebase")
+    _sh("git", "push")
+
 
 def _sh(*cmd: str) -> str:
     r = subprocess.run(cmd, capture_output=True, text=True, cwd=ROOT)

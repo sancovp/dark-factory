@@ -45,13 +45,11 @@ jobs:
           # the governor: max deploys per day from the org's config
           cfg = json.load(open("darkfactory.json"))
           cap = int(cfg.get("max_runs_per_day", 4))
-          runs = json.loads(subprocess.run(
-              ["gh", "run", "list", "--workflow", "factory.yml",
-               "--limit", "50", "--json", "createdAt,conclusion"],
-              capture_output=True, text=True).stdout or "[]")
+          # the governor counts DEPLOYS (tracked in the calendar itself) —
+          # NOT workflow runs: every 30-min beat is a run, deploys are rare
           today = now.strftime("%Y-%m-%d")
-          n_today = sum(1 for r in runs
-                        if str(r.get("createdAt", "")).startswith(today))
+          meter = cal.get("_deploys", {})
+          n_today = meter.get("n", 0) if meter.get("date") == today else 0
           due_name = None
           for a in cal.get("automations", []):
               last = a.get("last_run")
@@ -63,6 +61,7 @@ jobs:
               for a in cal["automations"]:
                   if a["name"] == due_name:
                       a["last_run"] = now.isoformat(timespec="seconds")
+              cal["_deploys"] = {"date": today, "n": n_today + 1}
               json.dump(cal, open(cal_path, "w"), indent=2)
               subprocess.run(["git", "config", "user.name", "dark-factory[bot]"])
               subprocess.run(["git", "config", "user.email",
