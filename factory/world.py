@@ -52,7 +52,14 @@ class DevWorldRuntime:
         self.workdir = Path(tempfile.mkdtemp(prefix="df-dev-"))
 
     async def run(self, spec: str):
-        task = json.loads(spec) if spec.strip().startswith("{") else {"charter": spec}
+        # Department sends {"task_id","goal_id","description"}; the CEO put
+        # the charter/telemetry JSON in the task DESCRIPTION (the real shape).
+        outer = json.loads(spec) if spec.strip().startswith("{") else {}
+        desc = outer.get("description", spec)
+        try:
+            task = json.loads(desc) if desc.strip().startswith("{") else {}
+        except (ValueError, AttributeError):
+            task = {}
         aim = (f"{task.get('charter', CHARTER)}\n"
                f"THE LIVE GAME'S TELEMETRY: {json.dumps(task.get('telemetry'))}."
                + (f"\nOPEN ISSUES: {json.dumps(task['issues'])}"
