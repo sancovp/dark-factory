@@ -1,0 +1,9 @@
+{
+  "test_id": "test_meta_quest_forge_recipe",
+  "skill_path": "crafted/meta_quest_forge_recipe.md",
+  "skill_name": "meta_quest_forge_recipe",
+  "test_input": "forge a quest for crafting a lens skill",
+  "output": "# Quest: Forge a Lens Skill\nCraft a `lens`-type skill that reframes how to look at a problem (a reusable analytical viewpoint).\n\n## Reward\n# Quest: q_forge_lens — Reward: 60g\n\n## Gate Verification\nThe output must:\n1. Pass fresh_test() with a test input\n2. Include a test record at crafted/.tests/<id>.json\n3. Have a grep-able reward format",
+  "tested_at": "2026-08-08T06:50:00Z",
+  "result": "pass"
+}

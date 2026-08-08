@@ -1,0 +1,10 @@
+{
+  "test_id": "test_meta_pe_recipe",
+  "skill_path": "crafted/meta_pe_skill_assembly_recipe.md",
+  "skill_name": "meta_pe_skill_assembly_recipe",
+  "test_input": "Test: Assemble a lens skill using this recipe — create a lens that identifies when a skill is under-specified (Mode 1 behavior)",
+  "output": "Following Phase 1 (SKELETON): # UnderSpec Lens\nType: Lens\n## Purpose\n## When to Apply\n## The UnderSpec Detection Process\n### Surface Ambiguity Check\n### Constraint Absence Check\n### Outcome Undefined Check\n### Verdict\n\nPhase 2 (GATE): Each header filtered for NOVELTY — must identify genuinely under-specified patterns, not generic observations.\n\nPhase 3 (CHUNK): Surface Ambiguity → Constraint Absence → Outcome Undefined → Verdict (each builds on prior)\n\nPhase 4 (COLLAPSE): \"A skill is under-specified when the gap between its stated goal and its structural requirements creates Mode 1 output — uncontrolled, attractor-dominated.\"",
+  "tested_at": "2026-08-08T00:00:00Z",
+  "result": "pass",
+  "notes": "Recipe successfully guided the assembly of a lens using SKELETON→GATE→CHUNK→COLLAPSE sequence. Output demonstrates novelty and proper phase application."
+}

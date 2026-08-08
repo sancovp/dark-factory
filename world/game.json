@@ -16,8 +16,8 @@
   "agents": {
     "agent_001": {
       "gold": 160,
-      "last_action": "trade_post",
-      "last_action_at": "2026-08-08T06:45:00Z",
+      "last_action": "quest_accept",
+      "last_action_at": "2026-08-08T06:47:06Z",
       "skills_crafted": 1,
       "trades_completed": 0,
       "quests_completed": 1
@@ -38,7 +38,7 @@
       "skill_path": "crafted/convergence_lens.md",
       "price": 50,
       "rarity": "uncommon",
-      "description": "Convergence Lens \u2014 identifies when agents/strategies are converging and surfaces divergent alternatives. Essential for avoiding monoculture traps.",
+      "description": "Convergence Lens — identifies when agents/strategies are converging and surfaces divergent alternatives. Essential for avoiding monoculture traps.",
       "posted_at": "2026-08-08T06:45:00Z",
       "test_id": "test_30346b132bed"
     }
@@ -69,43 +69,48 @@
         "status": "completed",
         "completed_at": "2026-08-08T06:44:35Z",
         "skill_path": "crafted/convergence_lens.md"
+      },
+      {
+        "quest_id": "q_recipe_chain",
+        "accepted_at": "2026-08-08T06:47:06Z",
+        "status": "active"
       }
     ]
   },
   "deity_bulletin": [
     {
       "season": 1,
-      "message": "The world is born. Test before you list. Diverge \u2014 quests and audits pay.",
+      "message": "The world is born. Test before you list. Diverge — quests and audits pay.",
       "posted_at": "2026-08-07T09:46:14Z"
     },
     {
       "season": 1,
-      "message": "Season 1 opens clean \u2014 no listings, no bugs, divergent first moves (search vs quest_accept) ward off early convergence.",
+      "message": "Season 1 opens clean — no listings, no bugs, divergent first moves (search vs quest_accept) ward off early convergence.",
       "posted_at": "2026-08-08T06:17:36Z"
     },
     {
       "season": 1,
-      "message": "agent_002 breaks out with quest+gain loop (+60g, +1 craft, +1 quest); agent_001 stalls on search \u2014 no convergence pressure yet, but agent_001 must adapt or fall behind.",
+      "message": "agent_002 breaks out with quest+gain loop (+60g, +1 craft, +1 quest); agent_001 stalls on search — no convergence pressure yet, but agent_001 must adapt or fall behind.",
       "posted_at": "2026-08-08T06:17:55Z"
     },
     {
       "season": 1,
-      "message": "Both agents lock onto quest_accept \u2014 early convergence detected. agent_002 leads by +60g and 1 craft, but identical action paths invite selection pressure.",
+      "message": "Both agents lock onto quest_accept — early convergence detected. agent_002 leads by +60g and 1 craft, but identical action paths invite selection pressure.",
       "posted_at": "2026-08-08T06:18:36Z"
     },
     {
       "season": 1,
-      "message": "Round 0 baseline established \u2014 agent_002 enters with quest momentum while agent_001 searches; strategies diverge naturally, no convergence pressure applied.",
+      "message": "Round 0 baseline established — agent_002 enters with quest momentum while agent_001 searches; strategies diverge naturally, no convergence pressure applied.",
       "posted_at": "2026-08-08T06:42:50Z"
     },
     {
       "season": 1,
-      "message": "Both agents quested in R1 \u2014 agent_001 surged to +60g catching up, agent_002 held at 280g; strategies remain parallel, no convergence detected.",
+      "message": "Both agents quested in R1 — agent_001 surged to +60g catching up, agent_002 held at 280g; strategies remain parallel, no convergence detected.",
       "posted_at": "2026-08-08T06:44:39Z"
     },
     {
       "season": 1,
-      "message": "Agent_001 listed goods at trade_post (uncommon, unchallenged); agent_002 continues questing \u2014 strategies diverge, no convergence pressure.",
+      "message": "Agent_001 listed goods at trade_post (uncommon, unchallenged); agent_002 continues questing — strategies diverge, no convergence pressure.",
       "posted_at": "2026-08-08T06:45:06Z"
     }
   ],
