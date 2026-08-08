@@ -53,25 +53,15 @@ from cave_teams.darkfactory import CarKind, Championship, racetrack
 from .wos_team import WoSPlayer, WoSDeity, last_json
 from .gate import fresh_test
 
-ROOT = Path(__file__).resolve().parent.parent
-WORLD = ROOT / "world"
+from .config import (ROOT, PLAYERS, CHARTER, DEV_ROUNDS, LIVE_ROUNDS,
+                     REPLICATES, MAX_RUNS_PER_DAY, MAX_RULES, WORLD_DIR,
+                     API_KEY_ENV)
+
+WORLD = ROOT / WORLD_DIR
 GOLDEN = ROOT / ".claude" / "skills"
 LINEAGE = ROOT / "LINEAGE.json"
-PLAYERS = ["agent_001", "agent_002"]
-
-CHARTER = ("WE NEED TO WORK TOGETHER TO IMPROVE THE CODEBASE. Come up with "
-           "a skill that COMPOSES existing skills (a recipe) or is NEW, and "
-           "can be USED to do something that improves this repo. Craft it, "
-           "test it, trade it — the best one gets APPLIED to the repo and "
-           "shipped through CI/CD if it passes every gate.")
-
-DEV_ROUNDS = int(os.environ.get("FACTORY_DEV_ROUNDS", "3"))
-LIVE_ROUNDS = int(os.environ.get("FACTORY_LIVE_ROUNDS", "3"))
-REPLICATES = int(os.environ.get("FACTORY_REPLICATES", "2"))
-MAX_RUNS_PER_DAY = int(os.environ.get("FACTORY_MAX_RUNS_PER_DAY", "4"))
 RULES = WORLD / "rules"
 GAME = WORLD / "game.json"           # THE CONTINUING WORLD (WoS's game.json)
-MAX_RULES = int(os.environ.get("FACTORY_MAX_RULES", "12"))
 
 
 def _guard(path: Path) -> Path:
@@ -682,8 +672,9 @@ def main() -> int:
     if not (ROOT / "FACTORY_ON").exists():
         print("FACTORY_ON absent — autonomous cycles are paused.")
         return 0
-    if not os.environ.get("MINIMAX_API_KEY"):
-        print("SKIP — MINIMAX_API_KEY not set (the worlds are LLM-driven)")
+    from .config import have_key
+    if not have_key():
+        print(f"SKIP — {API_KEY_ENV} not set (the worlds are LLM-driven)")
         return 0
     asyncio.run(cycle(ci=args.ci))
     sys.stdout.flush()

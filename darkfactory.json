@@ -1,0 +1,13 @@
+{
+  "factory_name": "dark-factory",
+  "players": ["agent_001", "agent_002"],
+  "dev_rounds": 3,
+  "live_rounds": 3,
+  "replicates": 2,
+  "max_rules": 12,
+  "max_runs_per_day": 4,
+  "model": "MiniMax-M2.7-highspeed",
+  "api_key_env": "MINIMAX_API_KEY",
+  "world_dir": "world",
+  "charter": "WE NEED TO WORK TOGETHER TO IMPROVE THE CODEBASE. Come up with a skill that COMPOSES existing skills (a recipe) or is NEW, and can be USED to do something that improves this repo. Craft it, test it, trade it — the best one gets APPLIED to the repo and shipped through CI/CD if it passes every gate."
+}

@@ -1,0 +1,5 @@
+{
+  "name": "dark-factory",
+  "description": "A repository that maintains and improves itself: WoS game-worlds develop skills, apply them to the repo, and ship through gated CI/CD. One config, one key, it runs.",
+  "version": "0.1.0"
+}
