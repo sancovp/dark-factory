@@ -1,0 +1,9 @@
+{
+  "test_id": "test_causation_lens",
+  "skill_path": "crafted/causation_lens.md",
+  "result": "pass",
+  "timestamp": "2026-08-08T08:00:00Z",
+  "input": "Data shows: ice cream sales and drowning deaths both increase in summer",
+  "output_summary": "Applied causation lens: mechanism hypothesis = heat drives both independently. Test evidence: drowning prevention efforts, pool attendance data, ice cream consumption patterns. Disproof: if ice cream sales rise but drowning doesn't when controlling for temperature. Confidence: correlational only without direct mechanism test.",
+  "test_notes": "Lens successfully reframed correlation into testable causal hypothesis with falsification criteria. Input: 'ice cream + drowning correlation', Output: mechanism test + confidence level."
+}

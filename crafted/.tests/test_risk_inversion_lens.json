@@ -1,0 +1,7 @@
+{
+  "test_id": "test_risk_inversion_lens",
+  "skill_path": "crafted/risk_inversion_lens.md",
+  "result": "pass",
+  "timestamp": "2026-08-08T07:58:00Z",
+  "notes": "Lens correctly inverts risk/opportunity framing"
+}

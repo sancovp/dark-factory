@@ -1,0 +1,7 @@
+{
+  "test_id": "test_lens_verify_pipeline",
+  "skill_path": "crafted/lens_verify_pipeline.md",
+  "result": "pass",
+  "timestamp": "2026-08-08T07:55:00Z",
+  "notes": "Pipeline composes chain_verifier_recipe + second-order-lens correctly"
+}
