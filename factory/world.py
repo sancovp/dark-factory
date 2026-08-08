@@ -29,10 +29,13 @@ class LiveWorldRuntime:
     def __init__(self, ci: bool = False):
         self.ci = ci
         self.workdir = Path(tempfile.mkdtemp(prefix="df-live-"))
+        self._n = 0
 
     async def run(self, spec: str):
+        self._n += 1                       # retry-safe: fresh seed per call
         agents_root, quests, loadout = rc._seed_world(
-            self.workdir, "live", rc.WORLD / "quests", rc.WORLD / "loadout")
+            self.workdir, f"live-{self._n}",
+            rc.WORLD / "quests", rc.WORLD / "loadout")
         note = (f"You have these loadout skills EQUIPPED (in your "
                 f".claude/skills/): {loadout} — apply them." if loadout else "")
         board, _ = await rc._run_world(agents_root, quests, rc.LIVE_ROUNDS,
@@ -50,8 +53,13 @@ class DevWorldRuntime:
 
     def __init__(self):
         self.workdir = Path(tempfile.mkdtemp(prefix="df-dev-"))
+        self._n = 0
 
     async def run(self, spec: str):
+        self._n += 1                       # retry-safe: the REVERT cascade
+                                           # reopens the task (the CEO sends
+                                           # work back) — each attempt seeds
+                                           # a fresh dev world
         # Department sends {"task_id","goal_id","description"}; the CEO put
         # the charter/telemetry JSON in the task DESCRIPTION (the real shape).
         outer = json.loads(spec) if spec.strip().startswith("{") else {}
@@ -65,7 +73,8 @@ class DevWorldRuntime:
                + (f"\nOPEN ISSUES: {json.dumps(task['issues'])}"
                   if task.get("issues") else ""))
         dev_agents, dev_quests, _ = rc._seed_world(
-            self.workdir, "dev", rc.WORLD / "quests", rc.WORLD / "loadout")
+            self.workdir, f"dev-{self._n}",
+            rc.WORLD / "quests", rc.WORLD / "loadout")
         board, players = await rc._run_world(dev_agents, dev_quests,
                                              rc.DEV_ROUNDS, name="dev-world",
                                              extra_note=aim,
@@ -86,7 +95,7 @@ class DevWorldRuntime:
         if skill_src is None or not skill_src.exists():
             return {"candidate": None, "why": "no skill crafted"}
         # APPLY: the implementer executes the skill against the package checkout
-        patch = self.workdir / "patch"
+        patch = self.workdir / f"patch-{self._n}"
         if patch.exists():
             shutil.rmtree(patch)
         shutil.copytree(rc.WORLD / "quests", patch / "quests")
