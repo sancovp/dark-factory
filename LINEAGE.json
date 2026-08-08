@@ -53,5 +53,26 @@
     ],
     "fitness_current": 2.5,
     "fitness_patched": 3.0
+  },
+  {
+    "at": "2026-08-08T07:26:53+00:00",
+    "verdict": "REVERT",
+    "change": "Installed skill_pipeline_recipe (recipe) to loadout, composing test_skill (prosthesis) and reframe_lens (lens) as its two-stage pipeline prerequisites",
+    "diff": [
+      {
+        "file": "loadout/reframe_lens.md",
+        "kind": "added"
+      },
+      {
+        "file": "loadout/skill_pipeline_recipe.md",
+        "kind": "added"
+      },
+      {
+        "file": "loadout/test_skill.md",
+        "kind": "added"
+      }
+    ],
+    "fitness_current": 2.0,
+    "fitness_patched": 1.5
   }
 ]
