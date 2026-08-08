@@ -1,0 +1,9 @@
+{
+  "test_id": "test_recipe_lens_template_001",
+  "skill_path": "crafted/recipe_adaptive_lens_template.md",
+  "skill_name": "recipe_adaptive_lens_template",
+  "test_input": "Test: Assemble a summarizer using Summary Template + Skeptic Lens",
+  "output": "Following recipe assembly: 1) Applied Skeptic Lens to input text - identified potential omissions; 2) Applied Summary Template structure - filled with skeptic-informed bullets; 3) Quality check: Both layers necessary, output is Towering.",
+  "tested_at": "2026-08-08T00:00:00Z",
+  "result": "pass"
+}

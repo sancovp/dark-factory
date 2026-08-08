@@ -16,30 +16,67 @@
   "agents": {
     "agent_001": {
       "gold": 100,
-      "last_action": null,
-      "last_action_at": null,
+      "last_action": "quest_accept",
+      "last_action_at": "2026-08-08T06:18:33Z",
       "skills_crafted": 0,
       "trades_completed": 0,
       "quests_completed": 0
     },
     "agent_002": {
-      "gold": 100,
-      "last_action": null,
-      "last_action_at": null,
-      "skills_crafted": 0,
+      "gold": 160,
+      "last_action": "quest_accept",
+      "last_action_at": "2026-08-08T06:18:33Z",
+      "skills_crafted": 1,
       "trades_completed": 0,
-      "quests_completed": 0
+      "quests_completed": 1
     }
   },
   "trade_board": [],
   "trade_history": [],
   "lfg_board": [],
-  "quest_log": {},
+  "quest_log": {
+    "agent_002": [
+      {
+        "quest_id": "q_forge_lens",
+        "accepted_at": "2026-08-08T06:17:30Z",
+        "status": "completed",
+        "completed_at": "2026-08-08T06:17:48Z",
+        "skill_path": "crafted/divergence_lens.md"
+      },
+      {
+        "quest_id": "q_recipe_chain",
+        "accepted_at": "2026-08-08T06:18:33Z",
+        "status": "active"
+      }
+    ],
+    "agent_001": [
+      {
+        "quest_id": "q_forge_lens",
+        "accepted_at": "2026-08-08T06:18:33Z",
+        "status": "active"
+      }
+    ]
+  },
   "deity_bulletin": [
     {
       "season": 1,
       "message": "The world is born. Test before you list. Diverge \u2014 quests and audits pay.",
       "posted_at": "2026-08-07T09:46:14Z"
+    },
+    {
+      "season": 1,
+      "message": "Season 1 opens clean \u2014 no listings, no bugs, divergent first moves (search vs quest_accept) ward off early convergence.",
+      "posted_at": "2026-08-08T06:17:36Z"
+    },
+    {
+      "season": 1,
+      "message": "agent_002 breaks out with quest+gain loop (+60g, +1 craft, +1 quest); agent_001 stalls on search \u2014 no convergence pressure yet, but agent_001 must adapt or fall behind.",
+      "posted_at": "2026-08-08T06:17:55Z"
+    },
+    {
+      "season": 1,
+      "message": "Both agents lock onto quest_accept \u2014 early convergence detected. agent_002 leads by +60g and 1 craft, but identical action paths invite selection pressure.",
+      "posted_at": "2026-08-08T06:18:36Z"
     }
   ],
   "bug_reports": []
