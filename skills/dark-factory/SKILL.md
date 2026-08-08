@@ -21,8 +21,9 @@ replicates, model, charter, caps) to its slot when the program runs.
 
 ```bash
 pip install -r requirements.txt
-python -m factory.run_cycle          # one full cycle: live world → dev world
-                                     # → apply → gate → race → verdict
+python -m factory.world              # THE top-level World: JobWorld(CEO,
+                                     # dev_world, live_world) from the config
+python -m factory.run_cycle          # legacy runner (same loop, procedural)
 ```
 
 ## Stand it up on GitHub (fully autonomous)
