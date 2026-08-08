@@ -1,12 +1,15 @@
 name: dark-factory
 
+# GitHub's role: DEPLOY the org. The beat below is dumb; WHICH beats become
+# deployments is decided by THE ORG'S OWN CALENDAR (world/calendar.json —
+# deity-owned). Issues and manual dispatch deploy unconditionally.
 on:
   schedule:
-    - cron: "17 6 * * *"        # heartbeat: one autonomous cycle per day
+    - cron: "*/30 * * * *"       # the beat carrier (30-min resolution)
   issues:
-    types: [opened]              # an issue landing CONVENES the dev system
+    types: [opened]               # an issue landing deploys the org now
   workflow_dispatch:
-  pull_request:                  # compose-check gates human PRs too
+  pull_request:                   # compose-check gates human PRs too
     paths-ignore: ["LINEAGE.json"]
 
 permissions:
@@ -15,38 +18,93 @@ permissions:
   issues: write
 
 jobs:
-  compose-check:
-    # keyless: the full stack installs and the composition imports/builds
+  calendar-gate:
+    # keyless + pip-less: consult the org's calendar; only due beats deploy.
     runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request'
+    outputs:
+      due: ${{ steps.gate.outputs.due }}
+      automation: ${{ steps.gate.outputs.automation }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: gate
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EVENT: ${{ github.event_name }}
+        run: |
+          python3 - <<'EOF'
+          import json, os, subprocess, datetime as dt
+          out = open(os.environ["GITHUB_OUTPUT"], "a")
+          event = os.environ["EVENT"]
+          if event in ("workflow_dispatch", "issues"):
+              print("gate: non-schedule trigger — deploy unconditionally")
+              out.write(f"due=true\nautomation={event}\n"); raise SystemExit
+          cal_path = "world/calendar.json"
+          cal = json.load(open(cal_path))
+          now = dt.datetime.now(dt.timezone.utc)
+          # the governor: max deploys per day from the org's config
+          cfg = json.load(open("darkfactory.json"))
+          cap = int(cfg.get("max_runs_per_day", 4))
+          runs = json.loads(subprocess.run(
+              ["gh", "run", "list", "--workflow", "factory.yml",
+               "--limit", "50", "--json", "createdAt,conclusion"],
+              capture_output=True, text=True).stdout or "[]")
+          today = now.strftime("%Y-%m-%d")
+          n_today = sum(1 for r in runs
+                        if str(r.get("createdAt", "")).startswith(today))
+          due_name = None
+          for a in cal.get("automations", []):
+              last = a.get("last_run")
+              mins = (1e9 if last is None else
+                      (now - dt.datetime.fromisoformat(last)).total_seconds() / 60)
+              if mins >= int(a.get("every_minutes", 1440)):
+                  due_name = a["name"]; break
+          if due_name and n_today < cap:
+              for a in cal["automations"]:
+                  if a["name"] == due_name:
+                      a["last_run"] = now.isoformat(timespec="seconds")
+              json.dump(cal, open(cal_path, "w"), indent=2)
+              subprocess.run(["git", "config", "user.name", "dark-factory[bot]"])
+              subprocess.run(["git", "config", "user.email",
+                              "dark-factory@users.noreply.github.com"])
+              subprocess.run(["git", "add", cal_path])
+              subprocess.run(["git", "commit", "-m",
+                              f"calendar: {due_name} fired"])
+              subprocess.run(["git", "push"])
+              print(f"gate: '{due_name}' due ({n_today}/{cap} today) — deploy")
+              out.write(f"due=true\nautomation={due_name}\n")
+          else:
+              why = ("governor cap" if due_name else "nothing due")
+              print(f"gate: no deploy ({why})")
+              out.write("due=false\nautomation=\n")
+          EOF
+
+  compose-check:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: "3.11" }
       - run: pip install -r requirements.txt
-      - name: the composition builds (worlds, gate, racetrack — no LLM calls)
-        run: |
-          python - <<'EOF'
-          from cave_teams.skillcraft import SkillcraftWorld, initial_state
-          from cave_teams.darkfactory import CarKind, Championship, racetrack
-          from cave_teams.examples import MiniMaxRuntime
-          from factory.wos_team import WoSPlayer, WoSDeity
-          from factory.gate import TEST_SH_PROMPT
-          from factory import run_cycle
-          assert "{skill_content}" in TEST_SH_PROMPT
-          print("compose-check: cave-teams + heaven + factory wiring import clean")
-          EOF
+      - name: the composition builds (keyless — no LLM calls)
+        run: python -c "from factory.world import build; w = build(); print(w.describe())"
 
-  autonomous-cycle:
-    if: github.event_name != 'pull_request'
-    needs: compose-check
+  deploy-the-org:
+    # stand the JobWorld up; its own rounds are the heartbeats; it runs to a
+    # verdict (or decides to do nothing) and the runner tears down. The org's
+    # state survives in the repo — the next deploy RESUMES the same org.
+    needs: calendar-gate
+    if: needs.calendar-gate.outputs.due == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with: { fetch-depth: 0 }
+      - run: git pull --rebase   # the gate may have just committed last_run
       - uses: actions/setup-python@v5
         with: { python-version: "3.11" }
       - run: pip install -r requirements.txt
-      - name: one factory cycle (dev-world → gate → live racetrack → verdict)
+      - name: "deploy: the org resumes (automation: ${{ needs.calendar-gate.outputs.automation }})"
         env:
           MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
           HEAVEN_DATA_DIR: ${{ runner.temp }}/heaven-data
@@ -55,4 +113,4 @@ jobs:
           mkdir -p "$HEAVEN_DATA_DIR"
           git config user.name  "dark-factory[bot]"
           git config user.email "dark-factory@users.noreply.github.com"
-          python -m factory.run_cycle --ci
+          python -m factory.world --ci

@@ -1,0 +1,10 @@
+{
+  "automations": [
+    {
+      "name": "daily-workday",
+      "every_minutes": 1440,
+      "last_run": null,
+      "note": "the standing daily deployment of the org"
+    }
+  ]
+}

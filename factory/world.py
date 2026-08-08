@@ -132,14 +132,46 @@ def make_judge(ci: bool = False):
                 else racetrack(*pair, str(workdir), kind=kind))
         race = await gate.execute({})
         v = race.context["verdict"]
-        out = {"verdict": v,
+        out = {"verdict": v, "change": candidate.get("change", ""),
+               "diff": candidate["diff"],
                "fitness_current": race.context["race"]["control"].get("fitness"),
                "fitness_patched": race.context["race"]["treatment"].get("fitness")}
+        if "tally" in race.context:
+            out["tally"] = race.context["tally"]
+        now = __import__("datetime").datetime.now(
+            __import__("datetime").timezone.utc).isoformat(timespec="seconds")
+        entry = {"at": now, **{k: out[k] for k in
+                               ("verdict", "change", "diff",
+                                "fitness_current", "fitness_patched")}}
         if v == "SHIP":
             for d in candidate["diff"]:
                 src, dst = patch / d["file"], rc._guard(rc.WORLD / d["file"])
                 dst.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy(src, dst)
+        rc._record(entry)
+        if ci:                              # the CI/CD half: PR per verdict
+            branch = (f"factory/{rc._slug(out['change']) or 'change'}"[:60]
+                      + f"-{now.replace(':', '').replace('+', 'Z')}")
+            base = rc._sh("git", "rev-parse", "--abbrev-ref", "HEAD")
+            rc._sh("git", "checkout", "-b", branch)
+            rc._sh("git", "add", "-A")
+            rc._sh("git", "commit", "-m",
+                   f"factory: {out['change'][:60]} — {v}")
+            rc._sh("git", "push", "-u", "origin", branch)
+            body = "```json\n" + json.dumps(entry, indent=2) + "\n```\n"
+            rc._sh("gh", "pr", "create", "--title",
+                   f"[{v}] {out['change'][:70]}: "
+                   f"{out['fitness_current']}→{out['fitness_patched']}",
+                   "--body", body, "--base", base, "--head", branch)
+            if v == "SHIP":
+                rc._sh("gh", "pr", "merge", branch, "--squash",
+                       "--delete-branch")
+            else:
+                rc._sh("gh", "pr", "close", branch, "--comment",
+                       f"verdict: {v} — the patched org did not causally "
+                       f"out-produce the current one.", "--delete-branch")
+            rc._sh("git", "checkout", base)
+            rc._sh("git", "pull", "--rebase")
         return out
 
     return judge
@@ -155,18 +187,38 @@ def build(ci: bool = False) -> DarkFactoryWorld:
 
 
 def main():
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--ci", action="store_true")
+    args = ap.parse_args()
+    ci = args.ci or os.environ.get("CI") == "true"
     from .config import have_key
+    if not (rc.ROOT / "FACTORY_ON").exists():
+        print("FACTORY_ON absent — the org stays down.")
+        return 0
     if not have_key():
         print("SKIP — the worlds are LLM-driven; set the key named by "
               "api_key_env in darkfactory.json")
         return 0
-    world = build(ci=os.environ.get("CI") == "true")
+    world = build(ci=ci)
     print(world.describe())
-    res = asyncio.run(world.execute({}))
-    b = res.context["board"]
-    for t in b["tasks"]:
-        print(f"  {t['dept']}: {t['status']}"
-              + (f" — {t['review']}" if t.get("review") else ""))
+
+    async def _run():
+        res = await world.execute({})
+        s = res.context["store"]
+        for t in s.get("tasks", {}).values():
+            print(f"  {t['dept']}: {t['status']}"
+                  + (f" — {json.dumps(t.get('review'))[:120]}"
+                     if t.get("review") else ""))
+        # the deity's cross-cycle seat: rules + season + THE CALENDAR
+        dev = next((t for t in s.get("tasks", {}).values()
+                    if t["dept"] == "dev_world"), None)
+        entry = {"verdict": (dev or {}).get("status"),
+                 "review": (dev or {}).get("review"),
+                 "day": s.get("day")}
+        await rc._deity_retrospective(entry, ci)
+
+    asyncio.run(_run())
     import sys
     sys.stdout.flush()
     os._exit(0)

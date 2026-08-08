@@ -149,10 +149,15 @@ async def _deity_retrospective(entry: dict, ci: bool) -> list:
         'You also hold deity-season.sh: set "advance_season": true ONLY '
         "when the live season has run its course (stagnant economy, lessons "
         "absorbed) — it pays bounties, resets gold to the floor, and RATCHETS "
-        "the quality bar. Reply ONLY JSON: "
-        '{"rules":[{"name":"<snake_case>","text":"<one operational rule, '
-        '<=60 words>"}],"advance_season":false,"reasoning":"<one line>"} — '
-        "an empty rules list is a valid answer if nothing was earned.")
+        "the quality bar. You ALSO own the org's deployment calendar "
+        "(world/calendar.json): if this cycle shows the org needs to run on "
+        "a different cadence (e.g. an automation the dev system wants), add "
+        "it — {\"name\",\"every_minutes\">=60,\"note\"} — at most 4 "
+        "automations total; the daily-workday entry is standing. Reply ONLY "
+        'JSON: {"rules":[{"name":"<snake_case>","text":"<one operational '
+        'rule, <=60 words>"}],"advance_season":false,'
+        '"automations":[],"reasoning":"<one line>"} — empty lists are valid '
+        "answers if nothing was earned.")
     o = last_json(out if isinstance(out, str) else str(out),
                   keys=("rules",), default={})
     written = []
@@ -176,6 +181,31 @@ async def _deity_retrospective(entry: dict, ci: bool) -> list:
             _sh("git", "commit", "-m",
                 f"deity: standing rule(s) accumulated — {', '.join(written)}")
             _sh("git", "push")
+    cal_path = WORLD / "calendar.json"
+    wanted = [a for a in (o.get("automations") or [])
+              if isinstance(a, dict) and a.get("name")
+              and int(a.get("every_minutes", 0)) >= 60][:4]
+    if wanted and cal_path.exists():
+        cal = json.loads(cal_path.read_text())
+        have = {a["name"] for a in cal.get("automations", [])}
+        added = []
+        for a in wanted:
+            if a["name"] in have or len(cal["automations"]) >= 4:
+                continue
+            cal["automations"].append(
+                {"name": str(a["name"])[:40],
+                 "every_minutes": int(a["every_minutes"]),
+                 "last_run": None, "note": str(a.get("note", ""))[:120]})
+            added.append(a["name"])
+        if added:
+            _guard(cal_path).write_text(json.dumps(cal, indent=2) + "\n")
+            print(f"  deity scheduled automation(s): {added}")
+            if ci:
+                _sh("git", "pull", "--rebase")
+                _sh("git", "add", str(cal_path))
+                _sh("git", "commit", "-m",
+                    f"deity: calendar — {', '.join(added)}")
+                _sh("git", "push")
     if o.get("advance_season") and GAME.exists():
         board = json.loads(GAME.read_text())
         nxt = skillcraft_advance()(board, board.get("season", {})
