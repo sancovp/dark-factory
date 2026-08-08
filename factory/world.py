@@ -148,12 +148,14 @@ def make_judge(ci: bool = False):
                       + f"-{now.replace(':', '').replace('+', 'Z')}")
             base = rc._sh("git", "rev-parse", "--abbrev-ref", "HEAD")
             rc._sh("git", "checkout", "-b", branch)
-            if v == "SHIP":
-                for d in candidate["diff"]:
-                    src = patch / d["file"]
-                    dst = rc._guard(rc.WORLD / d["file"])
-                    dst.parent.mkdir(parents=True, exist_ok=True)
-                    shutil.copy(src, dst)
+            # the candidate rides the PR for BOTH verdicts — a closed PR must
+            # SHOW the rejected change (the receipt); merge keeps it, close
+            # discards it with the branch
+            for d in candidate["diff"]:
+                src = patch / d["file"]
+                dst = rc._guard(rc.WORLD / d["file"])
+                dst.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy(src, dst)
             rc._sh("git", "add", "-A")
             rc._sh("git", "commit", "-m",
                    f"factory: {out['change'][:60]} — {v}")

@@ -474,7 +474,8 @@ def _publish(msg: str, *paths) -> None:
 def _sh(*cmd: str) -> str:
     r = subprocess.run(cmd, capture_output=True, text=True, cwd=ROOT)
     if r.returncode != 0:
-        raise RuntimeError(f"{' '.join(cmd)} failed: {r.stderr[-400:]}")
+        raise RuntimeError(f"{' '.join(cmd)} failed: "
+                           f"{(r.stderr or r.stdout)[-400:]}")
     return r.stdout.strip()
 
 
