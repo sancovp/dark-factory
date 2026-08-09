@@ -21,10 +21,12 @@ jobs:
           sudo apt-get update && sudo apt-get install -y swi-prolog
           pip install kuzu pydantic pydantic-stack-core
       - name: isaac stack (editable clones — data files guaranteed)
+        env:
+          STACK_PAT: ${{ secrets.STACK_PAT }}
         run: |
           git clone --depth 1 -b ceo https://github.com/sancovp/map-v2.git /tmp/map-v2
           git clone --depth 1 -b ceo https://github.com/sancovp/cave-teams.git /tmp/cave-teams
-          git clone --depth 1 https://github.com/sancovp/ee-v2.git /tmp/ee-v2
+          git clone --depth 1 "https://x-access-token:${STACK_PAT}@github.com/sancovp/ee-v2.git" /tmp/ee-v2
           pip install -e /tmp/map-v2 -e /tmp/cave-teams -e /tmp/ee-v2
           pip install heaven-framework || true   # verify pin on first run
       - name: run one round (grade 1)
