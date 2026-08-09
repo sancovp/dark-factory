@@ -143,5 +143,26 @@
     ],
     "fitness_current": 0.0,
     "fitness_patched": 0.5
+  },
+  {
+    "at": "2026-08-09T06:53:50+00:00",
+    "verdict": "REVERT",
+    "change": "",
+    "diff": [
+      {
+        "file": "quests/q_recipe_chain.md",
+        "kind": "modified"
+      },
+      {
+        "file": "loadout/chain_verifier_recipe.md",
+        "kind": "modified"
+      },
+      {
+        "file": "loadout/skill_audit_recipe.md",
+        "kind": "added"
+      }
+    ],
+    "fitness_current": 0.0,
+    "fitness_patched": 0.0
   }
 ]
