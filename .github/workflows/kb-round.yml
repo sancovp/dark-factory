@@ -1,0 +1,35 @@
+name: kb-round
+on:
+  workflow_dispatch:          # GRADE 1: human-dispatched only.
+    inputs:
+      subject:
+        description: "Module subject to cultivate"
+        required: true
+  # schedule:                 # LATER (deity earns it): calendar-gated like
+  #   - cron: "0 6 * * *"     # the deploy beat; see world/calendar.json
+jobs:
+  round:
+    if: github.repository_owner == 'sancovp'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - name: prover + graph deps
+        run: |
+          sudo apt-get update && sudo apt-get install -y swi-prolog
+          pip install kuzu pydantic pydantic-stack-core
+      - name: isaac stack
+        run: |
+          pip install "git+https://github.com/sancovp/map-v2.git@ceo"
+          pip install "git+https://github.com/sancovp/cave-teams.git@ceo"
+          pip install "git+https://github.com/sancovp/ee-v2.git"
+          pip install heaven-framework || true   # verify pin on first run
+      - name: run one round (grade 1)
+        env:
+          MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
+          HEAVEN_DATA_DIR: /tmp/heaven_data
+          FACTORY_ON: ${{ vars.FACTORY_ON }}
+        run: python -m kbworld.round "${{ github.event.inputs.subject }}" --grade1
+      # TODO(fill): branch + PR step (reuse the factory's publish pattern)
