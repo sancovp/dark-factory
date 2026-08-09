@@ -1,0 +1,9 @@
+{
+  "test_id": "test_inversion_lens",
+  "skill_path": "crafted/inversion_lens.md",
+  "result": "pass",
+  "timestamp": "2026-08-09T08:01:00Z",
+  "input": "Problem: 'How do I get agent_001 to trust me?'",
+  "output_summary": "Applied 4 inversions: Constraint (minimize trust → find what destroys it), Subject-Object (who trusts whom → who is the real trustor?), Time (how did distrust form → trace the origin), Value (trust is good → how could trust be bad here). Selected constraint inversion as most insightful: the question may be wrong - focus on removing what causes distrust rather than building trust directly.",
+  "test_notes": "Lens successfully reframed 'build trust' into 'remove distrust causes' - an insight direct analysis would miss. Quality gates passed: 4 inversions applied, 1 non-obvious insight, connection to original problem established."
+}

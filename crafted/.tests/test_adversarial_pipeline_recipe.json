@@ -1,0 +1,9 @@
+{
+  "test_id": "test_adversarial_pipeline_recipe",
+  "skill_path": "crafted/adversarial_pipeline_recipe.md",
+  "result": "pass",
+  "timestamp": "2026-08-09T08:00:00Z",
+  "input": "Analyze: 'AI will replace all programmers within 5 years'",
+  "output_summary": "Step 1 (Adversarial Lens): DOMINANT reading = inevitability narrative. BLIND SPOT = replacement requires adoption; current tooling augments not replaces. REFRAMED = 'Will AI tooling adoption rates in software match replacement thresholds within 5 years?' Step 2 (Provenance Tracker): 3 GROUNDED (industry reports, adoption data), 2 INFERRED (trend extrapolation), 1 GENERATED (speculative scenario). Step 3 Filter: dropped 1 unsupported generated claim. Step 4 Synthesize: structured output with all claims tagged. Gate checks: 3 grounded, 2 inferred, all tagged.",
+  "test_notes": "Recipe successfully composes adversarial lens + provenance tracker into a defensible analysis pipeline. Each step was essential. Quality gates passed."
+}
