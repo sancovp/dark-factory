@@ -164,5 +164,18 @@
     ],
     "fitness_current": 0.0,
     "fitness_patched": 0.0
+  },
+  {
+    "at": "2026-08-09T07:07:58+00:00",
+    "verdict": "REVERT",
+    "change": "Installed recipe_gate_preflight_pipeline.md to loadout; executed 3-stage preflight pipeline against existing chain_verifier_recipe.md \u2014 all stages pass",
+    "diff": [
+      {
+        "file": "loadout/recipe_gate_preflight_pipeline.md",
+        "kind": "added"
+      }
+    ],
+    "fitness_current": 0.5,
+    "fitness_patched": 0.0
   }
 ]
