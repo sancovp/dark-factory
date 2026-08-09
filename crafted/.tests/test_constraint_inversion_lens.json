@@ -1,0 +1,8 @@
+{
+  "test_id": "test_constraint_inversion_lens",
+  "skill_path": "crafted/constraint_inversion_lens.md",
+  "result": "pass",
+  "skill_type": "lens",
+  "quality_gates": 3,
+  "rarity_assessment": "Rare - provides novel reframing technique not found in existing lenses"
+}

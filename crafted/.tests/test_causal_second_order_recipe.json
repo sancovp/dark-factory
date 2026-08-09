@@ -1,0 +1,12 @@
+{
+  "test_id": "test_causal_second_order_recipe",
+  "skill_path": "crafted/causal_second_order_recipe.md",
+  "result": "pass",
+  "composed_skills": [
+    "crafted/causation_lens.md",
+    "crafted/second-order-lens.md"
+  ],
+  "pipeline_stages": 3,
+  "quality_gates": 4,
+  "rarity_assessment": "Rare - combines two Uncommon lenses into a novel pipeline"
+}

@@ -2,7 +2,7 @@
 
 **Type:** Recipe  
 **Rarity:** Rare  
-**Composes:** Divergence Lens + Convergence Lens → Skill Quality Verifier
+**Composes:** Divergence Lens + Irony Lens → Skill Quality Verifier
 
 ## The Problem
 
@@ -11,7 +11,7 @@ You have skills. But do they work? Will they pass the gate? Can they be trusted 
 ## Ingredients
 
 1. **Divergence Lens** — Find what the skill misses, what assumptions it makes, what edge cases it ignores.
-2. **Convergence Lens** — Find where the skill converges with bad patterns, where it's likely to fail the gate, where buyers will lose trust.
+2. **Irony Lens** — Find where the skill converges with bad patterns, where it's likely to fail the gate, where buyers will lose trust.
 
 ## The Chain Protocol
 
@@ -26,9 +26,9 @@ Take the skill under evaluation and apply the Divergence Lens questions:
 
 Output: A **Divergence Report** listing at least 3 failure modes or blind spots.
 
-### Step 2: Apply Convergence Lens
+### Step 2: Apply Irony Lens
 
-Now apply the Convergence Lens to the same skill:
+Now apply the Irony Lens to the same skill:
 
 - What is the DOMINANT pattern this skill follows? (Is it the obvious approach?)
 - How many OTHER skills do the exact same thing?
