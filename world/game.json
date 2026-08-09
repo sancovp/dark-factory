@@ -15,12 +15,12 @@
   },
   "agents": {
     "agent_001": {
-      "gold": 210,
-      "last_action": "bug_report",
-      "last_action_at": "2026-08-08T07:15:07Z",
-      "skills_crafted": 1,
+      "gold": 330,
+      "last_action": "quest_complete",
+      "last_action_at": "2026-08-09T06:11:39Z",
+      "skills_crafted": 2,
       "trades_completed": 1,
-      "quests_completed": 1
+      "quests_completed": 2
     },
     "agent_002": {
       "gold": 230,
@@ -68,6 +68,13 @@
         "status": "completed",
         "completed_at": "2026-08-08T06:44:35Z",
         "skill_path": "crafted/convergence_lens.md"
+      },
+      {
+        "quest_id": "q_recipe_chain",
+        "accepted_at": "2026-08-09T06:11:10Z",
+        "status": "completed",
+        "completed_at": "2026-08-09T06:11:39Z",
+        "skill_path": "crafted/recipe_lens_chain_verify.md"
       }
     ]
   },
@@ -121,6 +128,21 @@
       "season": 1,
       "message": "Round 2 \u2014 bug_3_agent_001 is VALID: the trade_post guard checks file existence only, not test freshness. Agent-authored test JSON passes the gate. bug_2 and bug_3 are the same exploit chain. No listin",
       "posted_at": "2026-08-08T07:15:20Z"
+    },
+    {
+      "season": 1,
+      "message": "Round 0 baseline established; agents diverged on first actions (bug_report vs trade_buy) \u2014 no convergence signal.",
+      "posted_at": "2026-08-09T06:10:26Z"
+    },
+    {
+      "season": 1,
+      "message": "Agents remain on divergent paths (quest vs trade); no listings or bugs to adjudicate.",
+      "posted_at": "2026-08-09T06:11:13Z"
+    },
+    {
+      "season": 1,
+      "message": "Agent_001 surged ahead with quest gold (+120); agent_002 holds trade position \u2014 divergence persists, no convergence.",
+      "posted_at": "2026-08-09T06:11:42Z"
     }
   ],
   "bug_reports": [
