@@ -1,0 +1,268 @@
+{
+  "skilltree": {
+    "name": "understand-sourdough baking",
+    "kind": "skill",
+    "skill_src": "/home/runner/work/dark-factory/dark-factory/kbworld/state/libraries/_staging_sourdough_baking/understand-sourdough baking",
+    "description": "the sourdough baking library \u2014 every skill a certified region of the KB; call number = home : facets",
+    "coord": "0",
+    "frameworks": [],
+    "children": [
+      {
+        "name": "understand-core",
+        "kind": "skill",
+        "skill_src": "/home/runner/work/dark-factory/dark-factory/kbworld/state/libraries/_staging_sourdough_baking/understand-core",
+        "description": "the core subdomain of sourdough baking (11 concepts)",
+        "coord": "0.1",
+        "frameworks": [],
+        "children": [
+          {
+            "name": "understand-crust_color",
+            "kind": "skill",
+            "skill_src": "/home/runner/work/dark-factory/dark-factory/kbworld/state/libraries/_staging_sourdough_baking/understand-crust_color",
+            "description": "The brown coloration of bread's outer layer produced by Maillard reaction and caramelization during baking, ra",
+            "coord": "0.1.1",
+            "frameworks": [],
+            "children": []
+          },
+          {
+            "name": "understand-flavor_complexity",
+            "kind": "skill",
+            "skill_src": "/home/runner/work/dark-factory/dark-factory/kbworld/state/libraries/_staging_sourdough_baking/understand-flavor_complexity",
+            "description": "The depth and nuance of sourdough taste arising from multiple organic acids, esters, and alcohols produced dur",
+            "coord": "0.1.2",
+            "frameworks": [],
+            "children": []
+          },
+          {
+            "name": "understand-baking_duration",
+            "kind": "skill",
+            "skill_src": "/home/runner/work/dark-factory/dark-factory/kbworld/state/libraries/_staging_sourdough_baking/understand-baking_duration",
+            "description": "The total time bread spends in the oven during baking, typically 20-50 minutes depending on loaf size and oven",
+            "coord": "0.1.3",
+            "frameworks": [],
+            "children": []
+          },
+          {
+            "name": "understand-banneton_flouring",
+            "kind": "skill",
+            "skill_src": "/home/runner/work/dark-factory/dark-factory/kbworld/state/libraries/_staging_sourdough_baking/understand-banneton_flouring",
+            "description": "Dusting the interior of a proofing basket with flour before placing shaped dough, preventing sticking and crea",
+            "coord": "0.1.4",
+            "frameworks": [],
+            "children": []
+          },
+          {
+            "name": "understand-crumb_color",
+            "kind": "skill",
+            "skill_src": "/home/runner/work/dark-factory/dark-factory/kbworld/state/libraries/_staging_sourdough_baking/understand-crumb_color",
+            "description": "The visual shade of the bread interior ranging from pale ivory to deep golden depending on fermentation length",
+            "coord": "0.1.5",
+            "frameworks": [],
+            "children": []
+          },
+          {
+            "name": "understand-crumb_texture",
+            "kind": "skill",
+            "skill_src": "/home/runner/work/dark-factory/dark-factory/kbworld/state/libraries/_staging_sourdough_baking/understand-crumb_texture",
+            "description": "The physical feel and structural quality of bread's interior ranging from fine and tender to coarse and chewy ",
+            "coord": "0.1.6",
+            "frameworks": [],
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "understand-deep_fermentation",
+        "kind": "skill",
+        "skill_src": "/home/runner/work/dark-factory/dark-factory/kbworld/state/libraries/_staging_sourdough_baking/understand-deep_fermentation",
+        "description": "the deep_fermentation subdomain of sourdough baking (36 concepts)",
+        "coord": "0.2",
+        "frameworks": [],
+        "children": [
+          {
+            "name": "understand-acid_development_rate",
+            "kind": "skill",
+            "skill_src": "/home/runner/work/dark-factory/dark-factory/kbworld/state/libraries/_staging_sourdough_baking/understand-acid_development_rate",
+            "description": "Speed at which lactobacillus produces lactic_acid and acetic_acid during fermentation, a component of fermenta",
+            "coord": "0.2.1",
+            "frameworks": [],
+            "children": []
+          },
+          {
+            "name": "understand-acid_accumulation_rate",
+            "kind": "skill",
+            "skill_src": "/home/runner/work/dark-factory/dark-factory/kbworld/state/libraries/_staging_sourdough_baking/understand-acid_accumulation_rate",
+            "description": "Speed at which lactobacillus produces lactic_acid and acetic_acid during active fermentation.",
+            "coord": "0.2.2",
+            "frameworks": [],
+            "children": []
+          },
+          {
+            "name": "understand-fermentation_vigor",
+            "kind": "skill",
+            "skill_src": "/home/runner/work/dark-factory/dark-factory/kbworld/state/libraries/_staging_sourdough_baking/understand-fermentation_vigor",
+            "description": "Intensity and rate of the combined microbial fermentation process in sourdough, driven by wild_yeast gas produ",
+            "coord": "0.2.3",
+            "frameworks": [],
+            "children": []
+          },
+          {
+            "name": "understand-activity_temperature",
+            "kind": "skill",
+            "skill_src": "/home/runner/work/dark-factory/dark-factory/kbworld/state/libraries/_staging_sourdough_baking/understand-activity_temperature",
+            "description": "Temperature range that modulates fermentation vigor, with optimal range 24-28\u00b0C for balanced wild yeast and la",
+            "coord": "0.2.4",
+            "frameworks": [],
+            "children": []
+          },
+          {
+            "name": "understand-organic_acid_formation",
+            "kind": "skill",
+            "skill_src": "/home/runner/work/dark-factory/dark-factory/kbworld/state/libraries/_staging_sourdough_baking/understand-organic_acid_formation",
+            "description": "The composite mixture of lactic acid and acetic acid generated during sourdough fermentation by the metabolic ",
+            "coord": "0.2.5",
+            "frameworks": [],
+            "children": []
+          },
+          {
+            "name": "understand-co2_output",
+            "kind": "skill",
+            "skill_src": "/home/runner/work/dark-factory/dark-factory/kbworld/state/libraries/_staging_sourdough_baking/understand-co2_output",
+            "description": "Carbon dioxide gas produced by wild yeast during anaerobic fermentation of sugars in the dough; the primary dr",
+            "coord": "0.2.6",
+            "frameworks": [],
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "understand-deep_sourdough_starter",
+        "kind": "skill",
+        "skill_src": "/home/runner/work/dark-factory/dark-factory/kbworld/state/libraries/_staging_sourdough_baking/understand-deep_sourdough_starter",
+        "description": "the deep_sourdough_starter subdomain of sourdough baking (71 concepts)",
+        "coord": "0.3",
+        "frameworks": [],
+        "children": [
+          {
+            "name": "understand-activity_indicators",
+            "kind": "skill",
+            "skill_src": "/home/runner/work/dark-factory/dark-factory/kbworld/state/libraries/_staging_sourdough_baking/understand-activity_indicators",
+            "description": "Observable visual markers on active_starter including bubble size, distribution, surface foam, dome height, an",
+            "coord": "0.3.1",
+            "frameworks": [],
+            "children": []
+          },
+          {
+            "name": "understand-activity_peak",
+            "kind": "skill",
+            "skill_src": "/home/runner/work/dark-factory/dark-factory/kbworld/state/libraries/_staging_sourdough_baking/understand-activity_peak",
+            "description": "Maximum fermentation intensity of active_starter occurring at the apex of rise before CO2 production begins to",
+            "coord": "0.3.2",
+            "frameworks": [],
+            "children": []
+          },
+          {
+            "name": "understand-activity_indicators_signals",
+            "kind": "skill",
+            "skill_src": "/home/runner/work/dark-factory/dark-factory/kbworld/state/libraries/_staging_sourdough_baking/understand-activity_indicators_signals",
+            "description": "active_starter exhibits bubble_activity and foam_surface and doubling_time indicating peak_fermentation_vigor.",
+            "coord": "0.3.3",
+            "frameworks": [],
+            "children": []
+          },
+          {
+            "name": "understand-activity_peak_signals",
+            "kind": "skill",
+            "skill_src": "/home/runner/work/dark-factory/dark-factory/kbworld/state/libraries/_staging_sourdough_baking/understand-activity_peak_signals",
+            "description": "activity_peak marks ideal moment for inoculation and levain creation using active_starter.",
+            "coord": "0.3.4",
+            "frameworks": [],
+            "children": []
+          },
+          {
+            "name": "understand-refrigeration_metabolism",
+            "kind": "skill",
+            "skill_src": "/home/runner/work/dark-factory/dark-factory/kbworld/state/libraries/_staging_sourdough_baking/understand-refrigeration_metabolism",
+            "description": "Reduced metabolic rate of wild_yeast and lactobacillus populations occurring at cold temperatures, producing m",
+            "coord": "0.3.5",
+            "frameworks": [],
+            "children": []
+          },
+          {
+            "name": "understand-depleted_nutrients",
+            "kind": "skill",
+            "skill_src": "/home/runner/work/dark-factory/dark-factory/kbworld/state/libraries/_staging_sourdough_baking/understand-depleted_nutrients",
+            "description": "Exhausted flour sugars and starches in starter following active fermentation, triggering dormancy as microbial",
+            "coord": "0.3.6",
+            "frameworks": [],
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "understand-sourdough_baking",
+        "kind": "skill",
+        "skill_src": "/home/runner/work/dark-factory/dark-factory/kbworld/state/libraries/_staging_sourdough_baking/understand-sourdough_baking",
+        "description": "the sourdough_baking subdomain of sourdough baking (180 concepts)",
+        "coord": "0.4",
+        "frameworks": [],
+        "children": [
+          {
+            "name": "understand-sourdough_starter",
+            "kind": "skill",
+            "skill_src": "/home/runner/work/dark-factory/dark-factory/kbworld/state/libraries/_staging_sourdough_baking/understand-sourdough_starter",
+            "description": "A fermented mixture of flour and water containing wild yeast and lactic acid bacteria that serves as the natur",
+            "coord": "0.4.1",
+            "frameworks": [],
+            "children": []
+          },
+          {
+            "name": "understand-fermentation",
+            "kind": "skill",
+            "skill_src": "/home/runner/work/dark-factory/dark-factory/kbworld/state/libraries/_staging_sourdough_baking/understand-fermentation",
+            "description": "Metabolic process where microbes convert sugars to CO2 for rise and acids for sour flavor",
+            "coord": "0.4.2",
+            "frameworks": [],
+            "children": []
+          },
+          {
+            "name": "understand-gluten_development",
+            "kind": "skill",
+            "skill_src": "/home/runner/work/dark-factory/dark-factory/kbworld/state/libraries/_staging_sourdough_baking/understand-gluten_development",
+            "description": "Process of hydrating and aligning gluten proteins through mixing, folding, or autolyse to create strong extens",
+            "coord": "0.4.3",
+            "frameworks": [],
+            "children": []
+          },
+          {
+            "name": "understand-baking",
+            "kind": "skill",
+            "skill_src": "/home/runner/work/dark-factory/dark-factory/kbworld/state/libraries/_staging_sourdough_baking/understand-baking",
+            "description": "Cooking dough in hot oven transforming it into bread through heat and chemical reactions",
+            "coord": "0.4.4",
+            "frameworks": [],
+            "children": []
+          },
+          {
+            "name": "understand-bulk_fermentation",
+            "kind": "skill",
+            "skill_src": "/home/runner/work/dark-factory/dark-factory/kbworld/state/libraries/_staging_sourdough_baking/understand-bulk_fermentation",
+            "description": "Primary fermentation phase where the mixed dough rests and ferments before shaping; time and temperature contr",
+            "coord": "0.4.5",
+            "frameworks": [],
+            "children": []
+          },
+          {
+            "name": "understand-flour",
+            "kind": "skill",
+            "skill_src": "/home/runner/work/dark-factory/dark-factory/kbworld/state/libraries/_staging_sourdough_baking/understand-flour",
+            "description": "Ground grain (typically wheat) used as the carbohydrate base for sourdough, providing starch, protein for glut",
+            "coord": "0.4.6",
+            "frameworks": [],
+            "children": []
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "subject": "sourdough baking",
+  "grade1": true,
+  "phases": {
+    "aim": {
+      "mode": "bootstrap",
+      "doors": [
+        "sourdough_starter",
+        "fermentation"
+      ],
+      "source": "worklist"
+    },
+    "grow": {
+      "bootstrap": {
+        "concepts": 180,
+        "relations": 132
+      },
+      "specialize": {
+        "basis_after": 0.184,
+        "new": [
+          [
+            "sourdough_starter",
+            71,
+            13
+          ],
+          [
+            "fermentation",
+            36,
+            0
+          ]
+        ]
+      }
+    },
+    "drain": {
+      "define": {
+        "defined": 11
+      },
+      "connect": {
+        "wired": 20
+      },
+      "after": {
+        "phase": "soup",
+        "concepts": 298,
+        "relations": 165,
+        "define": 0,
+        "connect": 167
+      }
+    },
+    "brain": {
+      "grew": "gluten_development"
+    },
+    "project": {
+      "library": "/home/runner/work/dark-factory/dark-factory/kbworld/state/libraries/sourdough_baking",
+      "skills": 24
+    },
+    "observe": {
+      "findings": 4,
+      "issues": [
+        {
+          "atom": "active_starter",
+          "price": 7,
+          "url": ""
+        },
+        {
+          "atom": "acetic_acid",
+          "price": 21,
+          "url": ""
+        },
+        {
+          "atom": "dormant_starter",
+          "price": 1,
+          "url": ""
+        },
+        {
+          "atom": "dough_consistency",
+          "price": 18,
+          "url": ""
+        }
+      ]
+    },
+    "encapsulate": {
+      "module": "/home/runner/work/dark-factory/dark-factory/kbworld/state/modules/sourdough_baking",
+      "skill": "/home/runner/work/dark-factory/dark-factory/kbworld/state/modules/sourdough_baking/.claude/skills/using-sourdough_baking/SKILL.md",
+      "plugin": "sourdough_baking-module"
+    }
+  },
+  "telemetry": {
+    "kb": "298c/165r",
+    "worklist": {
+      "before": {
+        "define": 0,
+        "connect": 0
+      },
+      "after": {
+        "define": 0,
+        "connect": 167
+      }
+    },
+    "basis": 0.265,
+    "secs": 609.1
+  }
+}
