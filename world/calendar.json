@@ -3,8 +3,12 @@
     {
       "name": "daily-workday",
       "every_minutes": 1440,
-      "last_run": "2026-08-08T06:05:57+00:00",
+      "last_run": "2026-08-09T06:06:02+00:00",
       "note": "the standing daily deployment of the org"
     }
-  ]
+  ],
+  "_deploys": {
+    "date": "2026-08-09",
+    "n": 1
+  }
 }
