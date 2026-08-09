@@ -19,7 +19,7 @@ jobs:
       - name: prover + graph deps
         run: |
           sudo apt-get update && sudo apt-get install -y swi-prolog
-          pip install kuzu pydantic pydantic-stack-core
+          pip install kuzu pydantic pydantic-stack-core agent-skilltree
       - name: isaac stack (editable clones — data files guaranteed)
         env:
           STACK_PAT: ${{ secrets.STACK_PAT }}
