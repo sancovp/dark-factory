@@ -12,8 +12,16 @@ jobs:
     if: github.repository_owner == 'sancovp'
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
     steps:
       - uses: actions/checkout@v4
+      - name: git identity (the round commits its state)
+        run: |
+          git config user.name "kbworld"
+          git config user.email "kbworld@dark-factory"
       - uses: actions/setup-python@v5
         with: {python-version: "3.11"}
       - name: prover + graph deps
@@ -33,6 +41,7 @@ jobs:
       - name: run one round (grade 1)
         env:
           MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
+          GH_TOKEN: ${{ github.token }}
           HEAVEN_DATA_DIR: /tmp/heaven_data
           FACTORY_ON: ${{ vars.FACTORY_ON }}
         run: python -m kbworld.round "${{ github.event.inputs.subject }}" --grade1
