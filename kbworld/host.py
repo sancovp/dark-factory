@@ -13,8 +13,8 @@ STATE_ROOT = Path(__file__).resolve().parent / "state"
 class FactoryKbcHost:
     """HOST_PROTOCOL: seat_factory + state_root + emit."""
 
-    def __init__(self):
-        self.state_root = STATE_ROOT
+    def __init__(self, state_root=None):
+        self.state_root = Path(state_root) if state_root else STATE_ROOT
         self.state_root.mkdir(parents=True, exist_ok=True)
 
     def seat_factory(self):

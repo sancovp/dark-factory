@@ -1,4 +1,4 @@
-# RULE — kbworld fill-out plan (scaffold 2026-08-10; design = aios-research/EE-NEUROSYMBOLIC-DESIGN.md §18–§23)
+# RULE — kbworld fill-out plan (STEPS 1–9 FILLED 2026-08-10 — test_kbworld.py green deterministically; ONLY STEP 10 REMAINS: first live workflow_dispatch, grade 1, humans watching. Scaffold 2026-08-10; design = aios-research/EE-NEUROSYMBOLIC-DESIGN.md §18–§23)
 
 The scaffold is COMPLETE STRUCTURE, stub bodies. Fill in THIS order; each step
 has a PASS criterion. Import everything from `ee_v2.kbc` (mount, specialize,

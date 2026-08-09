@@ -49,10 +49,57 @@ tracked as open supersede-issues, never hidden).
 """
 
 
-def emit_module_skill(kb, state_root) -> dict:
-    """TODO(fill §23): render USING_SKILL_TEMPLATE from the KB (slug,
-    counts, library path, top-level call-number index), write to
-    state/plugin/skills/using-{slug}/SKILL.md + the plugin manifest
-    (.claude-plugin marketplace format — mirror sancovp/garage's shape,
-    READ IT FIRST, do not invent the manifest schema). Return paths."""
-    raise NotImplementedError("fill: kbworld rule step 7")
+def emit_module_skill(kb, modules_root) -> dict:
+    """Render the universal skill + plugin manifest from the KB. Manifest
+    schemas mirrored from the REAL precedents (read 2026-08-10, not
+    invented): plugin.json = sancovp/promptworld/.claude-plugin/plugin.json
+    {name, version, description, author}; the marketplace entry =
+    sancovp/sancrev-marketplace/.claude-plugin/marketplace.json plugins[]
+    {name, description, author, category, source:{source:"url", url}}.
+    v1 emits the plugin dir NESTED under state/modules/<slug>/ — the Garage
+    metaformat wants plugins in their OWN repos; splitting out is a later
+    mechanical move (the marketplace entry ships ready, url = placeholder)."""
+    import json
+    import re
+    from collections import Counter
+
+    from ee_v2.kbc.projector import call_number
+
+    slug = re.sub(r"[^a-z0-9_]+", "_", kb.subject.lower()).strip("_")[:40]
+    mod = Path(modules_root) / slug
+    skill_dir = mod / ".claude" / "skills" / f"using-{slug}"
+    skill_dir.mkdir(parents=True, exist_ok=True)
+    (mod / ".claude-plugin").mkdir(parents=True, exist_ok=True)
+
+    deg = Counter()
+    for s_, t_ in kb.relations:
+        deg[s_] += 1
+        deg[t_] += 1
+    top = sorted(kb.concepts, key=lambda c: -deg[c])[:12]
+    index = "\n".join(f"- `{call_number(kb, c)[0]}`" for c in top)
+
+    skill = USING_SKILL_TEMPLATE.format(
+        slug=slug, subject=kb.subject,
+        n_concepts=len(kb.concepts), n_relations=len(kb.relations),
+        library_path=f"kbworld/state/libraries/{slug}",
+        call_number_index=index)
+    (skill_dir / "SKILL.md").write_text(skill, encoding="utf-8")
+
+    plugin = {"name": f"{slug}-module", "version": "0.1.0",
+              "description": (f"{kb.subject} — a cultivated, proof-checked "
+                              "neurosymbolic knowledge module: RAG library, "
+                              "agent brain, growable KB, factory-deepened. "
+                              f"{len(kb.concepts)} concepts."),
+              "author": {"name": "Isaac Rubin"}}
+    (mod / ".claude-plugin" / "plugin.json").write_text(
+        json.dumps(plugin, indent=2), encoding="utf-8")
+
+    entry = {"name": f"{slug}-module", "description": plugin["description"],
+             "author": {"name": "Isaac Rubin"}, "category": "productivity",
+             "source": {"source": "url",
+                        "url": f"https://github.com/sancovp/{slug}-module.git"
+                               "  # placeholder until split to own repo"}}
+    (mod / "marketplace-entry.json").write_text(
+        json.dumps(entry, indent=2), encoding="utf-8")
+    return {"module": str(mod), "skill": str(skill_dir / "SKILL.md"),
+            "plugin": plugin["name"]}
