@@ -113,5 +113,22 @@
     ],
     "fitness_current": 0.0,
     "fitness_patched": 2.5
+  },
+  {
+    "at": "2026-08-09T06:32:20+00:00",
+    "verdict": "REVERT",
+    "change": "Installed skill_dev_pipeline_recipe.md (Epic recipe) and quest_analysis_lens.md (Uncommon lens) to patch-2/loadout/ \u2014 the pipeline skill composes test-skill+remember and the lens helps agents evaluate",
+    "diff": [
+      {
+        "file": "loadout/quest_analysis_lens.md",
+        "kind": "added"
+      },
+      {
+        "file": "loadout/skill_dev_pipeline_recipe.md",
+        "kind": "added"
+      }
+    ],
+    "fitness_current": 0.0,
+    "fitness_patched": 0.0
   }
 ]
