@@ -167,14 +167,14 @@ def emit_module_skill(kb, modules_root, library_root=None) -> dict:
                               "neurosymbolic knowledge module: RAG library, "
                               "agent brain, growable KB, factory-deepened. "
                               f"{len(kb.concepts)} concepts."),
-              "author": {"name": "Isaac Rubin"},
+              "author": {"name": "Isaac Wostrel-Rubin"},
               "license": "UNLICENSED",
               "keywords": ["knowledge-base", "neurosymbolic", kebab]}
     (mod / ".claude-plugin" / "plugin.json").write_text(
         json.dumps(plugin, indent=2), encoding="utf-8")
 
     entry = {"name": f"{kebab}-module", "description": plugin["description"],
-             "author": {"name": "Isaac Rubin"}, "category": "productivity",
+             "author": {"name": "Isaac Wostrel-Rubin"}, "category": "productivity",
              "source": {"source": "url",
                         "url": (f"https://github.com/sancovp/{kebab}"
                                 "-module.git")}}
