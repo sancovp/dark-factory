@@ -22,8 +22,9 @@ import sys
 import tempfile
 from pathlib import Path
 
-sys.path.insert(0, "/home/ceo/repo/dark-factory")
-sys.path.insert(0, "/home/ceo/repo/ee-v2")
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+if Path("/home/ceo/repo/ee-v2").is_dir():          # container; CI pip-installs
+    sys.path.insert(1, "/home/ceo/repo/ee-v2")
 
 from kbworld.host import FactoryKbcHost                          # noqa: E402
 from kbworld.round import Deps, run_round                        # noqa: E402
