@@ -165,9 +165,11 @@ async def phase_brain(kb, brain, deps) -> dict:
 async def phase_project(kb, deps) -> dict:
     """e. PROJECT — the understand-* library, in-repo."""
     from ee_v2.kbc.projector import project_library
+    from ee_v2.kbc.specialize import project_personas
     out, n = project_library(kb, deps.host.state_root / "libraries"
                              / _slug(kb.subject))
-    return {"library": str(out), "skills": n}
+    staff = project_personas(kb, deps.host.state_root / "personas_out")
+    return {"library": str(out), "skills": n, "staff": len(staff)}
 
 
 async def phase_observe(kb, brain, deps) -> dict:
