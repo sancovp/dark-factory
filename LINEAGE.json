@@ -177,5 +177,18 @@
     ],
     "fitness_current": 0.5,
     "fitness_patched": 0.0
+  },
+  {
+    "at": "2026-08-10T06:30:41+00:00",
+    "verdict": "REVERT",
+    "change": "Installed trade_audit_recipe.md to loadout; audit found live exploit \u2014 agent_002 listing references missing test_id test_lens_001",
+    "diff": [
+      {
+        "file": "loadout/trade_audit_recipe.md",
+        "kind": "added"
+      }
+    ],
+    "fitness_current": 0.5,
+    "fitness_patched": 0.0
   }
 ]
