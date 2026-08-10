@@ -1,6 +1,6 @@
 # understand-sourdough_starter
 
-**CALL NUMBER:** `sourdough_baking.sourdough_starter : deep_sourdough_starter(5), deep_fermentation(1)`
+**CALL NUMBER:** `sourdough_baking.sourdough_starter : deep_fermentation(6), deep_sourdough_starter(5)`
 **DEFINITION:** A fermented mixture of flour and water containing wild yeast and lactic acid bacteria that serves as the natural leaven for sourdough bread, maintained through regular feedings.
 
 Invoke this skill to understand `sourdough_starter` down to its primitives. The RELATIVE ROOT below is the least-fixed-point closure of everything it bundles from — the full import cone, grouped by the lib each prim comes from. Projected from a prover-typed KB (MAP/SWI-Prolog consistency gate): every reference below resolves.
@@ -8,12 +8,16 @@ Invoke this skill to understand `sourdough_starter` down to its primitives. The 
 ## THE RELATIVE ROOT (the import cone, by lib)
 
 ### from `?`
-- **fermentation_byproducts** (d2): Compounds produced by microbial fermentation including carbon dioxide for dough rise, lactic and acetic acids for sour flavor, and alcohols for aroma.
 - **flavor_complexity** (d2): The depth and nuance of sourdough taste arising from multiple organic acids, esters, and alcohols produced during extended fermentation, creating tangy and complex notes.
 - **banneton_flouring** (d6): Dusting the interior of a proofing basket with flour before placing shaped dough, preventing sticking and creating decorative flour patterns on the finished crust.
 
 ### from `deep_fermentation`
+- **fermentation_byproducts** (d2): Compounds produced by microbial fermentation including carbon dioxide for dough rise, lactic and acetic acids for sour flavor, and alcohols for aroma.
+- **organic_acids** (d2): Carbon-chain acids produced by lactobacillus metabolism including lactic_acid and acetic_acid that determine sourness_level and contribute to flavor_complexity.
+- **carbon_dioxide** (d2): Gaseous byproduct of wild_yeast fermentation that provides dough rise and open crumb structure in sourdough bread.
+- **ethanol** (d2): Alcohol produced by wild_yeast during anaerobic fermentation that evaporates during baking and contributes to flavor_complexity development.
 - **fermentation_vigor** (d2): Intensity and rate of the combined microbial fermentation process in sourdough, driven by wild_yeast gas production and lactobacillus acid generation, determining dough rise speed and flavor development timing.
+- **aroma_compounds** (d3): Volatile fermentation byproducts including alcohols and esters that create the aromatic profile of sourdough.
 
 ### from `deep_sourdough_starter`
 - **cold_storage_duration** (d2): Time period a starter spends refrigerated during dormancy, during which yeast and bacterial metabolism slow significantly from peak activity levels.
@@ -50,4 +54,4 @@ Invoke this skill to understand `sourdough_starter` down to its primitives. The 
 - **fermentation_temperature** (d3): Environmental temperature during bulk and final proof that directly controls fermentation speed; warmer accelerates, cooler slows.
 
 ---
-*Projected from the `sourdough baking` KB (298 concepts / 165 relations) — consistency-typed by MAP; the facet list after the colon IS the cross-lib dependency web.*
+*Projected from the `sourdough baking` KB (373 concepts / 213 relations) — consistency-typed by MAP; the facet list after the colon IS the cross-lib dependency web.*

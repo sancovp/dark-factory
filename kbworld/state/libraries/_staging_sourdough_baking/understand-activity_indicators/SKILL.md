@@ -14,4 +14,4 @@ Invoke this skill to understand `activity_indicators` down to its primitives. Th
 `activity_indicators_signals`
 
 ---
-*Projected from the `sourdough baking` KB (298 concepts / 165 relations) — consistency-typed by MAP; the facet list after the colon IS the cross-lib dependency web.*
+*Projected from the `sourdough baking` KB (373 concepts / 213 relations) — consistency-typed by MAP; the facet list after the colon IS the cross-lib dependency web.*

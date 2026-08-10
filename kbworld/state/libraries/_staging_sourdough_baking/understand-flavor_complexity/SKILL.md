@@ -8,7 +8,7 @@ Invoke this skill to understand `flavor_complexity` down to its primitives. The 
 ## THE RELATIVE ROOT (the import cone, by lib)
 
 ## CONSUMERS (what needs this)
-`cold_retardation`, `fermentation`
+`cold_retardation`, `fermentation`, `organic_acids`
 
 ---
-*Projected from the `sourdough baking` KB (298 concepts / 165 relations) — consistency-typed by MAP; the facet list after the colon IS the cross-lib dependency web.*
+*Projected from the `sourdough baking` KB (373 concepts / 213 relations) — consistency-typed by MAP; the facet list after the colon IS the cross-lib dependency web.*

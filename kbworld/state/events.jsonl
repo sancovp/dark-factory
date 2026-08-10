@@ -1,1 +1,2 @@
 {"ts": "2026-08-09T13:48:39", "type": "kb_round", "subject": "sourdough baking", "telemetry": {"kb": "298c/165r", "worklist": {"before": {"define": 0, "connect": 0}, "after": {"define": 0, "connect": 167}}, "basis": 0.265, "secs": 609.1}}
+{"ts": "2026-08-10T09:37:31", "type": "kb_round", "subject": "sourdough baking", "telemetry": {"kb": "373c/213r", "worklist": {"before": {"define": 0, "connect": 167}, "after": {"define": 0, "connect": 200}}, "basis": 0.431, "secs": 320.2}}

@@ -1,0 +1,13 @@
+{
+  "region": "steam_production",
+  "call_number": "sourdough_baking.steam_production",
+  "tools": [
+    "kb_work",
+    "kb_drain",
+    "kb_root",
+    "kb_expand",
+    "brain_grow",
+    "brain_ask"
+  ],
+  "cone_size": 1
+}

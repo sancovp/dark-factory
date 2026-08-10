@@ -11,7 +11,7 @@ Invoke this skill to understand `activity_peak` down to its primitives. The RELA
 - **activity_peak_signals** (d1): activity_peak marks ideal moment for inoculation and levain creation using active_starter.
 
 ## CONSUMERS (what needs this)
-`activity_peak_signals`
+`activity_peak_signals`, `as_peak_timing`
 
 ---
-*Projected from the `sourdough baking` KB (298 concepts / 165 relations) — consistency-typed by MAP; the facet list after the colon IS the cross-lib dependency web.*
+*Projected from the `sourdough baking` KB (373 concepts / 213 relations) — consistency-typed by MAP; the facet list after the colon IS the cross-lib dependency web.*

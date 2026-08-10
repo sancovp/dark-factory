@@ -1,0 +1,13 @@
+{
+  "region": "flavor_complexity",
+  "call_number": "?.flavor_complexity",
+  "tools": [
+    "kb_work",
+    "kb_drain",
+    "kb_root",
+    "kb_expand",
+    "brain_grow",
+    "brain_ask"
+  ],
+  "cone_size": 0
+}
