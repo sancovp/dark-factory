@@ -122,6 +122,11 @@ async def main(tmp):
     using = next((mod / "skills").glob("using-*"))
     assert (using / "SKILL.md").exists()
     assert (using / "data" / "concepts.jsonl").exists()
+    assert (using / "data" / "module.ttl").exists()      # the OWL projection
+    ttl = (using / "data" / "module.ttl").read_text()
+    assert "owl:NamedIndividual" in ttl and "kbo:relatesTo" in ttl
+    readme = (mod / "README.md").read_text()
+    assert "kb-atlas" in readme and "module.ttl" in readme
     sibs = [d.name for d in (mod / "skills").iterdir()
             if "understand" in d.name and (d / "SKILL.md").exists()]
     assert sibs, "library skills must ship as siblings"

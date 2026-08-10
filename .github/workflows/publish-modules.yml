@@ -34,3 +34,7 @@ jobs:
           git config --global credential.helper store
           echo "https://x-access-token:${GH_TOKEN}@github.com" > ~/.git-credentials
           python kbworld/publish.py
+      - name: rebuild the KB Atlas (auto page per module)
+        env:
+          GH_TOKEN: ${{ secrets.REVIEW_TOKEN }}
+        run: python kbworld/atlas.py

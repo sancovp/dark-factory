@@ -137,6 +137,10 @@ def emit_module_skill(kb, modules_root, library_root=None) -> dict:
     # the parts ride as resources IN the skill (never loose root dirs)
     for f in sorted(Path(kb.root).glob("*.jsonl")):
         shutil.copy(f, skill_dir / "data" / f.name)
+    # PSC-with-OWL-PROJECTED (Isaac 2026-08-10): the module carries its KB
+    # as standards-compliant Turtle too; the proof gate stays Prolog
+    from ee_v2.kbc.owl import project_owl
+    owl_rep = project_owl(kb, skill_dir / "data" / "module.ttl")
     wl = Path(kb.root) / "worklist.json"
     if wl.exists():
         shutil.copy(wl, skill_dir / "data" / "worklist.json")
@@ -210,6 +214,16 @@ def emit_module_skill(kb, modules_root, library_root=None) -> dict:
         "brain / heaven tools / factory) plus the module's etiquette. The "
         f"knowledge substrate lives at `skills/using-{kebab}/data/` as "
         "plain JSONL.\n\n"
+        "## The graph + the OWL\n\n"
+        f"- **Interactive graph**: "
+        f"https://sancovp.github.io/kb-atlas/{slug}.html "
+        "(the KB Atlas — auto-generated pages for every module on the "
+        "floor)\n"
+        f"- **OWL/Turtle**: `skills/using-{kebab}/data/module.ttl` — "
+        f"{owl_rep['concepts']} typed individuals, "
+        f"{owl_rep['certificates']} reified certificates, "
+        f"{owl_rep['argument_edges']} typed argument edges. The proof gate "
+        "underneath stays Prolog; the OWL is a faithful projection.\n\n"
         "## Honesty note\n\n"
         "The gate proves **coherence, not truth**: content is "
         "LLM-cultivated and machine-checked for closure, connectedness, "
