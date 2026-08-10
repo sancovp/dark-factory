@@ -1,11 +1,11 @@
 name: Publish modules
 
-# THE PUBLISHING RAIL: when gate-merged state under kbworld/state/modules/
-# lands on main (i.e. a round's module emission survived review+merge), sync
-# each module to its own PRIVATE repo and open ONE marketplace PR. The
-# machine's reach ends there — making a module public is two maintainer acts
-# in one sitting (flip the repo public, merge the catalog PR); the machine
-# never does either. Stdlib-only: no model stack needed here.
+# THE PUBLISHING RAIL (FULL-AUTO / DARK FLOOR): when gate-merged state
+# under kbworld/state/modules/ lands on main (i.e. a round's module emission
+# survived review+merge), sync each module to its own PUBLIC repo, upsert
+# the marketplace catalog, and AUTO-MERGE the catalog PR (clean merges only;
+# a blocked merge is reported loudly and left for a maintainer). Door issue
+# in -> installable public plugin out. Stdlib-only: no model stack here.
 on:
   push:
     branches: [main]

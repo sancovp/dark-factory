@@ -91,8 +91,9 @@ class PubDeps:
 
 def sync_module(module_dir: Path, owner: str, deps: PubDeps,
                 dry_run=False) -> dict:
-    """Mirror one module dir into its own PRIVATE repo. Idempotent: commits
-    only when content actually changed. Returns {repo, changed, created}."""
+    """Mirror one module dir into its own PUBLIC repo (full-auto).
+    Idempotent: commits only when content actually changed. Returns
+    {repo, changed, created}."""
     entry = json.loads((module_dir / "marketplace-entry.json").read_text())
     repo = f"{owner}/{entry['name']}"
     if dry_run:
@@ -133,9 +134,10 @@ def sync_module(module_dir: Path, owner: str, deps: PubDeps,
 
 def marketplace_pr(entries: list, marketplace: str, deps: PubDeps,
                    dry_run=False) -> dict:
-    """Upsert entries (by name) into the marketplace catalog and open ONE PR.
-    THE MACHINE NEVER MERGES IT — the maintainer's merge is the publishing
-    act. Idempotent: no PR when the catalog already matches."""
+    """Upsert entries (by name) into the marketplace catalog, open ONE PR
+    and AUTO-MERGE it (full-auto; clean merge only — a conflicted or
+    protected catalog leaves the PR open and reports merged:False loudly).
+    Idempotent: no PR when the catalog already matches."""
     if dry_run:
         return {"pr": None, "upserted": [e["name"] for e in entries],
                 "dry_run": True}
@@ -164,7 +166,7 @@ def marketplace_pr(entries: list, marketplace: str, deps: PubDeps,
                 return {"pr": "pending (open PR already covers these)",
                         "upserted": [], "pending": changed}
         cat_path.write_text(json.dumps(cat, indent=2) + "\n")
-        branch = f"modules/sync-{int(time.time())}"
+        branch = f"modules/sync-{time.time_ns()}"
         deps.run(["git", "checkout", "-q", "-b", branch], cwd=work)
         deps.run(["git", "add", "-A"], cwd=work)
         deps.run(["git", "-c", "user.name=kbworld-publisher",
@@ -177,13 +179,17 @@ def marketplace_pr(entries: list, marketplace: str, deps: PubDeps,
             marketplace, branch,
             f"catalog: {', '.join(changed)} (factory-grown modules)",
             "Machine-opened by the kbworld publishing rail on "
-            "dark-factory-live. Each listed module's repo is synced and "
-            "PRIVATE.\n\nPUBLISHING = two maintainer acts in one sitting: "
-            "flip the module repo(s) public, then merge this PR. The "
-            "machine never does either.\n\nModules: "
+            "dark-factory-live (FULL-AUTO): each listed module's repo is "
+            "already synced and PUBLIC, and this PR auto-merges on clean. "
+            "If it is still open, the merge was blocked (conflict or "
+            "branch protection) and a maintainer should look.\n\nModules: "
             + ", ".join(changed) +
             "\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)")
         merged = deps.pr_merge(marketplace, branch)
+        if not merged:
+            print(f"WARNING: catalog PR did NOT auto-merge ({url}) — "
+                  "conflict or branch protection; maintainer attention "
+                  "needed", file=sys.stderr)
         return {"pr": url, "upserted": changed, "merged": merged}
 
 

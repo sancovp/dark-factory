@@ -143,7 +143,6 @@ def main(tmp):
 
 if __name__ == "__main__":
     with tempfile.TemporaryDirectory() as d:
-        asyncio_unused = None
         main(d)
     print("PUBLISH PASS — FULL-AUTO / DARK FLOOR: each module mirrors to "
           "its own PUBLIC repo, the catalog upsert PR opens and auto-merges, "

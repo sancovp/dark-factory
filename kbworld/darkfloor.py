@@ -54,7 +54,9 @@ def pick(state_root="kbworld/state", repo=None) -> str:
     for rp in reports:
         try:
             subj = json.loads(rp.read_text()).get("subject")
-        except Exception:
+        except Exception as e:
+            print(f"WARNING: unreadable round report {rp.name}: {e}",
+                  file=sys.stderr)
             continue
         if subj:
             last_seen[subj] = rp.stat().st_mtime
