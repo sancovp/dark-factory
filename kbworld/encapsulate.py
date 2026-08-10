@@ -180,5 +180,43 @@ def emit_module_skill(kb, modules_root, library_root=None) -> dict:
                                 "-module.git")}}
     (mod / "marketplace-entry.json").write_text(
         json.dumps(entry, indent=2), encoding="utf-8")
+
+    # the README receipt — the module explains itself to a human reader
+    def _count(fname):
+        p = Path(kb.root) / fname
+        return len(p.read_text().splitlines()) if p.exists() else 0
+
+    readme = (
+        f"# {plugin['name']} — a cultivated, proof-checked knowledge "
+        "organism\n\n"
+        "This repository was **grown, not written** — and it is a valid "
+        "Claude Code **plugin**. It is a neurosymbolic knowledge module "
+        f"about **{kb.subject}**, produced end-to-end by a KB factory: "
+        "every region admitted through a Prolog consistency gate, gaps "
+        "enumerated by the prover (not hidden), wrongness tracked as open "
+        "supersede issues rather than silently edited away.\n\n"
+        "## The numbers\n\n"
+        f"- **{len(kb.concepts)} concepts / {len(kb.relations)} relations**, "
+        "every region gate-admitted\n"
+        f"- **{n_lib} `understand-*` skills** harvested from the projected "
+        "library (call-number-addressed — the coordinate is the dependency "
+        "web)\n"
+        f"- **{_count('hyperedges.jsonl')} certified hyperedges** (the "
+        "language automaton's KNOWN vocabulary) · "
+        f"**{_count('skeletons.jsonl')} certified argument skeletons**\n\n"
+        "## Use it\n\n"
+        f"Install as a plugin (skills auto-discover) or read "
+        f"`skills/using-{kebab}/SKILL.md` — the four ways (RAG / agent "
+        "brain / heaven tools / factory) plus the module's etiquette. The "
+        f"knowledge substrate lives at `skills/using-{kebab}/data/` as "
+        "plain JSONL.\n\n"
+        "## Honesty note\n\n"
+        "The gate proves **coherence, not truth**: content is "
+        "LLM-cultivated and machine-checked for closure, connectedness, "
+        "groundedness, and warrant structure. Factual wrongness is "
+        "expected, priced (by consumer-cone size), and metabolized through "
+        "supersede issues — never silently retracted. Domain-expert review "
+        "is what promotes any region to trusted.\n")
+    (mod / "README.md").write_text(readme, encoding="utf-8")
     return {"module": str(mod), "skill": str(skill_dir / "SKILL.md"),
             "plugin": plugin["name"], "library_skills": n_lib}

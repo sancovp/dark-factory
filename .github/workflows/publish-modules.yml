@@ -1,0 +1,36 @@
+name: Publish modules
+
+# THE PUBLISHING RAIL: when gate-merged state under kbworld/state/modules/
+# lands on main (i.e. a round's module emission survived review+merge), sync
+# each module to its own PRIVATE repo and open ONE marketplace PR. The
+# machine's reach ends there — making a module public is two maintainer acts
+# in one sitting (flip the repo public, merge the catalog PR); the machine
+# never does either. Stdlib-only: no model stack needed here.
+on:
+  push:
+    branches: [main]
+    paths: ["kbworld/state/modules/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+
+      - name: sync module repos + marketplace PR
+        env:
+          GH_TOKEN: ${{ secrets.REVIEW_TOKEN }}   # PAT: repo create + cross-repo PR
+        run: |
+          git config --global user.name kbworld-publisher
+          git config --global user.email kbworld@dark-factory-live
+          git config --global credential.helper store
+          echo "https://x-access-token:${GH_TOKEN}@github.com" > ~/.git-credentials
+          python kbworld/publish.py
