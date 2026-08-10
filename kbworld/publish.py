@@ -172,13 +172,13 @@ def marketplace_pr(entries: list, marketplace: str, deps: PubDeps,
         # match on the canonical title, not substring (a stale PR whose
         # title merely contains a name must not block a new one).
         want = set(changed)
+        import re as _re
         for title in deps.pr_list(marketplace):
-            if title.startswith("catalog: "):
-                names = set(title[len("catalog: "):].split(" (")[0]
-                            .split(", "))
-                if names == want:
-                    return {"pr": "pending (open PR already covers these)",
-                            "upserted": [], "pending": changed}
+            m = _re.fullmatch(r"catalog: (.*) \(factory-grown modules\)",
+                              title)
+            if m and set(m.group(1).split(", ")) == want:
+                return {"pr": "pending (open PR already covers these)",
+                        "upserted": [], "pending": changed}
         cat_path.write_text(json.dumps(cat, indent=2) + "\n")
         branch = f"modules/sync-{time.time_ns()}"
         deps.run(["git", "checkout", "-q", "-b", branch], cwd=work)

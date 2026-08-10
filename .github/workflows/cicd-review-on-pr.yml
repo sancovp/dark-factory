@@ -1,0 +1,92 @@
+name: CICD Review on PR
+
+# THE STANDARDIZED HEAVEN CI/CD (adapted from sanctuary-revolution-alpha's
+# cicd-review-on-pr.yml, 2026-08-10). Gate order: structure -> correctness:
+# a deterministic gate first (the kbworld suite, only when the PR touches
+# CODE — state-only round PRs skip it), then the heaven reviewer agent
+# (automation/cicd-reviewer, vendored from the monorepo) reviews the diff
+# and posts --approve / --request-changes / --comment.
+#
+# DIVERGENCE from the monorepo original, and why: the reviewer runs DIRECTLY
+# on the runner (the exact Dockerfile pin recipe, pip-installed) instead of
+# `docker pull ghcr.io/sancovp/cicd-reviewer` — this repo's tokens cannot
+# pull that private image (no packages scope). Behavior is identical: same
+# ci_agent.py, same cicd_aios identity, same pins. Switch back to the image
+# when a read:packages credential exists.
+#
+# The reviewer posts with REVIEW_TOKEN (a user PAT) so its review identity
+# differs from the github-actions bot that authors round PRs — GitHub
+# forbids approving your own PR.
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+
+      - name: classify diff (code vs state-only)
+        id: det
+        run: |
+          changed=$(git diff --name-only 'origin/${{ github.event.pull_request.base.ref }}...HEAD')
+          echo "$changed" | head -40
+          if printf '%s\n' "$changed" | grep -q . && ! printf '%s\n' "$changed" | grep -vq '^kbworld/state/'; then
+            echo "code=false" >> "$GITHUB_OUTPUT"
+            echo "state-only diff — deterministic suite skipped"
+            n=$(printf '%s\n' "$changed" | wc -l)
+            echo "hint=This PR is a STATE-ONLY kbworld round emission ($n files, all under kbworld/state/ — machine-grown, prover-admitted KB state). Do NOT page the raw diff (huge JSONL). Instead: (1) verify no file outside kbworld/state/ changed via git -C \$REPO_DIR diff --name-only origin/${{ github.event.pull_request.base.ref }}...HEAD; (2) read the newest kbworld/state/round_*.json (the round's self-report); (3) spot-check 3-5 changed files via git diff --stat. Approve if the diff is state-only and the report is complete; request changes only for real defects. Post the review promptly — do not exhaust tool calls reading state." >> "$GITHUB_OUTPUT"
+          else
+            echo "code=true" >> "$GITHUB_OUTPUT"
+            echo "hint=" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: deterministic gate (the kbworld suite)
+        if: steps.det.outputs.code == 'true'
+        run: |
+          sudo apt-get update && sudo apt-get install -y swi-prolog
+          pip install kuzu pydantic pydantic-stack-core agent-skilltree pyyaml
+          set -a; source kbworld/STACK_PINS.env; set +a
+          git clone https://github.com/sancovp/brain-agent.git /tmp/brain-agent && git -C /tmp/brain-agent checkout -q "$BRAIN_AGENT_SHA"
+          git clone https://github.com/sancovp/map-v2.git /tmp/map-v2 && git -C /tmp/map-v2 checkout -q "$MAP_V2_SHA"
+          git clone https://github.com/sancovp/cave-teams.git /tmp/cave-teams && git -C /tmp/cave-teams checkout -q "$CAVE_TEAMS_SHA"
+          git clone https://github.com/sancovp/ee-v2.git /tmp/ee-v2 && git -C /tmp/ee-v2 checkout -q "$EE_V2_SHA"
+          pip install -e /tmp/map-v2 -e /tmp/cave-teams -e /tmp/ee-v2 -e /tmp/brain-agent
+          python kbworld/test_kbworld.py
+          python kbworld/test_publish.py
+          python kbworld/test_darkfloor.py
+
+      - name: heaven reviewer (MODE=review)
+        env:
+          MODE: review
+          MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.REVIEW_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          REPO_DIR: ${{ github.workspace }}
+          HEAVEN_DATA_DIR: /tmp/heaven_data
+          REVIEW_CONTEXT: ${{ steps.det.outputs.hint }}
+        run: |
+          pip install --quiet 'pydantic==2.10.6' 'langchain-core==0.3.84' 'langchain==0.3.28' \
+            'langchain-anthropic==0.3.13' 'langchain-openai==0.3.22' 'langchain-groq==0.2.4' \
+            'langchain-deepseek==0.1.2' 'langgraph==0.2.60' 'litellm==1.80.0' \
+            'requests==2.33.1' 'httpx==0.28.1' 'fastmcp==2.9.0' 'tiktoken>=0.5.0'
+          pip install --quiet --no-deps heaven-framework==0.1.35
+          mkdir -p /tmp/heaven_data
+          git config --global --add safe.directory '*'
+          cd automation/cicd-reviewer/cicd_aios
+          python3 ../ci_agent.py

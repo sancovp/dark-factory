@@ -5,6 +5,11 @@ name: Dark Floor (autonomous beat)
 # coldest module → else a seed) and dispatches ONE round. The round
 # self-merges through the CI/CD gate; the publisher ships the module PUBLIC.
 # Nobody clicks anything. This only runs on the DEPLOYED line.
+#
+# SECURITY: a kb-door issue title is UNTRUSTED input. It is sanitized in
+# kbworld/darkfloor.py (strip to [A-Za-z0-9 _-]) AND passed to the dispatch
+# through $GITHUB_ENV — NEVER bash-interpolated via ${{ }} (which GitHub does
+# not shell-escape). Two independent barriers; either alone suffices.
 on:
   schedule:
     - cron: "17 */6 * * *"     # every 6h at :17 (off-minute by design)
@@ -20,18 +25,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: pick a subject
-        id: pick
+      - name: pick a subject (sanitized → $GITHUB_ENV, never ${{ }})
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          subject=$(python kbworld/darkfloor.py "${{ github.repository }}")
+          subject=$(python kbworld/darkfloor.py "$GITHUB_REPOSITORY")
+          # darkfloor.py already stripped to [A-Za-z0-9 _-]; write to the
+          # env file (opaque to the runner, masked in logs) so no untrusted
+          # text ever re-enters a shell via ${{ }} interpolation.
+          printf 'SUBJECT=%s\n' "$subject" >> "$GITHUB_ENV"
           echo "chosen: $subject"
-          echo "subject=$subject" >> "$GITHUB_OUTPUT"
       - name: dispatch one round
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh workflow run kb-round.yml -R ${{ github.repository }} \
-            -f subject="${{ steps.pick.outputs.subject }}"
-          echo "dispatched round: ${{ steps.pick.outputs.subject }}"
+          gh workflow run kb-round.yml -R "$GITHUB_REPOSITORY" \
+            -f subject="$SUBJECT"
+          echo "dispatched round: $SUBJECT"

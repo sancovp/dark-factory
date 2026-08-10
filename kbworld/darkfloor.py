@@ -23,6 +23,19 @@ from pathlib import Path
 SEEDS = ["home espresso", "vegetable gardening", "wine tasting",
          "bread baking", "coffee roasting", "cheesemaking"]
 
+_SAFE = re.compile(r"[^a-zA-Z0-9 _-]")
+
+
+def sanitize(subject: str) -> str:
+    """SECURITY (2026-08-10 review): a kb-door issue title is UNTRUSTED input
+    that flows into a CI runner. Strip everything outside [A-Za-z0-9 _-] so a
+    title can never carry shell metacharacters (backtick, $, ", ;, newline)
+    into the dispatch. Collapse whitespace; cap length. Empty after strip →
+    fall back to a seed (never dispatch an empty/degenerate subject)."""
+    clean = _SAFE.sub(" ", subject or "")
+    clean = " ".join(clean.split())[:80].strip()
+    return clean or SEEDS[0]
+
 
 def _gh(*args):
     r = subprocess.run(["gh", *args], capture_output=True, text=True)
@@ -44,8 +57,8 @@ def pick(state_root="kbworld/state", repo=None) -> str:
                 "sort_by(.createdAt) | .[].title"]
     doors = [t for t in _gh(*args).splitlines() if t.strip()]
     if doors:
-        # a door titled "kb-door: <subject>" or just "<subject>"
-        return re.sub(r"^kb-door:\s*", "", doors[0]).strip()
+        # a door titled "kb-door: <subject>" or just "<subject>" — SANITIZED
+        return sanitize(re.sub(r"^kb-door:\s*", "", doors[0]))
 
     # 2 — deepen the least-recently-rounded existing module
     kbs = Path(state_root) / "kbs"
@@ -70,17 +83,21 @@ def pick(state_root="kbworld/state", repo=None) -> str:
                         return ts
                 return 0.0
             coldest = min(built, key=age)
-            for subj in last_seen:
-                if _slug(subj) == coldest:
-                    return subj
-            return coldest.replace("_", " ")
+            # pick the subject whose round report ran MOST RECENTLY for this
+            # dir (mtime, not insertion order — matters when subjects collide
+            # to the same slug)
+            matches = [(subj, ts) for subj, ts in last_seen.items()
+                       if _slug(subj) == coldest]
+            if matches:
+                return sanitize(max(matches, key=lambda x: x[1])[0])
+            return sanitize(coldest.replace("_", " "))
 
     # 3 — a fresh seed the floor hasn't built yet
     built_slugs = {d.name for d in kbs.iterdir()} if kbs.is_dir() else set()
     for seed in SEEDS:
         if _slug(seed) not in built_slugs:
-            return seed
-    return SEEDS[0]
+            return sanitize(seed)
+    return sanitize(SEEDS[0])
 
 
 if __name__ == "__main__":
