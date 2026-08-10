@@ -1,0 +1,8 @@
+{
+  "name": "sourdough_baking-module",
+  "version": "0.1.0",
+  "description": "sourdough baking \u2014 a cultivated, proof-checked neurosymbolic knowledge module: RAG library, agent brain, growable KB, factory-deepened. 298 concepts.",
+  "author": {
+    "name": "Isaac Rubin"
+  }
+}

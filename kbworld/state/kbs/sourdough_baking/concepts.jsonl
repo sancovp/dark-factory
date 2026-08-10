@@ -1,0 +1,298 @@
+{"c": "acetic_acid", "d": "Sharp sour acid produced by lactobacillus in presence of oxygen creating tangy flavor", "lib": "sourdough_baking"}
+{"c": "acid_accumulation_rate", "d": "Speed at which lactobacillus produces lactic_acid and acetic_acid during active fermentation.", "lib": "deep_fermentation"}
+{"c": "acid_development_rate", "d": "Speed at which lactobacillus produces lactic_acid and acetic_acid during fermentation, a component of fermentation_vigor affecting sourness_level development.", "lib": "deep_fermentation"}
+{"c": "active_starter", "d": "Starter exhibiting vigorous bubbling, foam surface, and doubling within hours of feeding, indicating healthy yeast and bacterial populations.", "lib": "sourdough_baking"}
+{"c": "active_starter_develops_from", "d": "active_starter emerges through repeated starter_refreshment building starter_vigor over starter_age.", "lib": "deep_sourdough_starter"}
+{"c": "active_starter_exhibits", "d": "active_starter shows activity_indicators including rise_rate and fermentation_aroma.", "lib": "deep_sourdough_starter"}
+{"c": "active_starter_has", "d": "active_starter contains wild_yeast and lactobacillus populations that drive fermentation.", "lib": "deep_sourdough_starter"}
+{"c": "active_starter_requires", "d": "active_starter depends on starter_refreshment with appropriate feed_ratio and starter_hydration.", "lib": "deep_sourdough_starter"}
+{"c": "activity_indicators", "d": "Observable visual markers on active_starter including bubble size, distribution, surface foam, dome height, and scent that collectively signal healthy fermentation.", "lib": "deep_sourdough_starter"}
+{"c": "activity_indicators_signals", "d": "active_starter exhibits bubble_activity and foam_surface and doubling_time indicating peak_fermentation_vigor.", "lib": "deep_sourdough_starter"}
+{"c": "activity_peak", "d": "Maximum fermentation intensity of active_starter occurring at the apex of rise before CO2 production begins to slow.", "lib": "deep_sourdough_starter"}
+{"c": "activity_peak_signals", "d": "activity_peak marks ideal moment for inoculation and levain creation using active_starter.", "lib": "deep_sourdough_starter"}
+{"c": "activity_temperature", "d": "Temperature range that modulates fermentation vigor, with optimal range 24-28\u00b0C for balanced wild yeast and lactobacillus activity.", "lib": "deep_fermentation"}
+{"c": "ambient_humidity", "d": "Environmental moisture level affecting crust drying rate and surface tension during baking and cooling.", "lib": "sourdough_baking"}
+{"c": "as_acetic_acid_ratio", "d": "Proportion of acetic acid relative to lactic acid in active starter determined by fermentation conditions and oxygen exposure.", "lib": "deep_sourdough_starter"}
+{"c": "as_aroma_profile", "d": "Complex scent of active starter combining floral notes from yeast fermentation and tangy notes from bacterial acid production.", "lib": "deep_sourdough_starter"}
+{"c": "as_bubble_structure", "d": "Pattern and density of CO2 cavities visible on starter surface and throughout its body, indicative of active fermentation.", "lib": "deep_sourdough_starter"}
+{"c": "as_dome_shape", "d": "Convex elevated top of active starter at peak rise, caused by CO2 pressure beneath the surface crust.", "lib": "deep_sourdough_starter"}
+{"c": "as_doubling_ratio", "d": "Volumetric expansion factor of active starter within hours of feeding, measuring rise from baseline to peak.", "lib": "deep_sourdough_starter"}
+{"c": "as_feed_responsiveness", "d": "Speed and magnitude of active starter reaction to feeding, correlating with microbial population health.", "lib": "deep_sourdough_starter"}
+{"c": "as_flour_type_affinity", "d": "Compatibility and fermentation response of active starter to specific flour varieties and their native microbiota.", "lib": "deep_sourdough_starter"}
+{"c": "as_foam_surface", "d": "Distinctive frothy layer on active starter surface formed by CO2 bubbles trapped in fermentation matrix.", "lib": "deep_sourdough_starter"}
+{"c": "as_hydration_state", "d": "Water-to-flour consistency of active starter affecting microbial accessibility and gas retention properties.", "lib": "deep_sourdough_starter"}
+{"c": "as_lactic_acid_ratio", "d": "Proportion of lactic acid relative to acetic acid in active starter determined by fermentation conditions and anaerobic phases.", "lib": "deep_sourdough_starter"}
+{"c": "as_lactobacillus_density", "d": "Concentration of lactobacillus bacterial populations per unit mass in active starter producing organic acids.", "lib": "deep_sourdough_starter"}
+{"c": "as_peak_timing", "d": "Duration from feeding to maximum rise of active starter, indicating fermentation vigor and microbial balance.", "lib": "deep_sourdough_starter"}
+{"c": "as_sourness_level", "d": "Intensity of acidic tang from lactobacillus fermentation byproduct in active starter ranging from mild to pronounced.", "lib": "deep_sourdough_starter"}
+{"c": "as_storage_history", "d": "Record of prior storage conditions and feeding schedules that shaped current active starter microbial composition.", "lib": "deep_sourdough_starter"}
+{"c": "as_temperature_sensitivity", "d": "Degree to which active starter activity rate responds to ambient and dough temperature changes.", "lib": "deep_sourdough_starter"}
+{"c": "as_vigor_level", "d": "Observable measure of active starter rising speed and bubble density indicating culture health and fermentation strength.", "lib": "deep_sourdough_starter"}
+{"c": "as_wild_yeast_density", "d": "Concentration of wild yeast colonies per unit mass in active starter driving primary leavening fermentation.", "lib": "deep_sourdough_starter"}
+{"c": "as_yeast_bacteria_balance", "d": "Proportional relationship between wild yeast and lactobacillus populations governing flavor and rise characteristics.", "lib": "deep_sourdough_starter"}
+{"c": "autolyse", "d": "Initial rest period after mixing flour and water where gluten develops without kneading, improving dough extensibility and reducing mixing time.", "lib": "sourdough_baking"}
+{"c": "baguette", "d": "Long thin French bread shape requiring specific dough consistency and scoring technique for characteristic ear.", "lib": "sourdough_baking"}
+{"c": "baker_s_division", "d": "Process of dividing fermented dough into individual loaves using scale and bench knife before shaping.", "lib": "sourdough_baking"}
+{"c": "baker_s_percentage", "d": "Baking formula where each ingredient weight is expressed as percentage of total flour weight, allowing easy recipe scaling and comparison.", "lib": "sourdough_baking"}
+{"c": "baking", "d": "Cooking dough in hot oven transforming it into bread through heat and chemical reactions", "lib": "sourdough_baking"}
+{"c": "baking_duration", "d": "The total time bread spends in the oven during baking, typically 20-50 minutes depending on loaf size and oven temperature.", "lib": null}
+{"c": "baking_schedule", "d": "Planning system coordinating all sourdough steps from levain feeding to bread completion within target time window.", "lib": "sourdough_baking"}
+{"c": "baking_steel", "d": "Thick steel plate conducting heat more efficiently than stone for superior bottom crust development and oven spring.", "lib": "sourdough_baking"}
+{"c": "baking_stone", "d": "Thick stone plate that stores heat and transfers it to bread bottom, mimicking professional deck oven conditions.", "lib": "sourdough_baking"}
+{"c": "baking_temperature", "d": "Oven heat setting typically between 450-500F for home sourdough baking", "lib": "sourdough_baking"}
+{"c": "banneton", "d": "Proofing basket made of woven rattan that supports shaped dough during final proof and leaves characteristic flour patterns on crust.", "lib": "sourdough_baking"}
+{"c": "banneton_flouring", "d": "Dusting the interior of a proofing basket with flour before placing shaped dough, preventing sticking and creating decorative flour patterns on the finished crust.", "lib": null}
+{"c": "banneton_proof", "d": "Final proof with dough resting in floured banneton basket that provides support and creates decorative flour marking on crust.", "lib": "sourdough_baking"}
+{"c": "batard", "d": "Oval shaped bread loaf formed by hand through rolling and shaping technique; classic sourdough shape.", "lib": "sourdough_baking"}
+{"c": "bench_knife", "d": "Flat metal tool for cutting, dividing, and handling dough without deflation", "lib": "sourdough_baking"}
+{"c": "bench_rest", "d": "Short rest period after dividing dough allowing gluten to relax for easier shaping without springing back.", "lib": "sourdough_baking"}
+{"c": "biga", "d": "Stiff Italian-style pre-ferment with lower hydration than poolish", "lib": "sourdough_baking"}
+{"c": "boule", "d": "Round spherical bread shape formed by gathering edges to center under tension; most common sourdough form.", "lib": "sourdough_baking"}
+{"c": "bread_aroma", "d": "Complex smell of freshly baked bread from Maillard reaction products, caramelization, and fermentation volatiles.", "lib": "sourdough_baking"}
+{"c": "bread_crumb", "d": "Characteristic of finished bread including moisture content, tenderness, and flavor", "lib": "sourdough_baking"}
+{"c": "bread_crumbs", "d": "Ground dried sourdough pieces used for breading, Stuffing, or as panko substitute in recipes.", "lib": "sourdough_baking"}
+{"c": "bread_flour", "d": "High-protein wheat flour (12-14%) providing strong gluten network ideal for open crumb sourdough structure.", "lib": "sourdough_baking"}
+{"c": "bread_freezing", "d": "Long term storage method slicing bread first and freezing pieces individually for convenient single-slice thawing.", "lib": "sourdough_baking"}
+{"c": "bread_recrisping", "d": "Technique restoring crispy crust to stale bread by heating briefly in dry hot oven for 5-10 minutes.", "lib": "sourdough_baking"}
+{"c": "bread_staling", "d": "Freshness loss from moisture migration and starch retrogradation over days, slowed by proper storage and sealed containers.", "lib": "sourdough_baking"}
+{"c": "bread_storage", "d": "Methods for maintaining bread freshness including paper bag (short term), plastic bag (longer), freezer (extended), or bread box.", "lib": "sourdough_baking"}
+{"c": "bread_volume", "d": "Total size and height of finished loaf indicating proper fermentation and oven spring", "lib": "sourdough_baking"}
+{"c": "bubble_activity", "d": "Observable CO2 release pattern in active starter expressed as bubble size, frequency, and distribution across the surface.", "lib": "deep_sourdough_starter"}
+{"c": "bubble_activity_manifests_as", "d": "bubble_distribution and bubble_size produce visible_signs of wild_yeast and lactobacillus metabolic activity.", "lib": "deep_sourdough_starter"}
+{"c": "bubble_distribution", "d": "Pattern and spacing of bubbles visible on active_starter surface ranging from fine uniform to large irregular indicating yeast activity levels.", "lib": "deep_sourdough_starter"}
+{"c": "bubble_size", "d": "Diameter of fermentation bubbles in active_starter, with finer bubbles suggesting strong bacterial activity and larger bubbles indicating robust yeast gas production.", "lib": "deep_sourdough_starter"}
+{"c": "bulk_ferment", "d": "Initial fermentation period of shaped dough before first fold; building phase for flavor and gas production.", "lib": "sourdough_baking"}
+{"c": "bulk_fermentation", "d": "Primary fermentation phase where the mixed dough rests and ferments before shaping; time and temperature control gas production and flavor development.", "lib": "sourdough_baking"}
+{"c": "caramelization", "d": "Browning of sugars at high temperatures creating sweet caramel notes in crust; occurs at higher temperatures than Maillard reaction.", "lib": "sourdough_baking"}
+{"c": "caramelized_aroma", "d": "Sweet bready smell from sugar caramelization during hot baking creating vanilla and toffee-like compounds.", "lib": "sourdough_baking"}
+{"c": "carbon_dioxide", "d": "Gaseous byproduct of wild_yeast fermentation that provides dough rise and open crumb structure in sourdough bread.", "lib": "deep_fermentation"}
+{"c": "carbonyl_compounds", "d": "Aldehydes and ketones produced during fermentation that contribute to crust flavor and overall aroma complexity.", "lib": "deep_fermentation"}
+{"c": "ciabatta", "d": "Italian loaf with open crumb and crisp crust using high hydration sourdough", "lib": "sourdough_baking"}
+{"c": "co2_output", "d": "Carbon dioxide gas produced by wild yeast during anaerobic fermentation of sugars in the dough; the primary driver of dough rise and open crumb structure.", "lib": "deep_fermentation"}
+{"c": "coil_fold", "d": "Gentle folding technique used for high-hydration doughs where the dough is lifted and coiled under itself, building strength with minimal disruption.", "lib": "sourdough_baking"}
+{"c": "cold_dormancy_duration", "d": "starter_age accumulated during refrigerator storage representing time since last feeding under cold conditions.", "lib": "deep_sourdough_starter"}
+{"c": "cold_retard", "d": "Extended cold proofing in the refrigerator (typically 8-24 hours) that slows fermentation, develops flavor complexity, and allows flexible baking scheduling.", "lib": "sourdough_baking"}
+{"c": "cold_retard_effect", "d": "Flavor development phenomenon where extended dormant_starter storage enhances sourness through prolonged lactic_acid and acetic_acid production at low rates.", "lib": "deep_sourdough_starter"}
+{"c": "cold_retardation", "d": "Refrigerated proofing slowing fermentation for flavor development and scheduling flexibility", "lib": "sourdough_baking"}
+{"c": "cold_storage_container", "d": "Sealed jar or vessel maintaining starter during refrigerator storage preventing contamination while allowing minimal gas exchange.", "lib": "deep_sourdough_starter"}
+{"c": "cold_storage_duration", "d": "Time period a starter spends refrigerated during dormancy, during which yeast and bacterial metabolism slow significantly from peak activity levels.", "lib": "deep_sourdough_starter"}
+{"c": "cold_temperature_effect", "d": "Reduced environmental temperature that decelerates wild_yeast fermentation and lactobacillus acid production to near-dormancy.", "lib": "deep_sourdough_starter"}
+{"c": "cold_temperature_hold", "d": "Storage condition maintaining dormant_starter at refrigerator temperatures typically between 35-40F/2-4C where metabolic activity decelerates to near-dormancy.", "lib": "deep_sourdough_starter"}
+{"c": "cold_temperature_trigger", "d": "Temperature threshold causing metabolic slowdown that initiates dormant state in starter culture.", "lib": "deep_sourdough_starter"}
+{"c": "consistent_temperature", "d": "Stable fermentation environment without drafts or hot spots ensuring predictable timing and uniform results.", "lib": "sourdough_baking"}
+{"c": "cool", "d": "Post-bake rest period (1-4 hours) where crumb structure sets, moisture redistributes, and bread reaches ideal slicing texture.", "lib": "sourdough_baking"}
+{"c": "cooling", "d": "Post-bake rest allowing crumb structure to set and internal moisture to redistribute", "lib": "sourdough_baking"}
+{"c": "couche_proof", "d": "Final proof method using linen cloth pleated between shaped loaves providing support and creating tight side crust.", "lib": "sourdough_baking"}
+{"c": "covered_bake", "d": "Baking method using covered dutch oven for first portion creating steam-rich environment, then uncovered for crust development.", "lib": "sourdough_baking"}
+{"c": "crouton", "d": "Small toasted bread cubes used in salads and soups, often from day-old sourdough with crusty exterior.", "lib": "sourdough_baking"}
+{"c": "crumb", "d": "The interior crumb structure of bread characterized by hole size, distribution, tenderness, and openness ranging from tight and dense to open and airy.", "lib": "sourdough_baking"}
+{"c": "crumb_color", "d": "The visual shade of the bread interior ranging from pale ivory to deep golden depending on fermentation length, dough hydration, and baking time and temperature.", "lib": null}
+{"c": "crumb_doneness", "d": "Visual and tactile check confirming fully baked interior without raw dough", "lib": "sourdough_baking"}
+{"c": "crumb_freshness", "d": "Interior texture quality of bread indicating proper fermentation, baking, and cooling without staleness or gumminess.", "lib": "sourdough_baking"}
+{"c": "crumb_structure", "d": "Internal architecture of bread defined by bubble size, distribution, and tenderness", "lib": "sourdough_baking"}
+{"c": "crumb_texture", "d": "The physical feel and structural quality of bread's interior ranging from fine and tender to coarse and chewy based on gluten development and fermentation.", "lib": null}
+{"c": "crust", "d": "The baked outer layer of bread formed by Maillard reaction and caramelization; texture ranges from thin and crispy to thick and chewy based on hydration and baking method.", "lib": "sourdough_baking"}
+{"c": "crust_color", "d": "The brown coloration of bread's outer layer produced by Maillard reaction and caramelization during baking, ranging from pale gold to deep mahogany.", "lib": null}
+{"c": "crust_retention", "d": "Maintenance of crispy crust texture through proper cooling and storage avoiding enclosed moisture-softening conditions.", "lib": "sourdough_baking"}
+{"c": "crust_shatter", "d": "Satisfying crunch when biting through well-baked sourdough crust, indicating proper thickness and moisture balance.", "lib": "sourdough_baking"}
+{"c": "crust_texture", "d": "External characteristics of crust from chewy and thick to thin and crispy", "lib": "sourdough_baking"}
+{"c": "culture_vitality", "d": "Health and metabolic activity level of the lactobacillus and wild_yeast population in the starter culture.", "lib": "deep_fermentation"}
+{"c": "cultured_butter", "d": "Butter produced through bacterial fermentation sometimes used in enriched sourdough", "lib": "sourdough_baking"}
+{"c": "day_old_bread", "d": "Bread baked previous day with slightly dried crust and set crumb, ideal for certain applications and easier slicing.", "lib": "sourdough_baking"}
+{"c": "dead_starter", "d": "Starter with no activity, off smell, or pink/orange discoloration indicating contamination; requires starting fresh culture.", "lib": "sourdough_baking"}
+{"c": "depleted_food_supply", "d": "Exhausted carbohydrates in starter from prior fermentation leaving minimal food for microbial activity.", "lib": "deep_sourdough_starter"}
+{"c": "depleted_nutrients", "d": "Exhausted flour sugars and starches in starter following active fermentation, triggering dormancy as microbial food source is consumed.", "lib": "deep_sourdough_starter"}
+{"c": "discard", "d": "Excess starter removed during feeding that can be used in discard recipes", "lib": "sourdough_baking"}
+{"c": "dome_height", "d": "Maximum rise of active_starter above its resting level before beginning to fall, indicating peak fermentation strength.", "lib": "deep_sourdough_starter"}
+{"c": "dormancy_duration", "d": "starter_age measurement of elapsed time since last feeding while dormant_starter remained in cold storage, affecting recovery speed and flavor potential.", "lib": "deep_sourdough_starter"}
+{"c": "dormancy_reactivation", "d": "Process where cold-dormant microbial populations become active again after temperature rises and fresh feed is provided, restoring starter_vigor.", "lib": "deep_sourdough_starter"}
+{"c": "dormancy_to_active_transition", "d": "State change from dormant_starter to active_starter achieved through revival_feeding and room temperature incubation.", "lib": "deep_sourdough_starter"}
+{"c": "dormant_starter", "d": "Starter stored in refrigerator with slowed activity due to cold temperature and depleted food; revives after feeding at room temperature.", "lib": "sourdough_baking"}
+{"c": "doubling_time", "d": "Duration required for active_starter to reach double its fed volume, with vigorous cultures achieving this in 4-6 hours at room temperature.", "lib": "deep_sourdough_starter"}
+{"c": "doubling_time_indicates", "d": "doubling_time measures starter_vigor with shorter times indicating stronger active_starter.", "lib": "deep_sourdough_starter"}
+{"c": "dough", "d": "The mixed combination of flour, water, salt, and levain that undergoes fermentation and transforms into bread through baking.", "lib": "sourdough_baking"}
+{"c": "dough_consistency", "d": "Viscosity and handling quality from soft and extensible to firm and tight", "lib": "sourdough_baking"}
+{"c": "dough_elasticity", "d": "Property allowing dough to spring back when stretched, controlling shape retention; decreases during fermentation as gluten relaxes.", "lib": "sourdough_baking"}
+{"c": "dough_expansion_rate", "d": "Rate at which dough volume increases due to gas_production_rate, directly proportional to fermentation_vigor under constant temperature and hydration.", "lib": "deep_fermentation"}
+{"c": "dough_extensibility", "d": "Ability of dough to stretch without breaking, allowing oven spring and open crumb; influenced by hydration and fermentation.", "lib": "sourdough_baking"}
+{"c": "dough_handling", "d": "Techniques for manipulating dough during shaping including stretching, folding, and rolling that develop gluten structure and determine final loaf form.", "lib": null}
+{"c": "dough_rise_capacity", "d": "Maximum volume increase achievable through fermentation_vigor, reflecting cumulative gas retention in the gluten network.", "lib": "deep_fermentation"}
+{"c": "dough_shape", "d": "Final form given to bread through shaping technique determining baking appearance and crumb structure.", "lib": "sourdough_baking"}
+{"c": "dough_strength", "d": "Ability of dough to hold gas without tearing, measured by extensibility and elasticity balance; developed through proper fermentation and protein content.", "lib": "sourdough_baking"}
+{"c": "dough_temperature", "d": "Target temperature of mixed dough (typically 75-80F/24-27C) ensuring predictable fermentation timing regardless of room conditions.", "lib": "sourdough_baking"}
+{"c": "dough_tension", "d": "Surface tightness of shaped loaf affecting how it holds form during proofing and oven spring.", "lib": "sourdough_baking"}
+{"c": "dutch_oven", "d": "Heavy lidded pot used to bake sourdough that traps steam from dough moisture, creating professional results without an oven steam injection system.", "lib": "sourdough_baking"}
+{"c": "ear", "d": "The lifted crust edge formed from scoring that rises dramatically during oven spring; prized aesthetic and texture element in artisan sourdough.", "lib": "sourdough_baking"}
+{"c": "einkorn_flour", "d": "Ancient wheat variety flour with digestible gluten and rich carotenoid content; weak gluten requires gentler handling.", "lib": "sourdough_baking"}
+{"c": "enriched_sourdough", "d": "Dough containing eggs, butter, or sugar alongside the sourdough culture", "lib": "sourdough_baking"}
+{"c": "enzymatic_activity", "d": "Natural enzyme breakdown of starches to sugars feeding fermentation microbes", "lib": "sourdough_baking"}
+{"c": "esters", "d": "Aromatic compounds formed from ethanol and organic_acids that contribute fruity and floral notes to sourdough flavor_complexity.", "lib": "deep_fermentation"}
+{"c": "ethanol", "d": "Alcohol produced by wild_yeast during anaerobic fermentation that evaporates during baking and contributes to flavor_complexity development.", "lib": "deep_fermentation"}
+{"c": "ethanol_release", "d": "Ethanol alcohol produced as a byproduct of wild yeast sugar metabolism during the initial anaerobic phase of sourdough fermentation.", "lib": "deep_fermentation"}
+{"c": "exopolysaccharides", "d": "Polysaccharide compounds secreted by certain lactobacillus strains that affect bread texture and water retention.", "lib": "deep_fermentation"}
+{"c": "feed_ratio", "d": "Proportion of flour and water added relative to existing starter weight during feeding", "lib": "sourdough_baking"}
+{"c": "feed_response_speed", "d": "Latency period between feeding and visible rise initiation in active_starter, with healthy cultures showing response within 1-2 hours.", "lib": "deep_sourdough_starter"}
+{"c": "feed_response_speed_enables", "d": "Rapid feed_response_speed predicts healthy starter_vigor and strong inoculation potential.", "lib": "deep_sourdough_starter"}
+{"c": "feeding_response", "d": "Speed and vigor with which dormant_starter revives after receiving fresh feed_ratio additions.", "lib": "deep_sourdough_starter"}
+{"c": "feeding_schedule", "d": "Regular pattern of starter maintenance specifying feeding frequency, ratios, flour types, and temperature to maintain culture health.", "lib": "sourdough_baking"}
+{"c": "fermentation", "d": "Metabolic process where microbes convert sugars to CO2 for rise and acids for sour flavor", "lib": "sourdough_baking"}
+{"c": "fermentation_acidity_balance", "d": "The ratio and interaction between lactic and acetic acid proportions in fermented dough, determining the character and intensity of sour flavor perception.", "lib": "deep_fermentation"}
+{"c": "fermentation_aroma", "d": "Smell of actively fermenting dough combining yeast products, organic acids, and flour compounds.", "lib": "sourdough_baking"}
+{"c": "fermentation_aroma_reflects", "d": "fermentation_aroma reveals acid_balance between lactic_acid and acetic_acid in active_starter.", "lib": "deep_sourdough_starter"}
+{"c": "fermentation_byproducts", "d": "Compounds produced by microbial fermentation including carbon dioxide for dough rise, lactic and acetic acids for sour flavor, and alcohols for aroma.", "lib": null}
+{"c": "fermentation_curve", "d": "Temporal pattern of fermentation activity showing lag phase, peak fermentation, and decline phases across the fermentation timeline.", "lib": "deep_fermentation"}
+{"c": "fermentation_duration", "d": "Time required for fermentation_vigor to produce target dough rise, inversely related to fermentation_vigor intensity at fixed hydration and flour.", "lib": "deep_fermentation"}
+{"c": "fermentation_endpoint", "d": "Stage where fermentation_vigor declines as sugars deplete and acid accumulation inhibits wild_yeast, marking optimal or over-fermented state.", "lib": "deep_fermentation"}
+{"c": "fermentation_optimal_range", "d": "Temperature band typically 75-80F where wild_yeast and lactobacillus achieve balanced fermentation_vigor, producing favorable gas and acid ratios.", "lib": "deep_fermentation"}
+{"c": "fermentation_phase", "d": "Stage within the fermentation timeline: initial adaptation, peak activity, or decline toward exhaustion.", "lib": "deep_fermentation"}
+{"c": "fermentation_stagnation", "d": "Reduced or arrested fermentation vigor due to temperature extremes, low hydration, or microbial inhibition.", "lib": "deep_fermentation"}
+{"c": "fermentation_temperature", "d": "Environmental temperature during bulk and final proof that directly controls fermentation speed; warmer accelerates, cooler slows.", "lib": "sourdough_baking"}
+{"c": "fermentation_temperature_dependency", "d": "Mathematical relationship between ambient temperature and fermentation_vigor, where wild_yeast and lactobacillus activity accelerate within their viable temperature ranges.", "lib": "deep_fermentation"}
+{"c": "fermentation_timeline", "d": "Planned schedule coordinating levain build, autolyse, bulk fermentation, folds, and proof to complete baking at desired time.", "lib": "sourdough_baking"}
+{"c": "fermentation_vessel", "d": "Container for cultivating and storing sourdough starter", "lib": "sourdough_baking"}
+{"c": "fermentation_vigor", "d": "Intensity and rate of the combined microbial fermentation process in sourdough, driven by wild_yeast gas production and lactobacillus acid generation, determining dough rise speed and flavor development timing.", "lib": "deep_fermentation"}
+{"c": "final_proof", "d": "The last rise of shaped dough before scoring and baking; time varies based on temperature and desired crumb characteristics.", "lib": "sourdough_baking"}
+{"c": "final_shaping", "d": "Creating tight surface tension and proper form for the finished loaf", "lib": "sourdough_baking"}
+{"c": "flavor_complexity", "d": "The depth and nuance of sourdough taste arising from multiple organic acids, esters, and alcohols produced during extended fermentation, creating tangy and complex notes.", "lib": null}
+{"c": "flavor_compounds", "d": "Complex organic molecules including esters aldehydes and higher alcohols created during fermentation that build flavor_complexity beyond simple sourness.", "lib": "deep_fermentation"}
+{"c": "flavor_volatiles", "d": "Aromatic organic compounds including esters and aldehydes produced during fermentation that create nuanced flavor_complexity beyond basic sourness.", "lib": "deep_fermentation"}
+{"c": "float_test", "d": "Test where a spoonful of levain dropped in water floats indicating sufficient gas retention and readiness for baking.", "lib": "sourdough_baking"}
+{"c": "flour", "d": "Ground grain (typically wheat) used as the carbohydrate base for sourdough, providing starch, protein for gluten, and nutrients for the starter ecosystem.", "lib": "sourdough_baking"}
+{"c": "flour_dusting", "d": "Application of flour on work surface and dough exterior preventing sticking and creating decorative crust patterns.", "lib": "sourdough_baking"}
+{"c": "flour_hydration", "d": "Ability of flour to absorb water varying by protein content, grind, and grain type; affects dough viscosity and final bread characteristics.", "lib": "sourdough_baking"}
+{"c": "flour_temperature", "d": "Temperature of flour before mixing affecting dough temperature and fermentation rate; can be adjusted for warm or cool climates.", "lib": "sourdough_baking"}
+{"c": "flour_type", "d": "Variety of grain including whole_wheat, rye, spelt, or mixed with different protein contents", "lib": "sourdough_baking"}
+{"c": "foam_layer", "d": "Frothy surface crust formed by trapped CO2 bubbles and fermentation byproducts on actively fermenting starter.", "lib": "deep_sourdough_starter"}
+{"c": "foam_stability", "d": "Ability of active_starter surface foam to persist without collapsing, indicating balanced bacterial and yeast activity.", "lib": "deep_sourdough_starter"}
+{"c": "foam_stability_reflects", "d": "Balanced foam_stability indicates equilibrium between lactic_acid and acetic_acid producing bacteria.", "lib": "deep_sourdough_starter"}
+{"c": "focaccia", "d": "Flat Italian bread dimpled with olive oil and herbs baked on sheet pan", "lib": "sourdough_baking"}
+{"c": "fold", "d": "Technique of folding dough over itself during fermentation to strengthen gluten, redistribute yeast food, and release gas bubbles.", "lib": "sourdough_baking"}
+{"c": "fold_count", "d": "Number of stretch and fold repetitions during bulk fermentation for gluten development", "lib": "sourdough_baking"}
+{"c": "fold_frequency", "d": "Interval between stretch and fold repetitions during bulk fermentation, typically every 30-60 minutes for 2-4 sets.", "lib": "sourdough_baking"}
+{"c": "gas_production", "d": "Volume of CO2 generated by wild yeast metabolism during fermentation, primary driver of dough expansion and crumb structure.", "lib": "deep_fermentation"}
+{"c": "gas_production_rate", "d": "Speed at which wild_yeast converts sugars into carbon dioxide during fermentation, a primary component of fermentation_vigor measuring dough rise capacity.", "lib": "deep_fermentation"}
+{"c": "gluten_development", "d": "Process of hydrating and aligning gluten proteins through mixing, folding, or autolyse to create strong extensible dough.", "lib": "sourdough_baking"}
+{"c": "gluten_network", "d": "Elastic protein structure formed by glutenin and gliadin that traps fermentation gas, provides dough strength, and gives bread its structure.", "lib": "sourdough_baking"}
+{"c": "grain_flavor", "d": "Taste reflecting specific grain types used in flour from wheat, rye, spelt, or ancient grains contributing unique notes.", "lib": "sourdough_baking"}
+{"c": "gummy_crum", "d": "Under-baked or under-proofed interior that is dense, sticky, and chewy rather than tender; bread needs higher internal temperature or longer fermentation.", "lib": "sourdough_baking"}
+{"c": "higher_alcohols", "d": "Alcohol compounds beyond ethanol produced during fermentation that add nutty and fruity dimensions to flavor_complexity.", "lib": "deep_fermentation"}
+{"c": "hooch", "d": "Dark liquid layer on neglected starter indicating high acidity and starvation; can be poured off or stirred in depending on desired sourness.", "lib": "sourdough_baking"}
+{"c": "hydration", "d": "Ratio of water to flour in dough expressed as percentage; higher hydration yields open crumb and crispy crust but requires skilled handling.", "lib": "sourdough_baking"}
+{"c": "hydration_ratio", "d": "Percentage of water relative to flour weight determining dough consistency and crumb openness", "lib": "sourdough_baking"}
+{"c": "inoculation", "d": "Adding levain to new dough batch to begin fermentation with established culture", "lib": "sourdough_baking"}
+{"c": "inoculation_rate", "d": "Percentage of levain added to main dough by weight, affecting fermentation speed and final flavor intensity.", "lib": "sourdough_baking"}
+{"c": "internal_temperature", "d": "Bread center temperature (typically 195-210F/90-99C) indicating doneness; lower temps leave gummy crumb.", "lib": "sourdough_baking"}
+{"c": "kitchen_scale", "d": "Precision weighing device for measuring ingredients by weight for consistent hydration ratios", "lib": "sourdough_baking"}
+{"c": "lactic_acid", "d": "Milder sour acid produced by lactobacillus contributing to bread tanginess", "lib": "sourdough_baking"}
+{"c": "lactic_acid_bacteria", "d": "Beneficial bacteria in sourdough that produce lactic and acetic acids, creating the characteristic tang and contributing to flavor development and dough leavening.", "lib": "sourdough_baking"}
+{"c": "lactobacillus", "d": "Bacterial strains producing lactic and acetic acids that create sourdough tanginess", "lib": "sourdough_baking"}
+{"c": "lag_phase", "d": "Initial fermentation period where wild yeast adapt to dough environment before vigorous gas production begins.", "lib": "deep_fermentation"}
+{"c": "lame", "d": "Sharp curved blade used for scoring bread, typically with a wooden handle, that creates clean precise cuts for ear formation.", "lib": "sourdough_baking"}
+{"c": "leavening_power", "d": "Capacity of active_starter to raise bread dough measured by gas production rate and total rise achieved.", "lib": "deep_sourdough_starter"}
+{"c": "levain", "d": "A portion of active sourdough starter built up before baking, used to leaven the main dough; can be stiff or liquid in consistency.", "lib": "sourdough_baking"}
+{"c": "levain_maturity", "d": "Stage of levain readiness for baking determined by doubling time, bubble activity, peak height, and float test.", "lib": "sourdough_baking"}
+{"c": "lid_removal", "d": "Taking Dutch oven lid off mid-bake to release steam and finish crust coloring", "lib": "sourdough_baking"}
+{"c": "liquid_starter", "d": "Thin consistency starter (100% hydration or more) producing more lactic acid, faster fermentation, and milder tang.", "lib": "sourdough_baking"}
+{"c": "maillard_reaction", "d": "Chemical reaction between amino acids and sugars at high temperatures creating brown crust color and complex savory flavors.", "lib": "sourdough_baking"}
+{"c": "mature_starter", "d": "Well-maintained sourdough starter at peak activity showing consistent doubling, pleasant tangy aroma, and readiness for baking.", "lib": "sourdough_baking"}
+{"c": "miche", "d": "Large round country bread loaf typically weighing 2-4 pounds, often with rustic thick crust and open crumb.", "lib": "sourdough_baking"}
+{"c": "microbial_balance", "d": "Proportional ratio of wild_yeast to lactobacillus populations determining fermentation character and flavor output.", "lib": "deep_sourdough_starter"}
+{"c": "mild_flavor", "d": "Subtle sourness with wheat and sweet undertones achieved through shorter fermentation and younger starter.", "lib": "sourdough_baking"}
+{"c": "mixing", "d": "Combining flour, water, and other ingredients to form a cohesive dough, developing initial gluten structure through mechanical stirring or hand work.", "lib": null}
+{"c": "nutty_flavor", "d": "Roasted grain taste from whole wheat or rye flour or from extended fermentation developing grain complexity.", "lib": "sourdough_baking"}
+{"c": "olive_oil", "d": "Fat pressed from olives used in bread making to add moisture, tenderness, and rich flavor to dough and crust.", "lib": null}
+{"c": "open_crum", "d": "Bread crumb with large irregular holes and good structure, considered desirable for artisan sourdough, achieved through proper fermentation and gentle handling.", "lib": "sourdough_baking"}
+{"c": "organic_acid_formation", "d": "The composite mixture of lactic acid and acetic acid generated during sourdough fermentation by the metabolic activity of lactobacillus strains acting on flour carbohydrates.", "lib": "deep_fermentation"}
+{"c": "organic_acid_ratio", "d": "Proportional balance between lactic_acid and acetic_acid determined by fermentation conditions that shapes the final sourness_level character.", "lib": "deep_fermentation"}
+{"c": "organic_acids", "d": "Carbon-chain acids produced by lactobacillus metabolism including lactic_acid and acetic_acid that determine sourness_level and contribute to flavor_complexity.", "lib": "deep_fermentation"}
+{"c": "oven_spring", "d": "Rapid oven rise occurring in the first 10-15 minutes of baking due to yeast activity, gas expansion, and steam; creates open crumb and dramatic ear.", "lib": "sourdough_baking"}
+{"c": "overproofed", "d": "Fermentation extending past peak rise where gluten has broken down, resulting in flat dense bread with minimal oven spring.", "lib": "sourdough_baking"}
+{"c": "overproofing", "d": "Excessive fermentation causing dough to collapse, lose structure, and create flat dense bread", "lib": "sourdough_baking"}
+{"c": "pain_au_levain", "d": "Pure sourdough bread leavened exclusively with natural starter", "lib": "sourdough_baking"}
+{"c": "pain_de_campagne", "d": "French country sourdough using whole wheat and rye for rustic character", "lib": "sourdough_baking"}
+{"c": "parchment_paper", "d": "Non-stick paper used to transfer proofed dough to baking vessel and prevent sticking during baking and cooling.", "lib": "sourdough_baking"}
+{"c": "peak_activity_window", "d": "Time interval after feeding when fermentation reaches maximum intensity before nutrients deplete.", "lib": "deep_sourdough_starter"}
+{"c": "peak_activity_window_provides", "d": "peak_activity_window is optimal time for levain creation or discard harvesting from active_starter.", "lib": "deep_sourdough_starter"}
+{"c": "peak_fermentation", "d": "Point of maximum fermentation vigor where wild yeast CO2 production and lactobacillus acid generation reach highest rates.", "lib": "deep_fermentation"}
+{"c": "peak_rise_time", "d": "Duration in hours from feeding until starter reaches maximum volume before beginning to fall.", "lib": "deep_sourdough_starter"}
+{"c": "pizza_dough", "d": "Sourdough base fermented for complex flavor before topping and high-heat baking", "lib": "sourdough_baking"}
+{"c": "poke_test", "d": "Finger poke into proofed dough checking for slow rebound indicating proper proof; quick bounce means under-proofed, no rebound means over-proofed.", "lib": "sourdough_baking"}
+{"c": "poolish", "d": "Wet pre-ferment similar to liquid levain for added complexity and fermentation insurance", "lib": "sourdough_baking"}
+{"c": "pre_shaping", "d": "Initial shaping forming rough loaf shape with surface tension before final bench rest and final shaping.", "lib": "sourdough_baking"}
+{"c": "preheat", "d": "Oven heating cycle before baking (typically 30-60 minutes) ensuring stable temperature for predictable baking results.", "lib": "sourdough_baking"}
+{"c": "proof", "d": "Final fermentation stage after shaping where the shaped dough rises before baking; may occur at room temperature or in refrigeration.", "lib": "sourdough_baking"}
+{"c": "proof_activity", "d": "Final fermentation phase showing dough readiness through increased volume, surface tension, and dome formation.", "lib": "deep_fermentation"}
+{"c": "proofing", "d": "Final fermentation phase where shaped dough rises before baking", "lib": "sourdough_baking"}
+{"c": "proofing_duration", "d": "Time allowance for final dough rise before scoring and baking", "lib": "sourdough_baking"}
+{"c": "refrigeration_interval", "d": "starter_feeding_schedule adapted for cold storage specifying days between refreshments (typically 3-7 days).", "lib": "deep_sourdough_starter"}
+{"c": "refrigeration_metabolism", "d": "Reduced metabolic rate of wild_yeast and lactobacillus populations occurring at cold temperatures, producing minimal CO2 and acid output.", "lib": "deep_sourdough_starter"}
+{"c": "refrigerator_storage", "d": "Cold environment at approximately 38-42F/3-5C that slows microbial metabolism and extends time between feedings.", "lib": "deep_sourdough_starter"}
+{"c": "refrigerator_vessel", "d": "Airtight container used for cold_storage_vessel holding dormant_starter in refrigerator, preventing moisture loss and odor absorption.", "lib": "deep_sourdough_starter"}
+{"c": "revival_feeding", "d": "starter_refreshment applied to dormant_starter with fresh flour and water to reactivate microbial populations.", "lib": "deep_sourdough_starter"}
+{"c": "revival_timeline", "d": "Expected duration for dormant_starter to transition from cold storage to active_starter status after revival_feeding at room temperature.", "lib": "deep_sourdough_starter"}
+{"c": "rice_flour", "d": "Fine powder often used for dusting bannetons preventing sticking without dense crust", "lib": "sourdough_baking"}
+{"c": "rise_rate", "d": "Speed at which active_starter volume increases during fermentation, measured in volume percentage per hour.", "lib": "deep_sourdough_starter"}
+{"c": "rise_ratio", "d": "Proportional volumetric expansion of starter after feeding, typically doubling or more in active specimens within 4-8 hours.", "lib": "deep_sourdough_starter"}
+{"c": "room_temperature", "d": "Ambient kitchen temperature (typically 70-78F/21-26C) affecting sourdough fermentation rates and starter activity.", "lib": "sourdough_baking"}
+{"c": "room_temperature_fermentation", "d": "Proofing at ambient warmth for faster fermentation with brighter flavors", "lib": "sourdough_baking"}
+{"c": "rustic_appearance", "d": "Artisan bread aesthetic characterized by irregular shape, flour dusting, thick crust, and organic imperfect form.", "lib": "sourdough_baking"}
+{"c": "rye_flour", "d": "Low-gluten flour from rye grain producing dense textured bread with distinctive sour notes; feeds bacteria well and adds moisture retention.", "lib": "sourdough_baking"}
+{"c": "rye_sourdough", "d": "Bread with significant rye flour content requiring adjusted hydration and fermentation", "lib": "sourdough_baking"}
+{"c": "salt", "d": "Sodium chloride added to dough that strengthens gluten, controls fermentation pace, enhances flavor, and extends bread shelf life.", "lib": "sourdough_baking"}
+{"c": "sandwich_loaf", "d": "Tall rectangular sourdough baked in loaf pan for everyday slicing", "lib": "sourdough_baking"}
+{"c": "scald", "d": "Hot liquid treatment of grains that inactivates enzymes, softens bran, and modifies texture in sourdough baking.", "lib": "sourdough_baking"}
+{"c": "scoring", "d": "Shallow cuts made on proofed dough before baking to control oven spring direction, create visual patterns, and allow steam to escape during baking.", "lib": "sourdough_baking"}
+{"c": "scoring_angle", "d": "Blade orientation relative to dough surface affecting ear formation and rise pattern", "lib": "sourdough_baking"}
+{"c": "seeds", "d": "Sunflower, pumpkin, sesame, flax, and other seeds added to dough for nutrition, texture variety, and flavor enhancement.", "lib": "sourdough_baking"}
+{"c": "shaping", "d": "Final dough shaping technique building proper surface tension and structure to support oven spring and hold crumb form.", "lib": "sourdough_baking"}
+{"c": "slicing", "d": "Cutting bread into portions after cooling for serving and storage", "lib": "sourdough_baking"}
+{"c": "slowed_metabolism", "d": "Diminished microbial activity state where wild_yeast and lactobacillus consume minimal resources.", "lib": "deep_sourdough_starter"}
+{"c": "soaker", "d": "Technique of soaking grains and seeds in liquid overnight to soften hulls, reduce phytic acid, and improve digestibility.", "lib": "sourdough_baking"}
+{"c": "sourdough_baker", "d": "Person practicing sourdough bread making with emphasis on starter cultivation and fermentation", "lib": "sourdough_baking"}
+{"c": "sourdough_flavor", "d": "Complex taste profile combining sour tang, wheat notes, and fermentation-derived compounds varying with starter age and fermentation time.", "lib": "sourdough_baking"}
+{"c": "sourdough_loaf", "d": "Whole sourdough bread shaped as round boule or elongated batard for artisan presentation", "lib": "sourdough_baking"}
+{"c": "sourdough_pancakes", "d": "Breakfast preparation using discard starter for fluffy tangy pancakes", "lib": "sourdough_baking"}
+{"c": "sourdough_starter", "d": "A fermented mixture of flour and water containing wild yeast and lactic acid bacteria that serves as the natural leaven for sourdough bread, maintained through regular feedings.", "lib": "sourdough_baking"}
+{"c": "sourdough_starter_culture", "d": "Living microbial community of yeast and bacteria passed between batches", "lib": "sourdough_baking"}
+{"c": "sourdough_tradition", "d": "Historical and cultural heritage of naturally fermented bread across civilizations", "lib": "sourdough_baking"}
+{"c": "sourdough_waffles", "d": "Crispy waffles made with discard starter for complex sour flavor", "lib": "sourdough_baking"}
+{"c": "sourness_level", "d": "Intensity of acidic tang from lactobacillus fermentation ranging from mild to pronounced", "lib": "sourdough_baking"}
+{"c": "spelt_flour", "d": "Ancient grain flour with weaker gluten than wheat producing tender baked goods with slightly sweet nutty flavor.", "lib": "sourdough_baking"}
+{"c": "staling", "d": "Moisture loss and starch retrogradation causing bread to become firm and dry", "lib": "sourdough_baking"}
+{"c": "starter_age", "d": "Duration since last feeding affecting fermentation vigor and flavor complexity", "lib": "sourdough_baking"}
+{"c": "starter_aroma", "d": "Smell of healthy starter combining winey, fruity, sour notes from balanced yeast and bacteria; unpleasant odors indicate problems.", "lib": "sourdough_baking"}
+{"c": "starter_build", "d": "Progressive feeding schedule multiplying starter from small amount over several hours to achieve sufficient active leaven.", "lib": "sourdough_baking"}
+{"c": "starter_discard", "d": "Portion of starter removed before feeding to maintain size; flavorful tangy ingredient used in pancakes, crackers, waffles, and other baking.", "lib": "sourdough_baking"}
+{"c": "starter_feeding_schedule", "d": "Regular timing pattern for maintaining starter such as daily or twice daily", "lib": "sourdough_baking"}
+{"c": "starter_hydration", "d": "Consistency of starter ranging from thick and stiff to loose and liquid", "lib": "sourdough_baking"}
+{"c": "starter_maintenance", "d": "Ongoing care of sourdough culture through regular feeding schedules and storage conditions", "lib": "sourdough_baking"}
+{"c": "starter_refreshment", "d": "Process of feeding starter with fresh flour and water to maintain microbial balance and fermentation vigor.", "lib": "sourdough_baking"}
+{"c": "starter_rise_phase", "d": "Progressive stages of active_starter expansion including initial lag, acceleration, peak, and plateau before decline.", "lib": "deep_sourdough_starter"}
+{"c": "starter_rise_phase_culminates_in", "d": "starter_rise_phase progresses through lag and acceleration phases to reach activity_peak before plateau.", "lib": "deep_sourdough_starter"}
+{"c": "starter_rise_phase_governed_by", "d": "starter_rise_phase is controlled by fermentation_temperature and starter_hydration levels.", "lib": "deep_sourdough_starter"}
+{"c": "starter_storage_temperature", "d": "Refrigerated or room temperature holding conditions affecting fermentation rhythm", "lib": "sourdough_baking"}
+{"c": "starter_vigor", "d": "Observable rising speed and bubble activity indicating culture health and strength", "lib": "sourdough_baking"}
+{"c": "starter_vitality", "d": "Measure of wild_yeast and lactobacillus population health and activity level in the sourdough starter, directly determining fermentation_vigor potential.", "lib": "deep_fermentation"}
+{"c": "steam", "d": "Water vapor released from dough and trapped in baking vessel that keeps crust flexible for maximum oven spring and shiny crust.", "lib": "sourdough_baking"}
+{"c": "steam_production", "d": "Water vapor released in oven creating humid environment for optimal crust development", "lib": "sourdough_baking"}
+{"c": "stiff_starter", "d": "Thick consistency starter (50-60% hydration) with more acetic acid character, slower fermentation, and better keeping quality.", "lib": "sourdough_baking"}
+{"c": "stone_milled_flour", "d": "Flour ground between traditional stone wheels preserving germ oils and producing nuanced flavor compared to steel roller milling.", "lib": "sourdough_baking"}
+{"c": "storage_viability", "d": "Degree to which dormant_starter retains fermentation capability over cold_storage_duration, affected by starter_age and storage conditions.", "lib": "deep_sourdough_starter"}
+{"c": "stretch_and_fold", "d": "Method of periodically stretching dough quarters and folding them into the center during bulk fermentation to develop structure without degassing.", "lib": "sourdough_baking"}
+{"c": "substrate_availability", "d": "Amount of fermentable sugars from flour available to wild_yeast and lactobacillus, driving fermentation_vigor.", "lib": "deep_fermentation"}
+{"c": "surface_doming", "d": "Visible convex curvature of active_starter surface at peak activity caused by accumulated CO2 gas beneath the crust.", "lib": "deep_sourdough_starter"}
+{"c": "surface_tension", "d": "The tight outer skin formed on dough during shaping that traps gases inside, supports oven spring, and determines loaf height and ear formation.", "lib": null}
+{"c": "tang", "d": "Sharp sour flavor note from acetic acid in sourdough, more pronounced with longer cold fermentation and mature active starter.", "lib": "sourdough_baking"}
+{"c": "temperature_response", "d": "Degree to which fermentation_vigor changes with temperature shifts, as microbial activity accelerates or slows.", "lib": "deep_fermentation"}
+{"c": "tight_crum", "d": "Dense crumb with small uniform holes, often resulting from under-proofing, over-mixing, or low hydration.", "lib": "sourdough_baking"}
+{"c": "toasted_aroma", "d": "Character of bread surface after baking with nutty brown notes from Maillard reaction and caramelization.", "lib": "sourdough_baking"}
+{"c": "uncovered_bake", "d": "Baking in open oven typically requiring manual steam injection for proper crust formation and oven spring.", "lib": "sourdough_baking"}
+{"c": "underproofed", "d": "Insufficient fermentation where bread rises inadequately, producing tight crumb, dense texture, and poor oven spring.", "lib": "sourdough_baking"}
+{"c": "underproofing", "d": "Insufficient fermentation leaving dough dense with tight crumb and raw starchy flavor", "lib": "sourdough_baking"}
+{"c": "water", "d": "Filtered water used to hydrate flour and feed the starter culture; temperature affects fermentation speed and dough behavior.", "lib": "sourdough_baking"}
+{"c": "wheat_flavor", "d": "Characteristic taste of wheat flour becoming more prominent in long-fermented sourdough highlighting grain origin.", "lib": "sourdough_baking"}
+{"c": "whole_wheat_flour", "d": "Flour milled from entire wheat berry including bran and germ; adds nutrition, flavor complexity, and requires more hydration.", "lib": "sourdough_baking"}
+{"c": "whole_wheat_sourdough", "d": "Bread using entire grain flour with higher nutrient content and denser texture", "lib": "sourdough_baking"}
+{"c": "wild_culture", "d": "Sourdough starter cultivated from local flour and environment capturing regional microflora", "lib": "sourdough_baking"}
+{"c": "wild_yeast", "d": "Naturally occurring yeast strains captured from flour and the environment that ferment dough, providing rise without commercial yeast.", "lib": "sourdough_baking"}
+{"c": "windowpane_test", "d": "Gluten development test stretching dough thin enough to see light through without tearing; indicates proper fermentation and structure.", "lib": "sourdough_baking"}

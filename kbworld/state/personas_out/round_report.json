@@ -1,0 +1,62 @@
+{
+  "rounds": [
+    {
+      "region": "sourdough_starter",
+      "targets": [
+        "active_starter",
+        "dormant_starter"
+      ],
+      "phases": [
+        "soup",
+        "soup"
+      ],
+      "new_concepts": 71,
+      "new_relations": 13
+    },
+    {
+      "region": "fermentation",
+      "targets": [
+        "fermentation_byproducts",
+        "fermentation_vigor"
+      ],
+      "phases": [
+        "soup",
+        "soup"
+      ],
+      "new_concepts": 36,
+      "new_relations": 0
+    }
+  ],
+  "basis_before": {
+    "shared_atoms": [
+      "acetic_acid",
+      "fermentation",
+      "fermentation_byproducts",
+      "fermentation_vigor",
+      "flavor_complexity",
+      "lactic_acid",
+      "lactobacillus",
+      "sourness_level",
+      "wild_yeast"
+    ],
+    "shared": 9,
+    "union": 44,
+    "overlap": 0.205
+  },
+  "basis_after": {
+    "shared_atoms": [
+      "acetic_acid",
+      "fermentation",
+      "fermentation_byproducts",
+      "fermentation_vigor",
+      "flavor_complexity",
+      "lactic_acid",
+      "lactobacillus",
+      "sourness_level",
+      "wild_yeast"
+    ],
+    "shared": 9,
+    "union": 49,
+    "overlap": 0.184
+  }
+}
