@@ -45,9 +45,23 @@ class Deps:
 
     @staticmethod
     def _gh_file(title: str, body: str, label: str) -> str:
-        r = subprocess.run(["gh", "issue", "create", "--title", title,
-                            "--body", body, "--label", label],
-                           capture_output=True, text=True, cwd=ROOT)
+        def _create():
+            return subprocess.run(["gh", "issue", "create", "--title", title,
+                                   "--body", body, "--label", label],
+                                  capture_output=True, text=True, cwd=ROOT)
+        r = _create()
+        if r.returncode != 0 and "label" in (r.stderr or "").lower():
+            subprocess.run(["gh", "label", "create", label, "--color",
+                            "D93F0B"], capture_output=True, text=True,
+                           cwd=ROOT)
+            r = _create()
+        if r.returncode != 0:
+            # NEVER a silent empty string (found 2026-08-10: three findings
+            # lost their issues on the fork) — the report keeps atom+why, and
+            # the failure is loud in the run log
+            print(f"WARNING: issue filing FAILED for {title!r}: "
+                  f"{(r.stderr or r.stdout)[-200:]}", file=sys.stderr)
+            return ""
         return r.stdout.strip()
 
     @staticmethod
@@ -189,6 +203,15 @@ async def phase_encapsulate(kb, deps) -> dict:
 
 async def run_round(subject: str, grade1: bool = True, deps: Deps = None,
                     budget: int = 60, open_pr: bool = True) -> dict:
+    """grade1 means: THE ROUND ITSELF NEVER MERGES — it ends at a PR. The
+    gate on that PR is the CI/CD reviewer chain (approve → auto-merge), not
+    a human (renamed semantics 2026-08-10; humans steer via kb-door /
+    kb-supersede issues and the deity rules). FACTORY_ON=off kills the round
+    at this layer too, not only at the beat."""
+    import os
+    if os.environ.get("FACTORY_ON", "on").strip().lower() in ("off", "0",
+                                                              "false"):
+        return {"subject": subject, "skipped": "FACTORY_ON is off"}
     deps = deps or Deps()
     host = deps.host
     t0 = time.time()
@@ -213,6 +236,14 @@ async def run_round(subject: str, grade1: bool = True, deps: Deps = None,
 
     kb.save()
     wl1 = derive_worklist(kb)
+    pins = {}
+    pins_f = HERE / "STACK_PINS.env"
+    if pins_f.exists():
+        for ln in pins_f.read_text().splitlines():
+            if "=" in ln and not ln.startswith("#"):
+                k, v = ln.split("=", 1)
+                pins[k] = v.strip()
+    report["stack_pins"] = pins
     report["telemetry"] = {
         "kb": f"{wl1['n_concepts']}c/{wl1['n_relations']}r",
         "worklist": {"before": {"define": len(wl0["define"]),

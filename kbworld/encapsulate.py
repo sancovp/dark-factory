@@ -116,6 +116,11 @@ def emit_module_skill(kb, modules_root, library_root=None) -> dict:
     slug = re.sub(r"[^a-z0-9_]+", "_", kb.subject.lower()).strip("_")[:40]
     kebab = slug.replace("_", "-")
     mod = Path(modules_root) / slug
+    # STALE-SKILL CLEARANCE: call numbers shift as the tree grows, so a
+    # re-emission must MIRROR the projection, not accrete over it — wipe
+    # skills/ and rebuild (found 2026-08-10: 73 dirs vs 43 harvested)
+    if (mod / "skills").exists():
+        shutil.rmtree(mod / "skills")
     skill_dir = mod / "skills" / f"using-{kebab}"
     (skill_dir / "data").mkdir(parents=True, exist_ok=True)
     (skill_dir / "references").mkdir(parents=True, exist_ok=True)

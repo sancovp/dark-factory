@@ -1,12 +1,10 @@
 name: kb-round
 on:
-  workflow_dispatch:          # GRADE 1: human-dispatched only.
-    inputs:
-      subject:
-        description: "Module subject to cultivate"
+  workflow_dispatch:          # dispatched by the DARK FLOOR beat (darkfloor.yml,
+    inputs:                   # every 6h) or by humans. FACTORY_ON=off kills it
+      subject:                # at the beat AND inside run_round. The merge gate
+        description: "Module subject to cultivate"   # is the reviewer chain.
         required: true
-  # schedule:                 # LATER (deity earns it): calendar-gated like
-  #   - cron: "0 6 * * *"     # the deploy beat; see world/calendar.json
 jobs:
   round:
     if: github.repository_owner == 'sancovp'
@@ -28,14 +26,13 @@ jobs:
         run: |
           sudo apt-get update && sudo apt-get install -y swi-prolog
           pip install kuzu pydantic pydantic-stack-core agent-skilltree
-      - name: isaac stack (editable clones — data files guaranteed)
-        env:
-          STACK_PAT: ${{ secrets.STACK_PAT }}
+      - name: isaac stack (PINNED — reproducible proofs; see kbworld/STACK_PINS.env)
         run: |
-          git clone --depth 1 https://github.com/sancovp/brain-agent.git /tmp/brain-agent
-          git clone --depth 1 -b ceo https://github.com/sancovp/map-v2.git /tmp/map-v2
-          git clone --depth 1 -b ceo https://github.com/sancovp/cave-teams.git /tmp/cave-teams
-          git clone --depth 1 "https://x-access-token:${STACK_PAT}@github.com/sancovp/ee-v2.git" /tmp/ee-v2
+          set -a; source kbworld/STACK_PINS.env; set +a
+          git clone https://github.com/sancovp/brain-agent.git /tmp/brain-agent && git -C /tmp/brain-agent checkout -q "$BRAIN_AGENT_SHA"
+          git clone https://github.com/sancovp/map-v2.git /tmp/map-v2 && git -C /tmp/map-v2 checkout -q "$MAP_V2_SHA"
+          git clone https://github.com/sancovp/cave-teams.git /tmp/cave-teams && git -C /tmp/cave-teams checkout -q "$CAVE_TEAMS_SHA"
+          git clone https://github.com/sancovp/ee-v2.git /tmp/ee-v2 && git -C /tmp/ee-v2 checkout -q "$EE_V2_SHA"
           pip install -e /tmp/map-v2 -e /tmp/cave-teams -e /tmp/ee-v2 -e /tmp/brain-agent
           pip install heaven-framework || true   # verify pin on first run
       - name: run one round (grade 1)

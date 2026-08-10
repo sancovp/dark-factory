@@ -137,9 +137,13 @@ async def main(tmp):
         fm = yaml.safe_load(txt.split("---")[1])
         assert fm.get("name") and fm.get("description"), \
             f"{d.name}: frontmatter must strict-YAML-parse w/ name+description"
+    # stale-skill regression (found 2026-08-10: 73 dirs vs 43 harvested):
+    # re-emission must MIRROR the projection — dir count == harvest + using-*
+    n_dirs = sum(1 for d in (mod / "skills").iterdir() if d.is_dir())
+    assert n_dirs == len(sibs) + 1, (n_dirs, len(sibs))
     print(f"  encapsulate: VALID plugin — manifest alone in .claude-plugin, "
           f"skills at root ({len(sibs)} understand-* siblings), data as "
-          "skill resources ✓")
+          "skill resources, no stale dirs ✓")
     assert rep["telemetry"]["worklist"]["after"] is not None
     assert prs and str(host.state_root) in str(prs[0][1][0])
     assert list(host.state_root.glob("round_*.json"))
@@ -152,4 +156,4 @@ if __name__ == "__main__":
         asyncio.run(main(d))
     print("KBWORLD PASS — the full reified round runs deterministically: "
           "aim→grow→drain→brain→project→observe→encapsulate, all logged, "
-          "PR-shaped, human-gated.")
+          "PR-shaped, reviewer-gated (humans steer via issues).")

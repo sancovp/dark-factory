@@ -409,10 +409,41 @@ def deploy(site: Path, repo=SITE_REPO, run=_run) -> dict:
                    f"{repo.split('/')[1]}/"}
 
 
+def marketplace_modules(marketplace: str, skip_names: set,
+                        run=_run) -> list:
+    """DURABLE DISCOVERY: the catalog is the source of truth for what is
+    published — clone each listed module repo and load it, so an atlas
+    rebuild from ANY checkout carries every module, not just local state
+    (found 2026-08-10: a state-only rebuild would have true-mirror-deleted
+    restaurants)."""
+    out = []
+    r = run(["gh", "api",
+             f"repos/{marketplace}/contents/.claude-plugin/marketplace.json",
+             "--jq", ".content"], check=False)
+    if r.returncode != 0:
+        return out
+    import base64
+    cat = json.loads(base64.b64decode(r.stdout).decode())
+    for e in cat.get("plugins", []):
+        if e["name"] in skip_names or "-module" not in e["name"]:
+            continue
+        url = e.get("source", {}).get("url", "")
+        if not url:
+            continue
+        td = Path(tempfile.mkdtemp(prefix="atlasmod-"))
+        if run(["git", "clone", "--depth", "1", url, str(td / "m")],
+               check=False).returncode == 0:
+            m = load_module(td / "m")
+            if m:
+                out.append(m)
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--modules-root", default="kbworld/state/modules")
     ap.add_argument("--extra-module", action="append", default=[])
+    ap.add_argument("--marketplace", default="sancovp/sancrev-marketplace")
     ap.add_argument("--site-repo", default=SITE_REPO)
     ap.add_argument("--out", default=None)
     ap.add_argument("--no-deploy", action="store_true")
@@ -428,6 +459,8 @@ def main():
         m = load_module(Path(x))
         if m:
             modules.append(m)
+    have = {m["entry"]["name"] for m in modules}
+    modules += marketplace_modules(a.marketplace, have)
     outdir = Path(a.out) if a.out else Path(tempfile.mkdtemp()) / "site"
     rep = build_site(modules, outdir)
     print(json.dumps(rep))
