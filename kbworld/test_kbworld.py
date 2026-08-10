@@ -106,13 +106,27 @@ async def main(tmp):
           " → kb-supersede issue filed ✓")
     mod = Path(p["encapsulate"]["module"])
     plugin = json.loads((mod / ".claude-plugin/plugin.json").read_text())
-    assert set(plugin) == {"name", "version", "description", "author"}
+    assert set(plugin) == {"name", "version", "description", "author",
+                           "license", "keywords"}
+    assert "-" in plugin["name"] and "_" not in plugin["name"]  # kebab-case
     entry = json.loads((mod / "marketplace-entry.json").read_text())
     assert set(entry) == {"name", "description", "author", "category",
                           "source"}
-    assert (mod / ".claude/skills").is_dir()
-    print("  encapsulate: plugin.json + marketplace entry match the REAL "
-          "schemas; using-* skill emitted ✓")
+    # VALID plugin structure (plugin-structure skill, critical rules):
+    # manifest alone in .claude-plugin/; components at ROOT; parts as
+    # resources INSIDE the skill
+    assert [f.name for f in (mod / ".claude-plugin").iterdir()] == \
+        ["plugin.json"]
+    assert not (mod / ".claude").exists()
+    using = next((mod / "skills").glob("using-*"))
+    assert (using / "SKILL.md").exists()
+    assert (using / "data" / "concepts.jsonl").exists()
+    sibs = [d.name for d in (mod / "skills").iterdir()
+            if "understand" in d.name and (d / "SKILL.md").exists()]
+    assert sibs, "library skills must ship as siblings"
+    print(f"  encapsulate: VALID plugin — manifest alone in .claude-plugin, "
+          f"skills at root ({len(sibs)} understand-* siblings), data as "
+          "skill resources ✓")
     assert rep["telemetry"]["worklist"]["after"] is not None
     assert prs and str(host.state_root) in str(prs[0][1][0])
     assert list(host.state_root.glob("round_*.json"))

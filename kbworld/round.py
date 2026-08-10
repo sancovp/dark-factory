@@ -179,9 +179,12 @@ async def phase_observe(kb, brain, deps) -> dict:
 
 
 async def phase_encapsulate(kb, deps) -> dict:
-    """g. ENCAPSULATE — the module ships its own manual (§23)."""
+    """g. ENCAPSULATE — the module ships its own manual (§23) as a VALID
+    plugin: library skills as siblings, data as skill resources."""
     from .encapsulate import emit_module_skill
-    return emit_module_skill(kb, deps.host.state_root / "modules")
+    return emit_module_skill(
+        kb, deps.host.state_root / "modules",
+        library_root=deps.host.state_root / "libraries" / _slug(kb.subject))
 
 
 async def run_round(subject: str, grade1: bool = True, deps: Deps = None,
