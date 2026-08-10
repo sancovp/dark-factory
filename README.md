@@ -1,12 +1,106 @@
 # 🌑🏭 dark-factory
 
-**This repository maintains and improves itself.** On a schedule — or whenever
-an issue is filed — a team of AI agents convenes inside a game, works out what
-this repo needs, builds the change, and ships it through CI/CD. No human is in
-the loop. What stops it shipping garbage is not trust in the AI: it's three
-independent gates, ending in a controlled experiment.
+**An autonomous, gate-checked factory that runs with no humans on the floor.**
+It runs two production lines, and they share one discipline — *nothing ships
+until a chain of independent gates passes*:
 
-This page explains the whole thing from zero. No prior context assumed.
+- **🧠 The knowledge line (`kbworld/`)** — grows **proof-checked knowledge
+  modules**. Name a subject; a factory round builds a knowledge base about it
+  where every claim is admitted by a Prolog consistency gate, packages it as
+  an installable Claude Code plugin, publishes it as its own public repo +
+  marketplace entry, and adds it to a live graph website. On a schedule, with
+  no human touch. **This is what the deployed instance mainly does.**
+- **🔧 The repo line (`world/`, `factory/`)** — this repository *improving its
+  own code*: AI agents convene inside a game (World of Skillcraft), work out
+  what the repo needs, build the change, and ship it through CI/CD gated by a
+  controlled experiment.
+
+Two lines, one factory: autonomous trigger → multi-gate review → ship through
+CI/CD → accumulating state → humans steer only by filing issues.
+
+> **Live right now** (from the deployed instance): the **[KB Atlas](https://sancovp.github.io/kb-atlas/)**
+> (auto-generated graph pages for every module) · the modules on the
+> **[SANCREV marketplace](https://github.com/sancovp/sancrev-marketplace)** ·
+> e.g. **[restaurants-module](https://github.com/sancovp/restaurants-module)**
+> — 2,849 concepts, gate-admitted, shipped for free.
+
+This page explains both lines from zero. No prior context assumed. If you only
+care about the knowledge line, read [§K](#k-the-knowledge-line-kbworld) and stop.
+
+---
+
+## §K. The knowledge line (`kbworld/`)
+
+**A knowledge module** is a knowledge base grown by machine and checked by a
+prover. It is *not* an LLM dumping text: every concept and relation is admitted
+through a **SWI-Prolog consistency gate** that proves the graph is *closed*
+(no relation points at an undefined concept) and *connected* (no orphans) — and
+when it isn't, the prover **names exactly what's missing**, which becomes the
+next unit of work. The gate proves **coherence, not truth**: factual wrongness
+is expected, priced by blast radius, and metabolized through open supersede
+issues — never silently retracted. That honesty note is the flex; no LLM-slop
+generator can print it.
+
+### One round, end to end
+
+A round is one turn of the factory on a subject. Seven phases, never skipped:
+
+| phase | what it does |
+|---|---|
+| **aim** | pick the target — an open `kb-door` issue outranks everything; else deepen the coldest region; else bootstrap a fresh subject |
+| **grow** | dump the concept space, mint a **persona** per region, each deepens its own territory; the prover admits only coherent accretion |
+| **drain** | work the prover's worklist — *define* referenced-but-undefined concepts (to the contract their consumers impose), *connect* orphans |
+| **brain** | grow one new **gyrus** — a durable activation-graph region that can be fired and reasoned over (the module is also an agent you can ask) |
+| **project** | emit the `understand-*` **skill library** — coordinate-addressed progressive disclosure (call number = the dependency web) |
+| **observe** | the module audits *itself* as a user would, prices each wrongness by its consumer-cone, and files `kb-supersede` issues |
+| **encapsulate** | package it as a valid Claude Code **plugin** + emit **OWL/Turtle** (`module.ttl`) + a README receipt |
+
+The round ends at a **pull request** — it never merges itself.
+
+### The gate, the floor, the rail (how a module reaches the world)
+
+```
+kb-door issue ──▶ round (7 phases) ──▶ PR
+                                        │  the CI/CD gate:
+                                        │  deterministic suites + a heaven
+                                        │  reviewer agent read the diff
+                                        ▼
+                          approve ──▶ auto-merge ──▶ publish rail:
+                                        │   the module → its own PUBLIC repo
+                                        │   + upsert the marketplace catalog
+                                        ▼
+                          KB Atlas rebuild — a graph page per module
+```
+
+- **The gate** is the same one the repo line uses: a deterministic test suite
+  plus a **heaven reviewer** (a MiniMax agent whose identity/rules live in
+  [`automation/cicd-reviewer/`](automation/cicd-reviewer/)) that reads the diff
+  and approves / requests changes. Its approval is what auto-merges the PR.
+- **The dark floor** ([`.github/workflows/darkfloor.yml`](.github/workflows/darkfloor.yml))
+  is the heartbeat: every 6 hours it picks a subject and dispatches a round.
+  `FACTORY_ON` off stops it (and the round). Humans steer by filing `kb-door`
+  (aim it here) and `kb-supersede` (it's wrong here) issues.
+- **The publish rail** ([`kbworld/publish.py`](kbworld/publish.py)) mirrors each
+  gate-merged module to **its own public repo** and upserts the
+  [marketplace](https://github.com/sancovp/sancrev-marketplace) catalog — so
+  each module is a standalone installable plugin, the catalog just points.
+- **The atlas** ([`kbworld/atlas.py`](kbworld/atlas.py)) auto-generates
+  [the website](https://sancovp.github.io/kb-atlas/): an interactive force-graph
+  per module (certified atoms ringed gold), a combined floor with candidate
+  cross-module bridges, and links to each repo/marketplace/`.ttl`.
+
+### The four ways to use a module
+
+Every module ships all four, described in its own `using-*` skill:
+**as RAG** (the `understand-*` library) · **as an agent** (`brain_ask` fires
+the matching gyri and proves the synthesis) · **as tools** (14 heaven tools over
+its state) · **as OWL** (`module.ttl` — concepts as typed individuals,
+certificates reified, argument DAGs as typed object properties; the proof gate
+stays Prolog, the OWL is a faithful projection).
+
+The engine that powers all of this — the curried compiler, the language
+automaton, the brain, the OWL projection — is the `ee_v2.kbc` library in
+[ee-v2](https://github.com/sancovp/ee-v2) (public, MIT).
 
 ---
 
@@ -207,6 +301,22 @@ need the selection structure to be sound.**
 </p>
 
 ## 5. Reading the repo
+
+**The knowledge line:**
+
+| path | what it is |
+|---|---|
+| [`kbworld/round.py`](kbworld/round.py) | one round = the seven phases (aim→grow→drain→brain→project→observe→encapsulate), ends at a PR |
+| [`kbworld/darkfloor.py`](kbworld/darkfloor.py) | the autonomous subject picker (kb-door → coldest module → seed); untrusted issue titles are sanitized here |
+| [`kbworld/publish.py`](kbworld/publish.py) | the publish rail — module → its own public repo + marketplace upsert |
+| [`kbworld/atlas.py`](kbworld/atlas.py) | the [KB Atlas](https://sancovp.github.io/kb-atlas/) site generator — a graph page per module |
+| [`kbworld/encapsulate.py`](kbworld/encapsulate.py) | packages a KB as a valid plugin + emits `module.ttl` (OWL) + the README receipt |
+| [`kbworld/observe.py`](kbworld/observe.py) | the self-audit → priced `kb-supersede` issues |
+| [`kbworld/STACK_PINS.env`](kbworld/STACK_PINS.env) | the immutable stack SHAs a round's proofs ran against (reproducibility) |
+| [`automation/cicd-reviewer/`](automation/cicd-reviewer/) | the heaven reviewer AIOS — its `.claude/` rules ARE how it reviews |
+| `.github/workflows/cicd-*.yml` · `darkfloor.yml` · `publish-modules.yml` | the gate (review→merge), the beat, the publish trigger |
+
+**The repo line (self-improvement):**
 
 | path | what it is |
 |---|---|
