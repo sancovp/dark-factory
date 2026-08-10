@@ -87,5 +87,6 @@ async def observation_pass(kb, brain, deps, max_regions: int = 3,
             "consumer, never retract; the graveyard keeps this as a "
             "hard-negative once superseded.",
             "kb-supersede")
-        issues.append({"atom": f["wrong"], "price": price, "url": url})
+        issues.append({"atom": f["wrong"], "why": f["why"], "price": price,
+                       "url": url})
     return {"findings": len(findings), "issues": issues}
