@@ -1,0 +1,96 @@
+{
+  "subject": "sourdough baking",
+  "grade1": true,
+  "phases": {
+    "aim": {
+      "mode": "deepen",
+      "doors": [
+        "fermentation",
+        "baking"
+      ],
+      "source": "worklist"
+    },
+    "grow": {
+      "specialize": {
+        "basis_after": 0.26,
+        "new": [
+          [
+            "fermentation",
+            12,
+            28
+          ],
+          [
+            "baking",
+            63,
+            0
+          ]
+        ]
+      }
+    },
+    "drain": {
+      "define": {},
+      "connect": {
+        "wired": 20
+      },
+      "after": {
+        "phase": "soup",
+        "concepts": 373,
+        "relations": 213,
+        "define": 0,
+        "connect": 200
+      }
+    },
+    "brain": {
+      "grew": "fermentation_vigor"
+    },
+    "project": {
+      "library": "/home/runner/work/dark-factory/dark-factory/kbworld/state/libraries/sourdough_baking",
+      "skills": 30,
+      "staff": 52
+    },
+    "observe": {
+      "findings": 3,
+      "issues": [
+        {
+          "atom": "acetic_acid",
+          "why": "Claims acetic acid is produced by lactobacillus in oxygen presence, but acetic acid is primarily produced by Acetobacter bacteria, not lactobacillus which mainly produces lactic acid",
+          "price": 24,
+          "url": "https://github.com/sancovp/dark-factory/issues/23"
+        },
+        {
+          "atom": "baking_temperature",
+          "why": "Lists 450-500F as typical, but 500F is extreme and risks burning; most home sourdough bakers use 450-475F",
+          "price": 3,
+          "url": "https://github.com/sancovp/dark-factory/issues/24"
+        },
+        {
+          "atom": "baking_duration",
+          "why": "Claims 20-50 minutes is typical, but 20-35 min covers most home loaves; 50 min would severely overbake standard recipes",
+          "price": 1,
+          "url": "https://github.com/sancovp/dark-factory/issues/25"
+        }
+      ]
+    },
+    "encapsulate": {
+      "module": "/home/runner/work/dark-factory/dark-factory/kbworld/state/modules/sourdough_baking",
+      "skill": "/home/runner/work/dark-factory/dark-factory/kbworld/state/modules/sourdough_baking/skills/using-sourdough-baking/SKILL.md",
+      "plugin": "sourdough-baking-module",
+      "library_skills": 36
+    }
+  },
+  "telemetry": {
+    "kb": "373c/213r",
+    "worklist": {
+      "before": {
+        "define": 0,
+        "connect": 167
+      },
+      "after": {
+        "define": 0,
+        "connect": 200
+      }
+    },
+    "basis": 0.431,
+    "secs": 320.2
+  }
+}

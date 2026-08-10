@@ -1,12 +1,12 @@
 {
-  "name": "sourdough_baking-module",
-  "description": "sourdough baking \u2014 a cultivated, proof-checked neurosymbolic knowledge module: RAG library, agent brain, growable KB, factory-deepened. 298 concepts.",
+  "name": "sourdough-baking-module",
+  "description": "sourdough baking \u2014 a cultivated, proof-checked neurosymbolic knowledge module: RAG library, agent brain, growable KB, factory-deepened. 373 concepts.",
   "author": {
-    "name": "Isaac Rubin"
+    "name": "Isaac Wostrel-Rubin"
   },
   "category": "productivity",
   "source": {
     "source": "url",
-    "url": "https://github.com/sancovp/sourdough_baking-module.git  # placeholder until split to own repo"
+    "url": "https://github.com/sancovp/sourdough-baking-module.git"
   }
 }

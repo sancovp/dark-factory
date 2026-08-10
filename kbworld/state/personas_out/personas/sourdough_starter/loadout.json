@@ -1,6 +1,6 @@
 {
   "region": "sourdough_starter",
-  "call_number": "sourdough_baking.sourdough_starter",
+  "call_number": "sourdough_baking.sourdough_starter : deep_fermentation(6), deep_sourdough_starter(5)",
   "tools": [
     "kb_work",
     "kb_drain",
@@ -9,5 +9,5 @@
     "brain_grow",
     "brain_ask"
   ],
-  "cone_size": 43
+  "cone_size": 52
 }

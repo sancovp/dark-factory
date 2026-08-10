@@ -1,0 +1,13 @@
+{
+  "region": "stretch_and_fold",
+  "call_number": "sourdough_baking.stretch_and_fold",
+  "tools": [
+    "kb_work",
+    "kb_drain",
+    "kb_root",
+    "kb_expand",
+    "brain_grow",
+    "brain_ask"
+  ],
+  "cone_size": 4
+}

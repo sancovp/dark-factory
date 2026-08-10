@@ -11,4 +11,4 @@ Invoke this skill to understand `crust_color` down to its primitives. The RELATI
 `crust`, `maillard_reaction`
 
 ---
-*Projected from the `sourdough baking` KB (298 concepts / 165 relations) — consistency-typed by MAP; the facet list after the colon IS the cross-lib dependency web.*
+*Projected from the `sourdough baking` KB (373 concepts / 213 relations) — consistency-typed by MAP; the facet list after the colon IS the cross-lib dependency web.*
