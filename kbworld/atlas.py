@@ -424,18 +424,19 @@ def marketplace_modules(marketplace: str, skip_names: set,
         return out
     import base64
     cat = json.loads(base64.b64decode(r.stdout).decode())
-    for e in cat.get("plugins", []):
-        if e["name"] in skip_names or "-module" not in e["name"]:
-            continue
-        url = e.get("source", {}).get("url", "")
-        if not url:
-            continue
-        td = Path(tempfile.mkdtemp(prefix="atlasmod-"))
-        if run(["git", "clone", "--depth", "1", url, str(td / "m")],
-               check=False).returncode == 0:
-            m = load_module(td / "m")
-            if m:
-                out.append(m)
+    with tempfile.TemporaryDirectory(prefix="atlasmod-") as td:
+        for i, e in enumerate(cat.get("plugins", [])):
+            if e["name"] in skip_names or "-module" not in e["name"]:
+                continue
+            url = e.get("source", {}).get("url", "")
+            if not url:
+                continue
+            dst = Path(td) / f"m{i}"
+            if run(["git", "clone", "--depth", "1", url, str(dst)],
+                   check=False).returncode == 0:
+                m = load_module(dst)
+                if m:
+                    out.append(m)
     return out
 
 

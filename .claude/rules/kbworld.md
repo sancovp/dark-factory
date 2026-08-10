@@ -41,6 +41,24 @@ debugging: boundaries teach; never soften a gate; never drop repairable input.
     ran, PR opened not merged, spend within budget. Only after ≥3 clean
     supervised rounds may the deity PROPOSE calendar entries (a human merges).
 
+**STEP-10 GATE: SATISFIED AND SUPERSEDED (2026-08-10).** The receipts:
+- ≥3 clean supervised rounds happened, humans watching every one:
+  R1 sourdough bootstrap 298c/165r (source PR #17, Isaac's tour + verdict),
+  R2 deepen 373c/213r (source PR #26, merged on Isaac's word, supersede
+  issues #23–25 filed live), R3 on the deployed line 465c/268r (live PR #1,
+  reviewed E2E: scoped heaven review → approve → auto-merge, receipts in the
+  round report + review body).
+- THE HUMAN ACT authorizing the calendar was given by the principal
+  directly, 2026-08-10 (Isaac, verbatim): "running full auto. dark floor."
+  — chosen again explicitly as "Full-auto" when offered the graded options.
+  That ruling IS the human merge of the calendar proposal; it is recorded
+  here so the tree and the law agree.
+- The gate that REPLACES supervision: every round still ends at a PR; the
+  reviewer chain (deterministic suites + heaven review → approve →
+  auto-merge) is the merge gate; `FACTORY_ON=off` kills the beat AND the
+  round; wrongness metabolizes through kb-supersede issues; humans steer
+  via kb-door issues and the deity rules. Cron cadence: 6h (darkfloor.yml).
+
 CI note: runner gets NATIVE swipl (apt) — no emulation; verify heaven pip
 pin + langchain coherence on first dispatch (fresh installs should be clean;
 the container's lcshim2 was local history, not upstream).

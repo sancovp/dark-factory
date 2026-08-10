@@ -143,8 +143,16 @@ def marketplace_pr(entries: list, marketplace: str, deps: PubDeps,
                 "dry_run": True}
     with tempfile.TemporaryDirectory(prefix="mkt-") as td:
         work = Path(td) / "m"
-        deps.run(["git", "clone", "--depth", "1",
-                  f"https://github.com/{marketplace}.git", str(work)])
+        r = deps.run(["git", "clone", "--depth", "1",
+                      f"https://github.com/{marketplace}.git", str(work)],
+                     check=False)
+        if not (work / ".git").exists():
+            print("WARNING: marketplace unreachable — module repos are "
+                  "synced, catalog update PENDING (rerun publishes it): "
+                  f"{(r.stderr or r.stdout)[-150:]}", file=sys.stderr)
+            return {"pr": None, "upserted": [],
+                    "pending": [e["name"] for e in entries],
+                    "error": "marketplace_unreachable"}
         cat_path = work / ".claude-plugin" / "marketplace.json"
         cat = json.loads(cat_path.read_text())
         by_name = {p["name"]: i for i, p in enumerate(cat["plugins"])}
@@ -159,12 +167,18 @@ def marketplace_pr(entries: list, marketplace: str, deps: PubDeps,
                 changed.append(e["name"])
         if not changed:
             return {"pr": None, "upserted": []}
-        # dedup: an open sync-PR already carrying these names means the
-        # maintainer just hasn't merged yet — do NOT stack duplicates
+        # dedup: an open sync-PR already carrying EXACTLY these names means
+        # the merge just hasn't landed — do NOT stack duplicates. Exact set
+        # match on the canonical title, not substring (a stale PR whose
+        # title merely contains a name must not block a new one).
+        want = set(changed)
         for title in deps.pr_list(marketplace):
-            if all(n in title for n in changed):
-                return {"pr": "pending (open PR already covers these)",
-                        "upserted": [], "pending": changed}
+            if title.startswith("catalog: "):
+                names = set(title[len("catalog: "):].split(" (")[0]
+                            .split(", "))
+                if names == want:
+                    return {"pr": "pending (open PR already covers these)",
+                            "upserted": [], "pending": changed}
         cat_path.write_text(json.dumps(cat, indent=2) + "\n")
         branch = f"modules/sync-{time.time_ns()}"
         deps.run(["git", "checkout", "-q", "-b", branch], cwd=work)
