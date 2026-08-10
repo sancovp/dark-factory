@@ -124,6 +124,13 @@ async def main(tmp):
     sibs = [d.name for d in (mod / "skills").iterdir()
             if "understand" in d.name and (d / "SKILL.md").exists()]
     assert sibs, "library skills must ship as siblings"
+    import yaml
+    for d in list((mod / "skills").iterdir()):
+        txt = (d / "SKILL.md").read_text()
+        assert txt.startswith("---"), d.name
+        fm = yaml.safe_load(txt.split("---")[1])
+        assert fm.get("name") and fm.get("description"), \
+            f"{d.name}: frontmatter must strict-YAML-parse w/ name+description"
     print(f"  encapsulate: VALID plugin — manifest alone in .claude-plugin, "
           f"skills at root ({len(sibs)} understand-* siblings), data as "
           "skill resources ✓")

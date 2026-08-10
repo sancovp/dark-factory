@@ -79,6 +79,31 @@ tracked as open supersede-issues, never hidden).
 """
 
 
+def _normalize_frontmatter(skill_md: Path) -> None:
+    """Skilltree emits `description: [0.8.4] …` unquoted — YAML reads the
+    bracketed call number as a flow sequence and strict parsers reject the
+    file (caught by the 2026-08-10 verify pass; upstream issue filed on
+    sancovp/skilltree). The harvest guarantees valid plugin output: quote
+    any unquoted flow-ish scalar in the frontmatter."""
+    lines = skill_md.read_text(encoding="utf-8").splitlines()
+    if not lines or lines[0].strip() != "---":
+        return
+    out, changed = [], False
+    for i, ln in enumerate(lines):
+        if 0 < i and ln.strip() == "---":
+            out.extend(lines[i:])
+            break
+        m = re.match(r"^(name|description):\s*(\[.*)$", ln)
+        if m:
+            val = m.group(2).replace('"', r'\"')
+            out.append(f'{m.group(1)}: "{val}"')
+            changed = True
+        else:
+            out.append(ln)
+    if changed:
+        skill_md.write_text("\n".join(out) + "\n", encoding="utf-8")
+
+
 def emit_module_skill(kb, modules_root, library_root=None) -> dict:
     """Render the module as a VALID plugin. plugin.json fields follow the
     plugin-structure skill's recommended metadata; the marketplace entry
@@ -134,6 +159,7 @@ def emit_module_skill(kb, modules_root, library_root=None) -> dict:
             if dst.exists():
                 shutil.rmtree(dst)
             shutil.copytree(src_dir, dst)
+            _normalize_frontmatter(dst / "SKILL.md")
             n_lib += 1
 
     plugin = {"name": f"{kebab}-module", "version": "0.1.0",
@@ -150,8 +176,8 @@ def emit_module_skill(kb, modules_root, library_root=None) -> dict:
     entry = {"name": f"{kebab}-module", "description": plugin["description"],
              "author": {"name": "Isaac Rubin"}, "category": "productivity",
              "source": {"source": "url",
-                        "url": f"https://github.com/sancovp/{kebab}-module"
-                               ".git  # placeholder until split to own repo"}}
+                        "url": (f"https://github.com/sancovp/{kebab}"
+                                "-module.git")}}
     (mod / "marketplace-entry.json").write_text(
         json.dumps(entry, indent=2), encoding="utf-8")
     return {"module": str(mod), "skill": str(skill_dir / "SKILL.md"),
