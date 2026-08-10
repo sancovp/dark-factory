@@ -50,7 +50,8 @@ jobs:
             echo "hint=This PR is a STATE-ONLY kbworld round emission ($n files, all under kbworld/state/ — machine-grown, prover-admitted KB state). Do NOT page the raw diff (huge JSONL). Instead: (1) verify no file outside kbworld/state/ changed via git -C \$REPO_DIR diff --name-only origin/${{ github.event.pull_request.base.ref }}...HEAD; (2) read the newest kbworld/state/round_*.json (the round's self-report); (3) spot-check 3-5 changed files via git diff --stat. Approve if the diff is state-only and the report is complete; request changes only for real defects. Post the review promptly — do not exhaust tool calls reading state." >> "$GITHUB_OUTPUT"
           else
             echo "code=true" >> "$GITHUB_OUTPUT"
-            echo "hint=" >> "$GITHUB_OUTPUT"
+            n=$(printf '%s\n' "$changed" | wc -l)
+            echo "hint=This is a $n-file code PR. Read the WHOLE diff in ONE call with 'gh pr diff $PR_NUMBER --repo $GITHUB_REPOSITORY' (do NOT cat files one by one — that exhausts your budget). Review in priority order: security → correctness → contracts. Open at most a few specific files for context on the highest-risk findings. POST your review (gh pr review) BEFORE you run low on tool calls — a posted review with the top findings beats an exhausted run with none." >> "$GITHUB_OUTPUT"
           fi
 
       - name: deterministic gate (the kbworld suite)
