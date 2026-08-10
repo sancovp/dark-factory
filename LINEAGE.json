@@ -216,5 +216,18 @@
     ],
     "fitness_current": 0.0,
     "fitness_patched": 0.5
+  },
+  {
+    "at": "2026-08-10T07:16:00+00:00",
+    "verdict": "REVERT",
+    "change": "Installed dependency_audit_lens.md to loadout; audit found chain_verifier_recipe.md has hidden supply chain dependencies (references Divergence Lens + Convergence Lens not in loadout)",
+    "diff": [
+      {
+        "file": "loadout/dependency_audit_lens.md",
+        "kind": "added"
+      }
+    ],
+    "fitness_current": 0.5,
+    "fitness_patched": 0.5
   }
 ]
