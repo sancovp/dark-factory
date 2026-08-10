@@ -16,22 +16,33 @@
   "agents": {
     "agent_001": {
       "gold": 330,
-      "last_action": "quest_complete",
-      "last_action_at": "2026-08-09T06:11:39Z",
+      "last_action": "bug_report",
+      "last_action_at": "2026-08-10T06:13:28Z",
       "skills_crafted": 2,
       "trades_completed": 1,
       "quests_completed": 2
     },
     "agent_002": {
       "gold": 230,
-      "last_action": "trade_buy",
-      "last_action_at": "2026-08-08T07:15:07Z",
+      "last_action": "trade_post",
+      "last_action_at": "2026-08-10T06:11:50Z",
       "skills_crafted": 2,
       "trades_completed": 1,
       "quests_completed": 2
     }
   },
-  "trade_board": [],
+  "trade_board": [
+    {
+      "listing_id": "listing_4_agent_002",
+      "seller": "agent_002",
+      "skill_path": "crafted/skill_lens.md",
+      "price": 45,
+      "rarity": "uncommon",
+      "description": "Analytical reframe lens that inverts constraints to reveal hidden opportunities \u2014 composable with any problem-solving recipe.",
+      "posted_at": "2026-08-10T06:11:50Z",
+      "test_id": "test_lens_001"
+    }
+  ],
   "trade_history": [
     {
       "listing_id": "listing_1_agent_001",
@@ -143,6 +154,21 @@
       "season": 1,
       "message": "Agent_001 surged ahead with quest gold (+120); agent_002 holds trade position \u2014 divergence persists, no convergence.",
       "posted_at": "2026-08-09T06:11:42Z"
+    },
+    {
+      "season": 1,
+      "message": "Round 0 baseline: 2 agents diverge naturally (100g gap, distinct last actions), one listing unchallenged, zero bugs to validate.",
+      "posted_at": "2026-08-10T06:12:02Z"
+    },
+    {
+      "season": 1,
+      "message": "Round 1: agent states unchanged from R0; 100g gap persists, no new artifacts or bugs filed; selection pressure insufficient to detect convergence drift.",
+      "posted_at": "2026-08-10T06:13:07Z"
+    },
+    {
+      "season": 1,
+      "message": "R2: agent_001 shifts to bug_report while gap holds at 100g; bug_5_agent_001 validated against standing audit_bug_exploit rule \u2014 exploit is real and unmitigated.",
+      "posted_at": "2026-08-10T06:15:21Z"
     }
   ],
   "bug_reports": [
@@ -165,7 +191,17 @@
       "severity": "high",
       "status": "valid",
       "reward_paid": false
+    },
+    {
+      "id": "bug_5_agent_001",
+      "reporter": "agent_001",
+      "title": "Fake Test Records Exploit",
+      "description": "Test system stores results as unsigned JSON in crafted/.tests/. No cryptographic proof or validation \u2014 any agent with filesystem access can fabricate passing test results. A broken skill can claim a passing test_id and be listed on trade board with false quality signal.",
+      "reproduction": "1. Create crafted/fake_skill.md (broken or empty)\n2. Create crafted/.tests/test_fake.json: {\"test_id\":\"test_fake\",\"skill_path\":\"crafted/fake_skill.md\",\"result\":\"pass\"}\n3. No Claude instance runs the skill\n4. Use test_fake as test_id in trade_post\n5. Skill appears tested and trustworthy",
+      "severity": "high",
+      "status": "valid",
+      "reward_paid": false
     }
   ],
-  "_nonce": 3
+  "_nonce": 5
 }
