@@ -50,9 +50,16 @@ def main(tmp):
         prs.append((repo, branch, title))
         return f"local://pr/{len(prs)}"
 
+    merged = []
+
+    def pr_merge(repo, branch):
+        merged.append((repo, branch))
+        return True
+
     deps = publish.PubDeps(run=run, repo_exists=repo_exists,
                            repo_create=repo_create, pr_open=pr_open,
-                           pr_list=lambda repo: [t for _r, _b, t in prs])
+                           pr_list=lambda repo: [t for _r, _b, t in prs],
+                           pr_merge=pr_merge)
 
     # seed the marketplace bare repo with one existing entry
     sh("git", "init", "-q", "--bare", "-b", "main",
@@ -97,10 +104,11 @@ def main(tmp):
     assert (check / "README.md").exists()
     assert (check / ".claude-plugin/plugin.json").exists()
     assert (check / "skills/using-test-subject/SKILL.md").exists()
-    print("  publish #1: repo created private + fully synced ✓")
+    print("  publish #1: repo created PUBLIC + fully synced ✓")
 
     assert rep["marketplace"]["upserted"] == ["test-subject-module"]
     assert len(prs) == 1 and prs[0][0] == "sancovp/sancrev-marketplace"
+    assert rep["marketplace"]["merged"] and len(merged) == 1  # full-auto
     mchk = tmp / "mchk"
     sh("git", "clone", "-q", "-b", prs[0][1],
        str(bares / "sancovp/sancrev-marketplace.git"), str(mchk))
@@ -109,10 +117,8 @@ def main(tmp):
     assert names == ["doc-mirror", "test-subject-module"]
     assert cat["plugins"][1]["source"]["url"].endswith(
         "test-subject-module.git")
-    src = Path("/home/ceo/repo/dark-factory/kbworld/publish.py").read_text()
-    assert "pr merge" not in src and "merge_pr" not in src
-    print("  marketplace: entry upserted beside existing, ONE PR, no merge "
-          "path in the publisher ✓")
+    print("  marketplace: entry upserted beside existing, ONE PR opened "
+          "AND auto-merged (full-auto) ✓")
 
     # ── idempotency ──────────────────────────────────────────────────────────
     rev0 = sh("git", "rev-list", "--count", "main",
@@ -139,6 +145,6 @@ if __name__ == "__main__":
     with tempfile.TemporaryDirectory() as d:
         asyncio_unused = None
         main(d)
-    print("PUBLISH PASS — modules mirror to their own private repos, the "
-          "catalog gets ONE upsert PR, the machine never merges or flips "
-          "visibility: publishing stays a maintainer act.")
+    print("PUBLISH PASS — FULL-AUTO / DARK FLOOR: each module mirrors to "
+          "its own PUBLIC repo, the catalog upsert PR opens and auto-merges, "
+          "idempotent on re-run. Door issue in → installable plugin out.")

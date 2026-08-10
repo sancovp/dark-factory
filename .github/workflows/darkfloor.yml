@@ -1,0 +1,36 @@
+name: Dark Floor (autonomous beat)
+
+# THE DARK FLOOR (Isaac 2026-08-10: "running full auto. dark floor."). A
+# scheduled beat picks a subject (open kb-door issue → else deepen the
+# coldest module → else a seed) and dispatches ONE round. The round
+# self-merges through the CI/CD gate; the publisher ships the module PUBLIC.
+# Nobody clicks anything. This only runs on the DEPLOYED line.
+on:
+  schedule:
+    - cron: "17 */6 * * *"     # every 6h at :17 (off-minute by design)
+  workflow_dispatch:
+
+permissions:
+  actions: write               # to dispatch the round workflow
+
+jobs:
+  beat:
+    if: github.repository == 'sancovp/dark-factory-live'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: pick a subject
+        id: pick
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          subject=$(python kbworld/darkfloor.py "${{ github.repository }}")
+          echo "chosen: $subject"
+          echo "subject=$subject" >> "$GITHUB_OUTPUT"
+      - name: dispatch one round
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run kb-round.yml -R ${{ github.repository }} \
+            -f subject="${{ steps.pick.outputs.subject }}"
+          echo "dispatched round: ${{ steps.pick.outputs.subject }}"

@@ -7,15 +7,16 @@ catalog that POINTS at each plugin's own repo — never houses their code"):
   kbworld/state/modules/<slug>/          the module, gate-merged on main
         │  sync (automatic — already reviewed+merged state)
         ▼
-  sancovp/<slug>-module                  the module's OWN repo, PRIVATE
-        │  marketplace PR (NEVER merged by the machine)
+  sancovp/<slug>-module                  the module's OWN repo, PUBLIC
+        │  marketplace PR — opened AND auto-merged (full-auto)
         ▼
-  sancovp/sancrev-marketplace            Isaac merges + flips the repo
-                                         public = THE publishing act
+  sancovp/sancrev-marketplace            listed automatically
 
-The machine's reach ends at: private repo synced + one PR opened. Making a
-module PUBLIC is two human acts in one sitting (flip repo visibility, merge
-the entry PR) — the same maintainer-gate shape as cicd-rules/*.
+FULL-AUTO / DARK FLOOR (Isaac 2026-08-10): door issue in → installable public
+plugin out, zero human touch. The flex is the METHOD (proof-checked, self-
+grown, self-published, free); the README's honesty note (coherence-not-truth)
+is the receipt no competitor can print. Clean merges only — a conflicted
+catalog is the one thing left for a human (never override conflicts).
 
 Standalone by design: stdlib + git + gh only (no kbworld/ee_v2 imports), so
 the publish workflow needs no model stack. Run:
@@ -45,12 +46,13 @@ class PubDeps:
     """Injectable boundary (gh + git); tests script these four."""
 
     def __init__(self, run=None, repo_exists=None, repo_create=None,
-                 pr_open=None, pr_list=None):
+                 pr_open=None, pr_list=None, pr_merge=None):
         self.run = run or _run
         self.repo_exists = repo_exists or self._repo_exists
         self.repo_create = repo_create or self._repo_create
         self.pr_open = pr_open or self._pr_open
         self.pr_list = pr_list or self._pr_list
+        self.pr_merge = pr_merge or self._pr_merge
 
     @staticmethod
     def _repo_exists(name):
@@ -59,7 +61,11 @@ class PubDeps:
 
     @staticmethod
     def _repo_create(name, description):
-        _run(["gh", "repo", "create", name, "--private",
+        # FULL-AUTO / DARK FLOOR (Isaac 2026-08-10): modules ship PUBLIC.
+        # The flex is the method — proof-checked, self-grown, free, sitting
+        # there. The README's honesty note (coherence-not-truth) is the
+        # thing no competitor can even print.
+        _run(["gh", "repo", "create", name, "--public",
               "--description", description])
 
     @staticmethod
@@ -73,6 +79,14 @@ class PubDeps:
         r = _run(["gh", "pr", "create", "--repo", repo, "--head", branch,
                   "--title", title, "--body", body], check=False)
         return r.stdout.strip() or r.stderr.strip()
+
+    @staticmethod
+    def _pr_merge(repo, branch):
+        # clean merge only — a conflicted catalog is left for a human
+        # (Isaac's standing rule: never override conflicts)
+        r = _run(["gh", "pr", "merge", "--repo", repo, branch, "--merge"],
+                 check=False)
+        return r.returncode == 0
 
 
 def sync_module(module_dir: Path, owner: str, deps: PubDeps,
@@ -169,7 +183,8 @@ def marketplace_pr(entries: list, marketplace: str, deps: PubDeps,
             "machine never does either.\n\nModules: "
             + ", ".join(changed) +
             "\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)")
-        return {"pr": url, "upserted": changed}
+        merged = deps.pr_merge(marketplace, branch)
+        return {"pr": url, "upserted": changed, "merged": merged}
 
 
 def publish_all(modules_root: Path, owner="sancovp",
