@@ -122,6 +122,10 @@ async def main(tmp):
     using = next((mod / "skills").glob("using-*"))
     assert (using / "SKILL.md").exists()
     assert (using / "data" / "concepts.jsonl").exists()
+    # the RUNNABLE BRAIN ships (neurodb + tissue), not just the substrate
+    assert p["encapsulate"]["brain_files"] > 0, p["encapsulate"]
+    assert (using / "data" / "brain").is_dir()
+    assert any((using / "data" / "brain").rglob("neurodb*")), "neurodb bundled"
     assert (using / "data" / "module.ttl").exists()      # the OWL projection
     ttl = (using / "data" / "module.ttl").read_text()
     assert "owl:NamedIndividual" in ttl and "kbo:relatesTo" in ttl
