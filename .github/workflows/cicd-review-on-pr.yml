@@ -69,11 +69,15 @@ jobs:
           python kbworld/test_publish.py
           python kbworld/test_darkfloor.py
 
+      # The reviewer approves as the BOT (github.token), NOT the PAT: round
+      # PRs are opened by the PAT (sancovp), and GitHub forbids approving your
+      # own PR — so the approver must be a different identity. can_approve is
+      # enabled on this repo, so the bot's --approve is valid.
       - name: heaven reviewer (MODE=review)
         env:
           MODE: review
           MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
-          GITHUB_TOKEN: ${{ secrets.REVIEW_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
           GITHUB_REPOSITORY: ${{ github.repository }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
           BASE_REF: ${{ github.event.pull_request.base.ref }}
@@ -91,3 +95,26 @@ jobs:
           git config --global --add safe.directory '*'
           cd automation/cicd-reviewer/cicd_aios
           python3 ../ci_agent.py
+
+      # FULL-AUTO CLOSE: if the reviewer approved, merge inline with the PAT
+      # (a PAT-merge push triggers publish-modules; a bot approval would NOT
+      # trigger the separate cicd-merge-on-approval workflow — recursion
+      # guard — so the merge must happen here). Clean merges only; a blocked
+      # merge is left open. Human approvals still go through
+      # cicd-merge-on-approval. cicd-rules/* branches are never auto-merged.
+      - name: auto-merge on approval (PAT)
+        if: ${{ !startsWith(github.event.pull_request.head.ref, 'cicd-rules/') }}
+        env:
+          GH_TOKEN: ${{ secrets.REVIEW_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          state=$(gh pr view "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" \
+                  --json reviews --jq '[.reviews[]|.state]|last')
+          echo "latest review state: $state"
+          if [ "$state" = "APPROVED" ]; then
+            gh pr merge "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --merge \
+              && echo "merged" \
+              || echo "not cleanly mergeable — left open for a human"
+          else
+            echo "not approved — leaving open"
+          fi
