@@ -46,9 +46,15 @@ tracked as open supersede-issues, never hidden).
    coordinate-addressed (call number = home class : dependency facets — the
    import web, literally); FTS5 index via `skilltree.build_index` over
    `${{CLAUDE_PLUGIN_ROOT}}/skills/using-{slug}/references/skilltree.json`.
-2. **As an agent** — `brain_ask("your question")`: the activation graph fires
-   the matching gyri numerically, each answers over its territory, the
-   synthesis is PROVEN one level up (SES tower) and returns with receipts.
+2. **As an agent (the runnable brain SHIPS here)** — the neuromorphic brain
+   is bundled at `${{CLAUDE_PLUGIN_ROOT}}/skills/using-{slug}/data/brain/`
+   (kuzu `neurodb` = the activation graph + `tissue/` = the gyri). Point a
+   `KbcBrain` at it and `brain_ask("your question")`: the graph FIRES the
+   matching gyri numerically (spreading activation, weights decide — not an
+   agent choosing), each fired gyrus answers over its territory, the
+   synthesis is PROVEN one level up (the SES tower — the join is a theorem),
+   and the prover teaches the graph back (Hebbian). Needs `kuzu` +
+   `brain-agent` + `ee_v2.kbc` installed.
 3. **As tools your agents hold** — `ee_v2.kbc.heaven_tools.make_kbc_tools`
    over this module's data root
    (`${{CLAUDE_PLUGIN_ROOT}}/skills/using-{slug}/data/`): 14 heaven tools
@@ -104,13 +110,17 @@ def _normalize_frontmatter(skill_md: Path) -> None:
         skill_md.write_text("\n".join(out) + "\n", encoding="utf-8")
 
 
-def emit_module_skill(kb, modules_root, library_root=None) -> dict:
+def emit_module_skill(kb, modules_root, library_root=None,
+                      brain_root=None) -> dict:
     """Render the module as a VALID plugin. plugin.json fields follow the
     plugin-structure skill's recommended metadata; the marketplace entry
     mirrors sancrev-marketplace's plugins[] shape (kept at root as the
     ready-to-paste row — it is marketplace data, not a plugin component).
     All data parts ship as RESOURCES inside the using-* skill; the
-    understand-* library ships as sibling skills (auto-discovered)."""
+    understand-* library ships as sibling skills (auto-discovered); the
+    runnable BRAIN (neurodb + tissue) ships under data/brain/ so brain_ask
+    works out of the box (Isaac 2026-08-11: the module IS the neuromorphic
+    agent, not just its substrate)."""
     from ee_v2.kbc.projector import call_number
 
     slug = re.sub(r"[^a-z0-9_]+", "_", kb.subject.lower()).strip("_")[:40]
@@ -142,6 +152,16 @@ def emit_module_skill(kb, modules_root, library_root=None) -> dict:
     # the parts ride as resources IN the skill (never loose root dirs)
     for f in sorted(Path(kb.root).glob("*.jsonl")):
         shutil.copy(f, skill_dir / "data" / f.name)
+    # THE RUNNABLE BRAIN — neurodb (kuzu activation graph) + tissue (gyri) so
+    # brain_ask fires numerically out of the box; not just the substrate
+    brain_shipped = 0
+    if brain_root and Path(brain_root).is_dir():
+        bdst = skill_dir / "data" / "brain"
+        if bdst.exists():
+            shutil.rmtree(bdst)
+        shutil.copytree(brain_root, bdst,
+                        ignore=shutil.ignore_patterns("asks"))
+        brain_shipped = sum(1 for _ in bdst.rglob("*") if _.is_file())
     # PSC-with-OWL-PROJECTED (Isaac 2026-08-10): the module carries its KB
     # as standards-compliant Turtle too; the proof gate stays Prolog
     from ee_v2.kbc.owl import project_owl
@@ -238,4 +258,5 @@ def emit_module_skill(kb, modules_root, library_root=None) -> dict:
         "is what promotes any region to trusted.\n")
     (mod / "README.md").write_text(readme, encoding="utf-8")
     return {"module": str(mod), "skill": str(skill_dir / "SKILL.md"),
-            "plugin": plugin["name"], "library_skills": n_lib}
+            "plugin": plugin["name"], "library_skills": n_lib,
+            "brain_files": brain_shipped}
