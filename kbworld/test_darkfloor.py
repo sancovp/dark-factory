@@ -43,11 +43,21 @@ def main():
     # precedence: a kb-door issue outranks seeds, and its title is sanitized
     # end-to-end (monkeypatch the gh boundary to return a malicious title)
     import kbworld.darkfloor as df
-    df._gh = lambda *a: "home`evil`espresso\n" if "list" in a else ""
+    closed = []
+    def fake_gh(*a):
+        if "list" in a:
+            return "42\thome`evil`espresso"          # number\ttitle
+        if "close" in a:
+            closed.append(a)
+            return ""
+        return ""
+    df._gh = fake_gh
     got = pick(state_root="/nonexistent", repo="x/y")
     assert not (set(got) & bad), got
     assert "home" in got and "espresso" in got
-    print(f"  pick: kb-door title sanitized end-to-end → {got!r} ✓")
+    assert closed and "42" in closed[0]                 # door consumed
+    print(f"  pick: kb-door title sanitized end-to-end → {got!r}; door "
+          "consumed (closed) ✓")
 
     # no doors, no state → a safe seed
     df._gh = lambda *a: ""

@@ -47,18 +47,26 @@ def _slug(x):
 
 
 def pick(state_root="kbworld/state", repo=None) -> str:
-    # 1 — open kb-door issues (oldest first)
-    args = ["issue", "list", "--label", "kb-door", "--state", "open",
-            "--json", "title,createdAt", "--jq",
-            "sort_by(.createdAt) | .[].title"]
-    if repo:
-        args = ["issue", "list", "--repo", repo, "--label", "kb-door",
-                "--state", "open", "--json", "title,createdAt", "--jq",
-                "sort_by(.createdAt) | .[].title"]
-    doors = [t for t in _gh(*args).splitlines() if t.strip()]
-    if doors:
-        # a door titled "kb-door: <subject>" or just "<subject>" — SANITIZED
-        return sanitize(re.sub(r"^kb-door:\s*", "", doors[0]))
+    # 1 — open kb-door issues (oldest first). A door is a ONE-SHOT aim: pick
+    # the oldest, then CLOSE it so the next beat advances to the next door
+    # (else the beat re-picks the same oldest door forever and the portfolio
+    # never drains). After bootstrapping, the subject keeps growing via the
+    # coldest-module rotation below.
+    base = (["issue", "list"] + (["--repo", repo] if repo else [])
+            + ["--label", "kb-door", "--state", "open", "--json",
+               "number,title,createdAt", "--jq",
+               'sort_by(.createdAt) | .[0] | '
+               'if . == null then "" else "\\(.number)\\t\\(.title)" end'])
+    row = _gh(*base).strip()
+    if row and "\t" in row:
+        num, title = row.split("\t", 1)
+        subject = sanitize(re.sub(r"^kb-door:\s*", "", title))
+        close = (["issue", "close", num] + (["--repo", repo] if repo else [])
+                 + ["--comment", "aimed — the dark floor dispatched a round "
+                    "on this subject; it deepens via the coldest-module "
+                    "rotation thereafter"])
+        _gh(*close)
+        return subject
 
     # 2 — deepen the least-recently-rounded existing module
     kbs = Path(state_root) / "kbs"
